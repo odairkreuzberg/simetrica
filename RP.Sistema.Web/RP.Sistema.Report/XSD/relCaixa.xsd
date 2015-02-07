@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="NewDataSet" msprop:Generator_UserDSName="NewDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="table" msprop:Generator_TableClassName="tableDataTable" msprop:Generator_TableVarName="tabletable" msprop:Generator_RowChangedName="tableRowChanged" msprop:Generator_TablePropName="table" msprop:Generator_RowDeletingName="tableRowDeleting" msprop:Generator_RowChangingName="tableRowChanging" msprop:Generator_RowEvHandlerName="tableRowChangeEventHandler" msprop:Generator_RowDeletedName="tableRowDeleted" msprop:Generator_RowClassName="tableRow" msprop:Generator_UserTableName="table" msprop:Generator_RowEvArgName="tableRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="idcaixa" msprop:Generator_ColumnVarNameInTable="columnidcaixa" msprop:Generator_ColumnPropNameInRow="idcaixa" msprop:Generator_ColumnPropNameInTable="idcaixaColumn" msprop:Generator_UserColumnName="idcaixa" type="xs:int" minOccurs="0" />
+              <xs:element name="situacao" msprop:Generator_ColumnVarNameInTable="columnsituacao" msprop:Generator_ColumnPropNameInRow="situacao" msprop:Generator_ColumnPropNameInTable="situacaoColumn" msprop:Generator_UserColumnName="situacao" type="xs:string" minOccurs="0" />
+              <xs:element name="descricao" msprop:Generator_ColumnVarNameInTable="columndescricao" msprop:Generator_ColumnPropNameInRow="descricao" msprop:Generator_ColumnPropNameInTable="descricaoColumn" msprop:Generator_UserColumnName="descricao" type="xs:string" minOccurs="0" />
+              <xs:element name="saldoanterior" msprop:Generator_ColumnVarNameInTable="columnsaldoanterior" msprop:Generator_ColumnPropNameInRow="saldoanterior" msprop:Generator_ColumnPropNameInTable="saldoanteriorColumn" msprop:Generator_UserColumnName="saldoanterior" type="xs:decimal" minOccurs="0" />
+              <xs:element name="saldoatual" msprop:Generator_ColumnVarNameInTable="columnsaldoatual" msprop:Generator_ColumnPropNameInRow="saldoatual" msprop:Generator_ColumnPropNameInTable="saldoatualColumn" msprop:Generator_UserColumnName="saldoatual" type="xs:decimal" minOccurs="0" />
+              <xs:element name="valor" msprop:Generator_ColumnVarNameInTable="columnvalor" msprop:Generator_ColumnPropNameInRow="valor" msprop:Generator_ColumnPropNameInTable="valorColumn" msprop:Generator_UserColumnName="valor" type="xs:decimal" minOccurs="0" />
+              <xs:element name="dtlancamento" msprop:Generator_ColumnVarNameInTable="columndtlancamento" msprop:Generator_ColumnPropNameInRow="dtlancamento" msprop:Generator_ColumnPropNameInTable="dtlancamentoColumn" msprop:Generator_UserColumnName="dtlancamento" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="nmusuario" msprop:Generator_ColumnVarNameInTable="columnnmusuario" msprop:Generator_ColumnPropNameInRow="nmusuario" msprop:Generator_ColumnPropNameInTable="nmusuarioColumn" msprop:Generator_UserColumnName="nmusuario" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

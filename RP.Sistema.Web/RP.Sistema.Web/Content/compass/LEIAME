@@ -1,0 +1,9 @@
+1 - Criar pasta em: ~/Content/images/MINHA_PASTA;
+2 - Criar arquivo .scss em: ~/Content/compass/sass;
+3 - Pelo prompt acessar o diretorio ~/Content/compass e executar o comando "compass compile"
+4 - Os arquivos serão gerados na seguinte estrutura:
+	Em ~/Content será gerado o arquivo de css que contem as referencias do seu sprite;
+	Em ~/Content/images será gerado o arquivo de imagem compactado;
+	
+OBS: Os arquivos de css e img apenas serão gerados se houver alguma alteração no .scss ou se for um novo;
+	Talves seja necessário desmarcar os arquivos css como "somente leitura".

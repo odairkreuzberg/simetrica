@@ -1,0 +1,26 @@
+<?xml version="1.0" standalone="yes"?>
+<xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="table">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="identidade" type="xs:int" minOccurs="0" />
+              <xs:element name="nmrazaosocial" type="xs:string" minOccurs="0" />
+              <xs:element name="nmfantasia" type="xs:string" minOccurs="0" />
+              <xs:element name="nrcnpj" type="xs:string" minOccurs="0" />
+              <xs:element name="dscidade" type="xs:string" minOccurs="0" />
+              <xs:element name="dsbairro" type="xs:string" minOccurs="0" />
+              <xs:element name="dslogradouro" type="xs:string" minOccurs="0" />
+              <xs:element name="nrendereco" type="xs:string" minOccurs="0" />
+              <xs:element name="nrcep" type="xs:string" minOccurs="0" />
+              <xs:element name="nrtelefone" type="xs:string" minOccurs="0" />
+              <xs:element name="dswebsite" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

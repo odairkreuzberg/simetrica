@@ -1,0 +1,64 @@
+﻿@model RP.Sistema.Web.Models.Projeto.Consultar
+@using RP.Util.Class;
+@{
+    bool desabilitar = Convert.ToBoolean(ViewData["desabilitar"]);
+    bool obrigatorio = Convert.ToBoolean(ViewData["obrigatorio"] ?? true);
+    string tipo = Convert.ToString(ViewData["tipo"] ?? string.Empty);
+    string label = Convert.ToString(ViewData["label"] ?? "Projeto");
+}
+<div class="control-group">
+    @Html.CustomLabelFor(model => model.idProjeto, label, new { @class = "control-label" })
+    @if (desabilitar)
+    {
+        <div class="controls">
+            @Html.TextBoxFor(model => model.descricao, new { @class = "span6", @readonly = "readonly" })
+        </div>
+    }
+    else
+    {
+        <div class="controls  controls-row">
+            @Html.TextBoxFor(model => model.descricao, new { @class = "span6", maxlength = "50", })
+            @if (obrigatorio){ @Html.ValidationMessageFor(model => model.descricao, null, new { @class = "help-inline", @id = Html.ClientPrefixName().ToString() })}
+        </div>
+    }
+    @Html.HiddenFor(model => model.idProjeto)
+</div>
+@if (!desabilitar)
+{
+
+    @Html.AddScriptBlock(
+
+@<script type="text/javascript">
+     $('#@Html.ClientIdFor(e => e.descricao)').bind('onsearch', function () {
+         var consulta = $('#@Html.ClientIdFor(e => e.descricao)').iNavigate();
+             consulta.addParams({ tipo: '@tipo' });
+         });
+         $('#@Html.ClientIdFor(e => e.descricao)').iNavigate({
+         columns: [,
+             { name: 'Projeto', bind: 'descricao', width: '40%' },
+             { name: 'Cliente', bind: 'nome', width: '40%' },
+             { name: 'Situação', bind: 'status', width: '20%' }
+         ],
+         width: 500,
+         source: '@Url.Action("JsSearch", "Projeto")',
+         minLength: 0,
+         paginate: {
+             size: 10
+         },
+         select: function (data) {
+             if (data) {
+                 $('#@Html.ClientIdFor(e => e.idProjeto)').val(data.idProjeto);
+                 $('#@Html.ClientIdFor(e => e.descricao)').val(data.descricao);
+                 $(document).trigger('@Helper.getInputId(Html.ClientPrefixName().ToString(), "AfterLoad")', data);
+             }
+         },
+         change: function (data) {
+             if (!data) {
+                 $('#@Html.ClientIdFor(e => e.idProjeto)').val('');
+                 $('#@Html.ClientIdFor(e => e.descricao)').blink().select();
+                 $(document).trigger('@Helper.getInputId(Html.ClientPrefixName().ToString(), "AfterLoad")', null);
+             }
+         }
+     });
+</script>
+)}

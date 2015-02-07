@@ -1,0 +1,145 @@
+﻿@model RP.Sistema.Web.Models.FolhaPagamento.ListVM
+@using RP.Util;
+@using RP.Util.Class;
+@using RP.Util.Class.Grid;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
+}
+<div class="container-fluid">
+    @Html.RenderFlashMessage()
+    @using (Html.BeginForm("Search", "FolhaPagamento", FormMethod.Get, new { @class = "well form-horizontal" }))
+    {
+        <div class="container center">
+            <div class="control-group">
+                <span style="margin-left: 18px">Funcionário</span>
+                @Html.TextBoxFor(model => model.Consulta.nome, new { @class = "span6", maxlength = "10", @placeholder = "Pesquisar por nome...", style = "width:608px" })
+            </div>
+
+            <div class="control-group" style="margin-left: -20px">
+                <span>Ano</span>
+                @Html.DropDownListFor(e => e.Consulta.ano, Model.Ano, new { @class = "input-small" })
+                <span>Mes</span>
+                @Html.DropDownListFor(e => e.Consulta.mes, RP.Sistema.Web.Models.FolhaPagamento.ListVM.Mes, new { @class = "apan2" })
+                @Html.CustomButton("Localizar", "submit", new { @class = "btn" }, new { @left = "icon-search" }, false)
+                
+            <div class="btn-group">
+                <a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#" title="Mais ações"><i class="icon-cog icon-white"></i>Ações <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="@Url.Action("Report", new { clear = true, ano = 0, mes = 0})"  id="btn-report"><i class="icon-print"></i>RELAÇÃO DE HORAS EXTRAS</a></li>
+                    <li><a href="@Url.Action("ReportMes", new { clear = true, ano = 0, mes = 0})"  id="btn-report-mes"><i class="icon-print"></i>RELAÇÃO DE SALÁRIOS</a></li>
+                </ul>
+            </div>
+                
+            </div>
+        </div>
+    }
+    @if (_action.ToLower() == "search")
+    {
+        IEnumerable<teGridColumn<RP.Sistema.Web.Models.FolhaPagamento.ListVM.FuncionarioVM>> _g = new[] 
+        {
+            new teGridColumn<RP.Sistema.Web.Models.FolhaPagamento.ListVM.FuncionarioVM>
+            {
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "actions b4"}
+                }, 
+                header = "", 
+                format = item => 
+                    
+                    ((item.idFolha != null) ?
+                    (
+                    "<a class='btn'  rel='popover' data-placement='right' data-trigger='hover' data-content='A folha deste funcionário já esta montada.' title='" + item.situacao + "' ><i class='icon-info-sign'></i></a>"
+                    ) :
+                    (
+                    Html.CustomActionLink("Montar folha de pagamento", "Create", "FolhaPagamento", new { item.idFuncionario, ano = 0, mes = 0 }, new { @class = "btn  btn-success btn-create", @title = "Montar folha de pagamento" }, new { @left = "icon-check  icon-white"}, true).ToString()
+                    )) +
+                    
+                    ((item.idFolha == null || item.situacao == RP.Sistema.Model.Entities.FolhaPagamento.PAGO) ?
+                    (
+                    "<a class='btn'  rel='popover' data-placement='right' data-trigger='hover' data-content='Para pagar um funcionário é necessário montar a folha de pagamento.' title='" + item.situacao + "' ><i class='icon-info-sign'></i></a>"
+                    ) :
+                    (
+                    Html.CustomActionLink("Pagar funcionário", "Pagar", "FolhaPagamento", new {item.idFolha, item.idFuncionario, ano = 0, mes = 0 }, new { @class = "btn btn-info btn-create", @title = "Pagar funcionário" }, new { @left = "icon-download-alt icon-white"}, true).ToString()
+                    )) +
+                    
+                    ((item.idFolha == null) ?
+                    (
+                    "<a class='btn'  rel='popover' data-placement='right' data-trigger='hover' data-content='Para visualizar a folha de frequencia é necessário montar a folha de pagamento.' title='" + item.situacao + "' ><i class='icon-info-sign'></i></a>"
+                    ) :
+                    (
+                    Html.CustomActionLink("Folha de frequencia", "FolhaFrequencia", "FolhaPagamento", new {item.idFolha, item.idFuncionario, ano = 0, mes = 0 }, new { @class = "btn btn-primary btn-create", @title = "Folha de frequencia" }, new { @left = "icon-file icon-white"}, true).ToString()
+                    )) +
+                    
+                    ((item.situacao != RP.Sistema.Model.Entities.FolhaPagamento.PAGO) ?
+                    (
+                    "<a class='btn'  rel='popover' data-placement='right' data-trigger='hover' data-content='Para gerar o recibo de pagamento é necessario efetuar o pagamento.' title='" + item.situacao + "' ><i class='icon-info-sign'></i></a>"
+                    ) :
+                    (
+                    Html.CustomActionLink("Recibo de pagamento", "Recibo", "FolhaPagamento", new { item.idFolha }, new {@class = "btn btn-primary", @title = "Recibo de pagamento" }, new { @left = "icon-print  icon-white"}, true).ToString()
+                    )) 
+            },                       
+            new teGridColumn<RP.Sistema.Web.Models.FolhaPagamento.ListVM.FuncionarioVM>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","55%"}
+                },
+                header = "Funcionário", 
+                format = item =>  item.nome
+            },                              
+            new teGridColumn<RP.Sistema.Web.Models.FolhaPagamento.ListVM.FuncionarioVM>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","15%"}
+                },
+                header = "Profissão", 
+                format = item => item.tipo
+            },                       
+            new teGridColumn<RP.Sistema.Web.Models.FolhaPagamento.ListVM.FuncionarioVM>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","15%"}
+                },
+                header = "Situação", 
+                format = item => item.situacao 
+            },                       
+            new teGridColumn<RP.Sistema.Web.Models.FolhaPagamento.ListVM.FuncionarioVM>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","15%"}
+                },
+                header = "Valor", 
+                format = item => item.salario 
+            }
+		};
+        var __grid = Html.tGrid(
+             Model.Funcionarios,
+             new Dictionary<string, string> { { "class", "table table-bordered table-condensed table-striped table-hover" } },
+             _g,
+             pager: new teGridPager
+             {
+                 pagerAttributes = new Dictionary<string, string>(),
+                 currentPage = int.Parse(Request["page"] ?? RP.Util.Resource.Message.DEFAULT_PAGE),
+                 pageSize = int.Parse(Request["pagesize"] ?? RP.Util.Resource.Message.DEFAULT_PAGESIZE),
+                 totalItemCount = Model.Funcionarios.TotalCount,
+                 routeValues = new RouteValueDictionary(new { controller = "DispensaPrescricao", action = _action })
+             }
+         );
+        @__grid
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/FolhaPagamento/Index.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

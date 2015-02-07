@@ -1,0 +1,133 @@
+﻿@model RP.Sistema.Web.Models.Acao.AcaoVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Edit";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i> Salvar</a></li>
+                        <li><a href="#" data-form-type="reset" title="Limpar o formulário"><i class="icon-refresh"></i> Limpar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Ações</a> <span class="divider">/</span></li>
+                    <li class="active">Editar Ação</li>
+                </ul>
+                
+            	@Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+                    @Html.HiddenFor(model => model.idAcao)
+				    @{
+					    RP.Util.Class.Form editor = Html.Editor();
+					    editor.Add(new RP.Util.Class.Line()
+						    .Add(
+							    Html.LabelFor(model => model.nmAcao),
+                                Html.TextBoxFor(model => model.nmAcao, new { @class = "input-xxlarge", maxlength = "50" })
+						    )
+					    );
+                        
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.LabelFor(model => model.dsAcao),
+                                Html.TextBoxFor(model => model.dsAcao, new { @class = "input-xxlarge", maxlength = "50" })
+                            )
+                        );
+                    }
+				    @editor.Render()
+
+                    @Html.EditorFor(model => model.Controle, "Controle/Consultar")
+
+                    @Html.EditorFor(model => model.Menu, "Menu/Consultar")
+
+                    @{
+                        editor = Html.Editor();
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.LabelFor(model => model.nmMenu),
+                                Html.TextBoxFor(model => model.nmMenu, new { @class = "input-xxlarge", maxlength = "50" })
+                            )
+                        );
+
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.LabelFor(model => model.nrOrdem),
+                                Html.TextBoxFor(model => model.nrOrdem, new { @class = "input-small spinner", @spinner = "{ min: 0 }", @maxlength = "50" })
+                            )
+                        );
+
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.LabelFor(model => model.flMenu),
+                                Html.CheckBox("flMenu", Model.flMenu == "Sim", new { @class = "checkboxUI" })
+                            )
+                        );
+                    }
+                    @editor.Render()
+
+                    <div class="control-group">
+                        @Html.Label("listaIcone", "Ícone", new { @class = "control-label" })
+                        <div class="controls controls-row">
+                            @Html.HiddenFor(model => model.dsIcone)
+                            @Html.TextBox("listaIcone", (!string.IsNullOrEmpty(Model.dsIcone) ? Model.dsIcone.Replace("atalho-", "") : ""), new { @class = "input-large pull-left" })
+                            <div class="thumbnail pull-left" style="width: 45px; height: 45px; margin-left:5px; margin-top: -24px">
+                                <span id="preview-atalho" class="@Model.dsIcone"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="lista-icones" value="@Json.Encode(Model.listaIcones)" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@{
+    string css = "~/" + Guid.NewGuid();
+    string js = "~/" + Guid.NewGuid();
+
+    StyleBundle styleBundle = new StyleBundle(css);
+    styleBundle.Include("~/Content/sprites-atalho.css");
+    BundleTable.Bundles.Add(styleBundle);
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Acao/Edit.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+
+@section styles{
+    @Styles.Render(css)
+    <style type="text/css">
+        .ui-autocomplete {
+            max-height: 300px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        span[class^="atalho-"], #preview-atalho {
+            display: inline-block;
+            height: 45px;
+            margin-right: 10px;
+            width: 45px;
+            float: left;
+        }
+    </style>
+}
+
+@section scripts{
+    @Scripts.Render(js)
+}

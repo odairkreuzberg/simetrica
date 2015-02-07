@@ -1,0 +1,11 @@
+.browser-sprite, .browser-google-chrome, .browser-ie, .browser-mozilla-firefox, .browser-opera, .browser-safari { background: url('images/browser-s0fe682e6bb.png') no-repeat; }
+
+.browser-google-chrome { background-position: 0 0; }
+
+.browser-ie { background-position: -58px 0; }
+
+.browser-mozilla-firefox { background-position: -116px 0; }
+
+.browser-opera { background-position: -174px 0; }
+
+.browser-safari { background-position: -232px 0; }

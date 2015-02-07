@@ -1,0 +1,178 @@
+﻿@model RP.Sistema.Web.Models.Entidade.EntidadeVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Empresa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm("Index", "Entidade", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i>Salvar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li class="active">Dados da empresa</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+                @Html.HiddenFor(model => model.idEntidade)
+                <div class="form-horizontal">
+                    @{
+        RP.Util.Class.Form editor = Html.Editor();
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.nmRazaoSocial),
+                Html.TextBoxFor(model => model.nmRazaoSocial, new { @class = "input-xxlarge", maxlength = "50" }).ToString() +
+                Html.ValidationMessageFor(model => model.nmRazaoSocial, null, new { @class = "help-inline" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.nmFantasia),
+                Html.TextBoxFor(model => model.nmFantasia, new { @class = "input-xxlarge", maxlength = "50" }).ToString() +
+                Html.ValidationMessageFor(model => model.nmFantasia, null, new { @class = "help-inline" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.nrCNPJ),
+                Html.TextBoxFor(model => model.nrCNPJ, new { @class = "input-medium", @mask = "99.999.999/9999-99", maxlength = "20" }).ToString() +
+                Html.ValidationMessageFor(model => model.nrCNPJ, null, new { @class = "help-inline" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.nrTelefone),
+                Html.TextBoxFor(model => model.nrTelefone, new { @class = "input-medium", @mask = "(99) 9999-9999", maxlength = "20" }).ToString() +
+                Html.ValidationMessageFor(model => model.nrTelefone, null, new { @class = "help-inline" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.dsLogradouro),
+                Html.TextBoxFor(model => model.dsLogradouro, new { @class = "input-xxlarge", maxlength = "50" }).ToString() +
+                Html.ValidationMessageFor(model => model.dsLogradouro, null, new { @class = "help-inline" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.nrEndereco),
+                Html.TextBoxFor(model => model.nrEndereco, new { @class = "input-small", maxlength = "6", @filter = "numeric" }).ToString() +
+                Html.ValidationMessageFor(model => model.nrEndereco, null, new { @class = "help-inline" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.dsBairro),
+                Html.TextBoxFor(model => model.dsBairro, new { @class = "input-xxlarge", maxlength = "50" }).ToString() +
+                 Html.ValidationMessageFor(model => model.dsBairro, null, new { @class = "help-inline" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.nrCEP),
+                Html.TextBoxFor(model => model.nrCEP, new { @class = "input-small", maxlength = "9", @mask = "99999-999" }).ToString() +
+                Html.ValidationMessageFor(model => model.nrCEP, null, new { @class = "help-inline" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.dsCidade),
+                Html.TextBoxFor(model => model.dsCidade, new { @class = "input-xxlarge", maxlength = "50" }).ToString() +
+                 Html.ValidationMessageFor(model => model.nrCNPJ, null, new { @class = "help-inline" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.dsWebSite),
+                Html.TextBoxFor(model => model.dsWebSite, new { @class = "input-xxlarge", maxlength = "100" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.dsEmail),
+                Html.TextBoxFor(model => model.dsEmail, new { @class = "input-xxlarge", maxlength = "100" })
+            )
+        );
+                    }
+                    @editor.Render()
+                    <h4 class="heading">LOGO</h4>
+                    <div class="control-group">
+                        <div class="controls">
+                            <div class="@(string.IsNullOrEmpty(Model.pathLogo) ? "fileupload fileupload-new" : "fileupload fileupload-exists")" data-provides="fileupload">
+                                <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
+                                    <img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />
+                                </div>
+                                <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;">
+                                    @if (!string.IsNullOrEmpty(Model.pathLogo))
+                                    {
+                                        @Html.Raw("<img src='" + Model.pathLogo + "' />");
+                                    }
+                                </div>
+                                <span class="btn btn-file"><span class="fileupload-new">Selecionar foto</span><span class="fileupload-exists">Trocar</span><input type="file" name="fuFoto" id="fuFoto" /></span>
+                                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remover</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    @*<div class="control-group">
+                        <div class="controls">
+                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
+                                    @if (string.IsNullOrEmpty(Model.pathLogo))
+                                    {
+                                        <img style="width: 50px; height: 50px;" src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />
+                                    }
+                                    else
+                                    {
+                                        <img style="width: 120px; height: 92px;" src="@Model.pathLogo" />
+                                    }
+
+                                </div>
+                                <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
+                                <span class="btn btn-file"><span class="fileupload-new">Selecioar foto</span>
+                                    <span class="fileupload-exists">Trocar</span>
+                                    <input type="file" value="@Model.pathLogo" name="fuFoto" id="fuFoto" />
+                                </span>
+                                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remover</a>
+                                (120 x 92 pixels)
+                            </div>
+                        </div>
+                    </div>*@
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string css = "~/" + Guid.NewGuid();
+    string js = "~/" + Guid.NewGuid();
+
+    StyleBundle styleBundle = new StyleBundle(css);
+    styleBundle.Include("~/Content/bootstrap-fileupload.css");
+    BundleTable.Bundles.Add(styleBundle);
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/bootstrap-fileupload.js");
+    scriptBundle.Include("~/Scripts/Entidade/Create.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+
+@section styles{
+    @Styles.Render(css)
+}
+
+@section scripts{
+    @Scripts.Render(js)
+}

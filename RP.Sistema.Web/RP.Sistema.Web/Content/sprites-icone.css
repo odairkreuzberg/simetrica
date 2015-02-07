@@ -1,0 +1,11 @@
+.icone-sprite, .icone-sign-alert, .icone-status-away, .icone-status-busy, .icone-status-offline, .icone-status-online { background: url('images/icone-s9b5a36501b.png') no-repeat; }
+
+.icone-sign-alert { background-position: 0 0; }
+
+.icone-status-away { background-position: -26px 0; }
+
+.icone-status-busy { background-position: -52px 0; }
+
+.icone-status-offline { background-position: -78px 0; }
+
+.icone-status-online { background-position: -104px 0; }

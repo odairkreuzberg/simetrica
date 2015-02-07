@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="NewDataSet" msprop:Generator_UserDSName="NewDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="table" msprop:Generator_TableClassName="tableDataTable" msprop:Generator_TableVarName="tabletable" msprop:Generator_RowChangedName="tableRowChanged" msprop:Generator_TablePropName="table" msprop:Generator_RowDeletingName="tableRowDeleting" msprop:Generator_RowChangingName="tableRowChanging" msprop:Generator_RowEvHandlerName="tableRowChangeEventHandler" msprop:Generator_RowDeletedName="tableRowDeleted" msprop:Generator_RowClassName="tableRow" msprop:Generator_UserTableName="table" msprop:Generator_RowEvArgName="tableRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="idfuncionario" msprop:Generator_ColumnVarNameInTable="columnidfuncionario" msprop:Generator_ColumnPropNameInRow="idfuncionario" msprop:Generator_ColumnPropNameInTable="idfuncionarioColumn" msprop:Generator_UserColumnName="idfuncionario" type="xs:int" minOccurs="0" />
+              <xs:element name="fltipo" msprop:Generator_ColumnVarNameInTable="columnfltipo" msprop:Generator_ColumnPropNameInRow="fltipo" msprop:Generator_ColumnPropNameInTable="fltipoColumn" msprop:Generator_UserColumnName="fltipo" type="xs:string" minOccurs="0" />
+              <xs:element name="nome" msprop:Generator_ColumnVarNameInTable="columnnome" msprop:Generator_ColumnPropNameInRow="nome" msprop:Generator_ColumnPropNameInTable="nomeColumn" msprop:Generator_UserColumnName="nome" type="xs:string" minOccurs="0" />
+              <xs:element name="hrextra" msprop:Generator_ColumnVarNameInTable="columnhrextra" msprop:Generator_ColumnPropNameInRow="hrextra" msprop:Generator_ColumnPropNameInTable="hrextraColumn" msprop:Generator_UserColumnName="hrextra" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

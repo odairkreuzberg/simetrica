@@ -1,0 +1,205 @@
+﻿@model RP.Sistema.Web.Models.Material.Consultar
+@using RP.Util.Class;
+@{
+    bool desabilitar = Convert.ToBoolean(ViewData["desabilitar"]);
+    bool obrigatorio = Convert.ToBoolean(ViewData["obrigatorio"] = true);
+    
+    var UnidadeMedida = new RP.Sistema.Web.Models.UnidadeMedida.Consultar();
+}
+<div class="control-group">
+    @Html.CustomLabelFor(model => model.idMaterial, "Material", new { @class = "control-label" })
+    @if (desabilitar)
+    {
+        <div class="controls">
+            @Html.TextBoxFor(model => model.nome, new { @class = "span6", @readonly = "readonly" })
+        </div>
+    }
+    else
+    {
+        <div class="controls  controls-row">
+            @Html.TextBoxFor(model => model.nome, new { @class = "span6", maxlength = "50", })
+            <a id="@Helper.getInputId("btn", Html.ClientPrefixName().ToString())" title="Adicionar fabricante" class="btn btn-input"><i style="font-size: 300px" class="icon-plus"></i></a>
+            @if (obrigatorio) { @Html.ValidationMessageFor(model => model.nome, null, new { @class = "help-inline", @id = Html.ClientPrefixName().ToString() }) }
+        </div>
+    }
+    @Html.HiddenFor(model => model.idMaterial)
+    @Html.HiddenFor(model => model.margemGanho)
+    @Html.HiddenFor(model => model.preco)
+</div>
+@if (!desabilitar)
+{
+    <div id="@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>Novo material</h3>
+        </div>
+        <div class="modal-body">
+            <div class="control-group">
+                <label for="@Helper.getInputId("nome_novo", Html.ClientPrefixName().ToString())" class="control-label">Nome</label>
+                <div class="controls">
+                    <input type="text" value="" maxlength="100" id="@Helper.getInputId("nome_novo", Html.ClientPrefixName().ToString())" class="span6">
+                    <span id="@Helper.getInputId("nome_valid", Html.ClientPrefixName().ToString())" class="field-validation-valid help-inline"></span>
+                </div>
+            </div>
+            @Html.EditorFor(model => UnidadeMedida, "UnidadeMedida/Consultar", new { obrigatorio = true})
+            <div class="control-group">
+                <label for="@Helper.getInputId("preco_novo", Html.ClientPrefixName().ToString())" class="control-label">Preço (R$)</label>
+                <div class="controls">
+                    <input type="text" value="" maxlength="100" id="@Helper.getInputId("preco_novo", Html.ClientPrefixName().ToString())" filter="floatnumber" class="input-small">
+                    <span id="@Helper.getInputId("preco_valid", Html.ClientPrefixName().ToString())" class="field-validation-valid help-inline"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="@Helper.getInputId("margem_ganho_novo", Html.ClientPrefixName().ToString())" class="control-label">Margem de ganho (%)</label>
+                <div class="controls">
+                    <input type="text" value="" maxlength="100" id="@Helper.getInputId("margem_ganho_novo", Html.ClientPrefixName().ToString())" filter="numeric" class="input-small">
+                    <span id="@Helper.getInputId("margem_ganho_valid", Html.ClientPrefixName().ToString())" class="field-validation-valid help-inline"></span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" id="@Helper.getInputId("add", Html.ClientPrefixName().ToString())" data-loading-text="Processando" class="btn btn-primary">Adicionar</a>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+        </div>
+    </div>
+
+    @Html.AddScriptBlock(
+
+@<script type="text/javascript">
+     $(function () {
+
+         $('#@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())').dialog({
+             width: 960
+         });
+
+         $('#@Helper.getInputId("btn", Html.ClientPrefixName().ToString())').on('click', function () {
+             $("#@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())").modal('show');
+         })
+
+         $('#@Helper.getInputId("add", Html.ClientPrefixName().ToString())').on('click', function () {
+             Material.insert();
+         })
+
+         Material = {
+             insert: function () {
+                 var form = Material.getForm();
+                 form.btnAdd.button('loading');
+
+                 var form = Material.getForm();
+
+                 if (Material.validarForm(form)) {
+
+                     var model = Material.getCampos(form);
+
+                     $.ajax({
+                         dataType: 'json',
+                         type: 'POST',
+                         url: '@Url.Action("JsCreate", "Material")',
+                         data: model,
+                         beforeSend: function () {
+                             $.loadingBox('show');
+                         },
+                         success: function (data) {
+                             Material.setModel(data.model);
+
+                             Material.limparForm(form);
+                         },
+                         error: function (request) {
+                             form.btnAdd.button('reset');
+                             $.loadingBox('hide');
+                         }
+                     });
+                 } else {
+                     form.btnAdd.button('reset');
+                 }
+             },
+
+             getCampos: function (form) {
+                 return model = {
+                     nome: form.inputNome.val(),
+                     preco: form.inputPreco.val(),
+                     margemGanho: form.inputMargemGanho.val(),
+                     idUnidadeMedida: form.inputIdUnidadeMedida.val()
+                 };
+             },
+
+             getForm: function () {
+                 return form = {
+                     inputNome: $('#@Helper.getInputId("nome_novo", Html.ClientPrefixName().ToString())'),
+                     spanNome: $('#@Helper.getInputId("nome_valid", Html.ClientPrefixName().ToString())'),
+
+                     inputPreco: $('#@Helper.getInputId("preco_novo", Html.ClientPrefixName().ToString())'),
+                     spanPreco: $('#@Helper.getInputId("preco_valid", Html.ClientPrefixName().ToString())'),
+
+                     inputMargemGanho: $('#@Helper.getInputId("margem_ganho_novo", Html.ClientPrefixName().ToString())'),
+                     spanMargemGanho: $('#@Helper.getInputId("margem_ganho_valid", Html.ClientPrefixName().ToString())'),
+
+                     inputIdUnidadeMedida: $('#@Helper.getInputId("UnidadeMedida_idUnidadeMedida", Html.ClientPrefixName().ToString())'),
+                     inputNomeUnidadeMedida: $('#@Helper.getInputId("UnidadeMedida_nome", Html.ClientPrefixName().ToString())'),
+                     spanUnidadeMedida: $('#@Helper.getInputId("UnidadeMedida", Html.ClientPrefixName().ToString())'),
+
+                     btnAdd: $('#@Helper.getInputId("add", Html.ClientPrefixName().ToString())'),
+                     dialog: $("#@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())")
+                 };
+             },
+
+             validarForm: function (form) {
+                 validarCampo(form.spanNome, form.inputNome, "Informe o nome");
+                 validarCampo(form.spanPreco, form.inputPreco, "Informe o preço");
+                 validarCampo(form.spanMargemGanho, form.inputMargemGanho, "Informe a margem de ganho");
+                 validarCampo(form.spanUnidadeMedida, form.inputNomeUnidadeMedida, "Selecione uma unidade de medida");
+
+                 return (!window.IsNullOrEmpty(form.inputNome.val())
+                         && !window.IsNullOrEmpty(form.inputMargemGanho.val())
+                         && !window.IsNullOrEmpty(form.inputMargemGanho.val())
+                         && !window.IsNullOrEmpty(form.inputNomeUnidadeMedida.val()));
+             },
+
+             setModel: function (model) {
+                 $('#@Html.ClientIdFor(e => e.nome)').val(model.nome);
+                 $('#@Html.ClientIdFor(e => e.idMaterial)').val(model.idMaterial);
+                 $('#@Html.ClientIdFor(e => e.margemGanho)').val(model.margemGanho);
+                 $('#@Html.ClientIdFor(e => e.preco)').val(model.preco);
+             },
+
+             limparForm: function (form) {
+                 form.inputNome.val('');
+                 form.dialog.modal('hide');
+                 form.btnAdd.button('reset');
+                 $.loadingBox('hide');
+             }
+         }
+     });
+     $('#@Html.ClientIdFor(e => e.nome)').iNavigate({
+         columns: [
+             { name: 'Nome', bind: 'nome', width: '60%' },
+             { name: 'Margem (%)', bind: 'margemGanho', width: '20%' },
+             { name: 'Preço (R$)', bind: 'preco', width: '20%' }
+         ],
+         width: 500,
+         source: '@Url.Action("JsSearch", "Material")',
+         minLength: 0,
+         paginate: {
+             size: 10
+         },
+         select: function (data) {
+             if (data) {
+                 $('#@Html.ClientIdFor(e => e.idMaterial)').val(data.idMaterial);
+                 $('#@Html.ClientIdFor(e => e.nome)').val(data.nome);
+                 $('#@Html.ClientIdFor(e => e.margemGanho)').val(data.margemGanho);
+                 $('#@Html.ClientIdFor(e => e.preco)').val(data.preco);
+                 $(document).trigger('@Helper.getInputId(Html.ClientPrefixName().ToString(), "AfterLoad")', data);
+             }
+         },
+         change: function (data) {
+             if (!data) {
+                 $('#@Html.ClientIdFor(e => e.idMaterial)').val('');
+                 $('#@Html.ClientIdFor(e => e.margemGanho)').val('');
+                 $('#@Html.ClientIdFor(e => e.preco)').val(''); 
+                 $('#@Html.ClientIdFor(e => e.nome)').blink().select();
+                 $(document).trigger('@Helper.getInputId(Html.ClientPrefixName().ToString(), "AfterLoad")', null);
+             }
+         }
+     });
+</script>
+)}

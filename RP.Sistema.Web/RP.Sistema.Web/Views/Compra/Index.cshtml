@@ -1,0 +1,129 @@
+﻿@model RP.DataAccess.PaginatedList<RP.Sistema.Model.Entities.Compra>
+@using RP.Util;
+@using RP.Util.Class;
+@using RP.Util.Class.Grid;
+@using RP.Sistema.Web.Helpers;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
+}
+<div class="container-fluid">
+    @Html.RenderFlashMessage()
+    @using (Html.BeginForm("Search", "Compra", FormMethod.Get, new { @class = "well form-inline" }))
+    {
+        <div class="container center">
+            <div class="input-prepend input-append">
+                <span class="add-on">Filtro</span>
+                @Html.TextBox("filter", null, new { @class = "span6", maxlength = "100", @placeholder = "Pesquisar por nome..." })
+                @Html.CustomButton("Localizar", "submit", new { @class = "btn" }, new { @left = "icon-search" }, true)
+                @Html.CustomActionLink("Limpar pesquisa", "Index", new { @clear = true }, new { @class = "btn" }, new { @left = "icon-remove" }, true)
+            </div>
+            <div class="btn-group">
+                <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#" title="Mais ações"><i class="icon-cog icon-white"></i>Adicionar <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="@Url.Action("vulso", new { clear = true })"><i class="icon-plus-sign"></i> A vulso</a></li>
+                    <li><a href="@Url.Action("projeto", new { clear = true })"><i class="icon-plus-sign"></i> Por projeto</a></li>
+                </ul>
+            </div>
+        </div>
+    }
+
+    @if (_action.ToLower() == "search")
+    {
+        IEnumerable<teGridColumn<RP.Sistema.Model.Entities.Compra>> _g = new[] 
+        {
+            new teGridColumn<RP.Sistema.Model.Entities.Compra>
+            {
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "actions b2"}
+                }, 
+                header = "", 
+                format = item => 
+                    Html.CustomActionLink( "Cancelar", "Cancelar", "Compra", new { id = item.idCompra }, new { @class = "btn btn-danger", @title = "Cancelar registro" }, new { @left = "icon-off icon-white"}, true).ToString()  +
+                    Html.CustomActionLink("Visualizar", "Details", "Compra", new { id = item.idCompra }, new { @class = "btn btn-success", @title = "Detalhar registro" }, new { @left = "icon-eye-open icon-white"}, true).ToString()
+                    //Html.CustomActionLink("Relatótio", "report", "Compra", new { id = item.idCompra }, new {@class = "btn", @title = "Editar registro" }, new { @left = "icon-print"}, true).ToString()
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Compra>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","13%"}
+                },
+                header = "Data", 
+                format = item => item.dtLancamento.ToString("dd/MM/yyyy")
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Compra>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","20%"}
+                },
+                header = "Fornecedor", 
+                format = item => item.Fornecedor == null ? string.Empty :item.Fornecedor.nome
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Compra>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","20%"}
+                },
+                header = "Projeto", 
+                format = item => item.Projeto == null ? string.Empty :item.Projeto.descricao
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Compra>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","20%"}
+                },
+                header = "Descrição", 
+                format = item => item.descricao
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Compra>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","13%"}
+                },
+                header = "Cancelado", 
+                format = item => item.flCancelado
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Compra>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","14%"}
+                },
+                header = "Total", 
+                format = item => item.total
+            }
+		};
+
+        var __grid = Html.tGrid<RP.Sistema.Model.Entities.Compra>(
+            Model,
+            new Dictionary<string, string> { { "class", "table table-bordered table-condensed table-striped table-hover" } },
+            _g,
+            pager: new teGridPager
+            {
+                pagerAttributes = new Dictionary<string, string> { },
+                currentPage = int.Parse(Request["page"] ?? RP.Util.Resource.Message.DEFAULT_PAGE),
+                pageSize = int.Parse(Request["pagesize"] ?? RP.Util.Resource.Message.DEFAULT_PAGESIZE),
+                totalItemCount = Model.TotalCount,
+                routeValues = new RouteValueDictionary(new { controller = "Compra", action = _action })
+            }
+        );
+        @__grid
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Compra/Index.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

@@ -1,0 +1,149 @@
+﻿@model RP.Sistema.Web.Models.Usuario.AlterarPerfilVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Perfil usuário";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm("Perfil", "Usuario", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i>Salvar</a></li>
+                        <li><a href="#" data-form-type="reset" title="Limpar o formulário"><i class="icon-refresh"></i>Limpar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+                    <h4 class="heading">Dados do usuário logado</h4>
+                    @{
+        RP.Util.Class.Form editor = Html.Editor();
+
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.Usuario.Login),
+                Html.TextBoxFor(model => model.Usuario.Login, new { @class = "input-xxlarge", @readonly = "readonly" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.Usuario.Nome),
+                Html.TextBoxFor(model => model.Usuario.Nome, new { @class = "input-xxlarge", @readonly = "readonly" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.Usuario.Email),
+                Html.TextBoxFor(model => model.Usuario.Email, new { @class = "input-xxlarge", @readonly = "readonly" })
+            )
+        );
+                    }
+                    @editor.Render()
+
+                    <h4 class="heading">Senha</h4>
+
+                    <div class="control-group">
+                        <div class="controls">
+                            <span class="help-block">
+                                <span class="label label-info">Atenção</span>
+                                <small>Para manter a senha atual, apenas deixe os campos abaixo em branco!</small>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.SenhaAtual, new { @class = "control-label" })
+                        <div class="controls controls-row">
+                            @Html.PasswordFor(model => model.SenhaAtual, new { @value = Model.SenhaAtual, @class = "input-large", maxlength = "50" })
+                            @Html.ValidationMessageFor(model => model.SenhaAtual)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.NovaSenha, new { @class = "control-label" })
+                        <div class="controls controls-row">
+                            @Html.PasswordFor(model => model.NovaSenha, new { @class = "input-large", maxlength = "50" })
+                            @Html.ValidationMessageFor(model => model.NovaSenha)
+                            <div id="progress-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.ConfirmacaoSenha, new { @class = "control-label" })
+                        <div class="controls controls-row">
+                            @Html.PasswordFor(model => model.ConfirmacaoSenha, new { @class = "input-large", maxlength = "50" })
+                            @Html.ValidationMessageFor(model => model.ConfirmacaoSenha)
+                        </div>
+                    </div>
+
+                    <h4 class="heading">Foto</h4>
+                    <div class="control-group">
+                        <div class="controls">
+                            <div class="@(string.IsNullOrEmpty(Model.Usuario.dsFoto) ? "fileupload fileupload-new" : "fileupload fileupload-exists")" data-provides="fileupload">
+                                <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
+                                    <img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />
+                                </div>
+                                <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;">
+                                    @if (!string.IsNullOrEmpty(Model.Usuario.dsFoto))
+                                    {
+                                        @Html.Raw("<img src='" + Model.Usuario.dsFoto + "?v=" + DateTime.Now.Ticks.ToString("0000000000") + "' />");
+                                    }
+                                </div>
+                                <span class="btn btn-file"><span class="fileupload-new">Selecionar foto</span><span class="fileupload-exists">Trocar</span><input type="file" name="fuFoto" id="fuFoto" /></span>
+                                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remover</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@{
+    string css = "~/" + Guid.NewGuid();
+    string js = "~/" + Guid.NewGuid();
+
+    StyleBundle styleBundle = new StyleBundle(css);
+    styleBundle.Include("~/Content/bootstrap-fileupload.css");
+    BundleTable.Bundles.Add(styleBundle);
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/bootstrap-fileupload.js");
+    scriptBundle.Include("~/Scripts/Usuario/AlterPassword.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+
+@section styles{
+    @Styles.Render(css)
+    <script id="tmpl-senha-descricao" type="text/x-tmpl">
+        <ul>
+            <li>Mínimo de 8 caracteres;</li>
+            <li>Pelo menos uma letra maiúscula;</li>
+            <li>Pelo menos um caracter númerico;</li>
+            <li>Pelo menos um caracter não alfabético (ex: @@, ?, #, %, etc...)</li>
+        </ul>        
+    </script>
+}
+
+@section scripts{
+    @Scripts.Render(js)
+    <style type="text/css">
+        #progress-bar .progress {
+            margin-bottom: 0;
+        }
+
+        .popover {
+            max-width: 400px;
+        }
+    </style>
+}

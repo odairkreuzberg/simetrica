@@ -1,0 +1,105 @@
+﻿@model RP.Sistema.Web.Models.Usuario.UsuarioVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Adicionar ação ao perfil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Perfil = new RP.Sistema.Web.Models.Perfil.Consultar();
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i> Salvar</a></li>
+                        <li><a href="#" data-form-type="reset" title="Limpar o formulário"><i class="icon-refresh"></i> Limpar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")" title="Lista de Usuários">Usuários</a> <span class="divider">/</span></li>
+                    <li><a href="@Url.Action("Details", "Usuario", new { id = Model.IdUsuario })" title="Detalhes do Usuário">Usuário</a> <span class="divider">/</span></li>
+                    <li class="active">Adicionar Perfil </li>
+                </ul>
+
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+                @Html.RenderFlashMessage()
+
+                <div class="form-horizontal">
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.Nome, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.Nome, new { @class = "span6", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.Email, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.Email, new { @class = "span6", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.Login, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.Login, new { @class = "span4", @readonly = "readonly" })
+                        </div>
+                    </div>
+
+                    <div id="dlg-perfil">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3>Adicionar Perfil</h3>
+                        </div>
+                        <div class="modal-body">
+                            @Html.EditorFor(model => Perfil, "Perfil/Consultar", new { @AddButton = true })
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" id="btn-add-perfil" class="btn btn-primary">Adicionar</a>
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="heading">Perfís do Usuário</h4>
+                <div class="container-fluid">
+                    <a data-toggle="modal" class="btn" role="button" href="#dlg-perfil" id="btn-open-perfil"><i class="icon-plus-sign"></i> Adicionar</a>
+                    <table id="tblPerfil">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th style="width: 15%">Id</th>
+                                <th style="width: 85%">Perfil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="message">
+                                <td colspan="3">Nenhum perfil</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    @if (Model.Perfis != null)
+                    {
+                        <input type="hidden" id="tblPerfil_data" value="@Json.Encode(Model.Perfis.Select(r => new { r.IdPerfil, r.Nome }).OrderBy(e => e.IdPerfil))"/>
+                    }
+                    <input type="hidden" id="tblPerfil_count" name="tblPerfil.count"/>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Usuario/AddPerfil.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

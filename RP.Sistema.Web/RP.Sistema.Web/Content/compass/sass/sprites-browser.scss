@@ -1,0 +1,4 @@
+$browser-layout:horizontal;
+$browser-spacing: 10px;
+@import "browser/*.png";
+@include all-browser-sprites;

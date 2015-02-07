@@ -1,0 +1,353 @@
+﻿@model RP.Sistema.Web.Models.Projeto.AprovarVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Aprovar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="msg-aviso msg-erro">
+        <button data-dismiss="alert" class="close btn-msg-aviso" type="button">×</button><div class="msg"></div>
+    </div>
+    @using (Html.BeginForm("Aprovar", "Projeto", FormMethod.Post, new { id = "form", name = "form" }))
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" id="teste" title="Salva registro"><i class="icon-ok-sign"></i>Salvar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                        <li class="divider"></li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.comissaoVendedor, null, new { @class = "help-inline no-required" })</li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.porcentagemVendedor, null, new { @class = "help-inline no-required" })</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Aprovar projeto</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, false, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+                    @Html.HiddenFor(model => model.idProjeto)
+                    @Html.HiddenFor(model => model.Cliente.nome)
+                    @Html.HiddenFor(model => model.Vendedor.idFuncionario)
+                    @Html.HiddenFor(model => model.Vendedor.nome)
+                    @Html.HiddenFor(model => model.Cliente.idCliente)
+                    @Html.HiddenFor(model => model.descricao)
+                    @Html.HiddenFor(model => model.vlCustos)
+                    <div style="display: table; width: 100%; margin: 0">
+                        <div style="display: table-row">
+                            <div class="dv-cell-head" style="width: 55%; border: 0 none; color: #fff; font-size: large">
+                                <strong>Projeto - @Model.descricao</strong>
+                                @Html.DropDownListFor(model => model.status, RP.Sistema.Web.Models.Projeto.AprovarVM.Status, new { @class = "span4" })
+                            </div>
+                            <div class="dv-cell-head" style="width: 15%; border: 0 none">
+                            </div>
+                            <div class="dv-cell-head" style="width: 15%; border: 0 none; text-align: right; color: #fff"><strong>Lucro parcial (R$):</strong></div>
+                            <div class="dv-cell-head" style="width: 15%; border: 0 none; text-align: right;">
+                                <input class="input-transparent input-small" id="vlLucroProjeto" style="color: #fff;" disabled="disabled" value="" />
+                            </div>
+                        </div>
+                        <div style="display: table-row">
+                            <div class="dv-cell" style="font-weight: bold">Descrição</div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none; font-weight: bold">Base Cálculo</div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none; font-weight: bold">Referência</div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none; font-weight: bold">Valor</div>
+                        </div>
+                        <div style="display: table-row">
+                            <div class="dv-cell">Comissão vendendor <span>@Model.Vendedor.nome</span></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                <input type="text" style="text-align: right; margin: 0" name="porcentagemVendedor" id="porcentagemVendedor" value="@Model.porcentagemVendedor" data-input="calcular-projeto" filter="floatnumber" class="input-small">
+                            </div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                <input class="input-small input-transparent vlTotalProjeto" />
+                            </div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                <input class="input-transparent input-small" id="comissaoVendedor" style="color: red" disabled="disabled" />
+                            </div>
+                        </div>
+                        <div style="display: table-row">
+                            <div class="dv-cell">Custos adicionais gastos no andamento do projeto</div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                <input class="input-transparent input-small" value="@String.Format("{0:0,0.00}", Model.vlCustos)" style="color: red"  disabled="disabled" />
+                            </div>
+                        </div>
+                        <div style="display: table-row">
+                            <div class="dv-cell">Custos do projeto <strong>(materiais, projetistas, e marceneiros)</strong></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                <input class="input-transparent input-small" id="vlCustosDesenvolvimento" style="color: red" disabled="disabled" />
+                            </div>
+                        </div>
+                        <div style="display: table-row">
+                            <div class="dv-cell">Total de margem de ganho nos materiais</div>
+                            <div class="dv-cell" style="border-left: 0 none"></div>
+                            <div class="dv-cell" style="border-left: 0 none"></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                <input class="input-transparent input-small" id="vlTotalMargemGanhoMaterial" style="color: green" disabled="disabled" />
+                            </div>
+                        </div>
+                        <div style="display: table-row">
+                            <div class="dv-cell">total de margem de ganho nos produtos</div>
+                            <div class="dv-cell" style="border-left: 0 none"></div>
+                            <div class="dv-cell" style="border-left: 0 none"></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                <input class="input-transparent input-small" id="vlTotalMargemProduto" style="color: green" disabled="disabled" />
+                            </div>
+                        </div>
+                        <div style="display: table-row">
+                            <div class="dv-cell"><strong>Valor total do projeto (R$)</strong></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                <input class="input-small input-transparent vlProjeto" name="vlProjeto" id="vlProjeto" />
+                            </div>
+                        </div>
+                        <div style="display: table-row">
+                            <div class="dv-cell"><strong>Valor todal de desconto (R$)</strong></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                <input class="input-small input-transparent vlDescontoProjeto" name="vlDescontoProjeto" id="vlDescontoProjeto" />
+                            </div>
+                        </div>
+                        <div style="display: table-row">
+                            <div class="dv-cell"><strong>Valor todal as ser cobrado pelo projeto (R$)</strong></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                            <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                <input class="input-small input-transparent vlTotalProjeto" name="vlTotalProjeto" id="vlTotalProjeto" />
+                            </div>
+                        </div>
+                    </div>
+                    <table id="tblProduto">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th style="width: 55%">Produto</th>
+                                <th style="width: 15%; text-align: right">Valor(%)</th>
+                                <th style="width: 15%; text-align: right">Desconto(R$)</th>
+                                <th style="width: 15%; text-align: right">Total(R$)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="message">
+                                <td colspan="5">Nenhum produto</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input type="hidden" id="tblProduto_count" name="tblProduto.count" />
+                    @if (Model != null && Model.Produtos != null)
+                    {
+                        <input type="hidden" id="tblProduto_data" value="@Json.Encode(Model.Produtos.OrderBy(e => e.nome))"/>
+                    }
+                </div>
+
+                <div id="dlg-produto">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Produto</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div style="display: table; width: 100%; margin: 0">
+                            <div style="display: table-row">
+                                <div class="dv-cell-head" style="width: 55%; border: 0 none;">
+                                    <input class="input-transparent" id="nomeProduto" value="teste" style="color: #fff; text-align: left" disabled="disabled">
+                                </div>
+                                <div class="dv-cell-head" style="width: 15%; border: 0 none"></div>
+                                <div class="dv-cell-head" style="width: 15%; border: 0 none; text-align: right; color: #fff;"><strong>Lucro parcial (R$):</strong></div>
+                                <div class="dv-cell-head" style="width: 15%; border: 0 none; text-align: right;">
+                                    <input class="input-small input-transparent vlLucro" style="color: #fff;" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div style="display: table-row">
+                                <div class="dv-cell" style="font-weight: bold">Descrição</div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none; font-weight: bold">Base Cálculo</div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none; font-weight: bold">Referência</div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none; font-weight: bold">Valor</div>
+                            </div>
+                            <div style="display: table-row">
+                                <div class="dv-cell">Custos gasto com material</div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input class="input-transparent input-small vlCustoMaterial" id="vlCustoMaterial" style="color: red" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div style="display: table-row">
+                                <div class="dv-cell">Comissão projetista <span id="projetista"></span></div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input type="text" style="text-align: right; margin: 0" id="porcentagemProjetista" data-input="calcular" filter="floatnumber" class="input-small">
+                                </div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input class="input-small input-transparent vlVenda" />
+                                </div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input class="input-transparent input-small" id="comissaoProjetista" style="color: red" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div style="display: table-row">
+                                <div class="dv-cell">Comissão marceneiro <span id="marceneiro"></span></div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input type="text" style="text-align: right; margin: 0" id="porcentagemMarceneiro" data-input="calcular" filter="floatnumber" class="input-small">
+                                </div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input class="input-small input-transparent vlVenda" />
+                                </div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input class="input-transparent input-small" id="comissaoMarceneiro" style="color: red" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div style="display: table-row">
+                                <div class="dv-cell">Margem de ganho no material</div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input class="input-small input-transparent vlTotalMaterial" />
+                                </div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input class="input-small input-transparent vlCustoMaterial" />
+                                </div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input class="input-small input-transparent vlLiquidoMaterial" style="color: green" />
+                                </div>
+                            </div>
+                            <div style="display: table-row">
+                                <div class="dv-cell">Margem de ganho</div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input type="text" style="text-align: right; margin: 0" id="margemGanho" data-input="calcular" filter="floatnumber" class="input-small">
+                                </div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input class="input-small input-transparent vlTotalMaterial" />
+                                </div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input class="input-small input-transparent vlLiquido" style="color: green" />
+                                </div>
+                            </div>
+                            <div style="display: table-row">
+                                <div class="dv-cell">Desconto</div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input type="text" style="text-align: right; margin: 0" id="vlDesconto" data-input="calcular" filter="floatnumber" class="input-small">
+                                </div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input class="input-small input-transparent vlProduto " />
+                                </div>
+                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                    <input class="input-small input-transparent vlVenda" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" id="atualizar-produto" class="btn btn-primary">Conluir</a>
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+                    </div>
+                </div>
+                <div id="dlg-pagamento" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">Finalizar venda</h3>
+                    </div>
+                    <div class="modal-body">
+
+                        <div style="display: table; width: 100%; margin: 0">
+                            <div style="display: table-row">
+                                <div class="dv-cell" style="width: 25%; border: 0 none" >
+                                    <span class="label">Valor Total (R$)</span> @Html.TextBox("Projeto.vlVenda", null, new { @class = "input-small", @readonly = "readonly", style = "margin: 0;text-align: right" })
+                                </div>
+                                <div class="dv-cell" style="width: 25%; border: 0 none" >
+                                    <span class="label">Qtd. Parcelas</span> @Html.TextBox("Projeto.qtdParcela", null, new { @class = "input-small", @filter = "numeric", style = "margin: 0;text-align: right" })
+                                </div>
+                                <div class="dv-cell" style="width: 35%; border: 0 none" >
+                                     <span class="label">Vencimento 1º parcela</span> @Html.TextBox("Projeto.dtVencimento", null, new { @class = "input-small datepicker", style = "margin: 0", @mask = "99/99/9999" })
+                                </div>
+                                <div class="dv-cell" style="width: 15%; border: 0 none;text-align:right" >
+                                    <button id="gerar-parcela" class="btn btn-success">Gerar parcelas</button>
+                                </div>
+                            </div>
+                        </div>
+                        <table id="tblParcela">
+                            <thead>
+                                <tr>
+                                    <th style="width: 8%">Parcela</th>
+                                    <th style="width: 20%">Forma de pagamento</th>
+                                    <th style="width: 48%">Observação</th>
+                                    <th style="width: 12%">Vencimento</th>
+                                    <th style="width: 12%">Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="message">
+                                    <td colspan="5">Nenhuma parcela</td>
+                                </tr>
+                            </tbody>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">
+                                    <span class="pull-right"><strong>Soma das parcelas (R$):</strong></span>
+                                </td>
+                                <td>
+                                    <input class="input-small input-transparent" id="somaParcelas" value="0,00" />
+                                </td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn-finalizar" class="btn btn-primary">Finalizar</button>
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Projeto/aprovar.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}
+
+<style>
+    .dv-cell-head {
+        display: table-cell;
+        border: 1px solid grey;
+        vertical-align: middle;
+        padding: 5px;
+        background: #808080;
+    }
+
+    .dv-cell {
+        display: table-cell;
+        border: 1px solid grey;
+        vertical-align: middle;
+        padding: 5px;
+        border-top: 0 none;
+    }
+
+    .dv-border-left {
+        border-left: 0 none;
+        border-right: 0 none;
+    }
+
+    .input-transparent {
+        background: transparent !important;
+        border-width: 0 0 0 0;
+        font-weight: bold;
+        text-align: right;
+        color: #333333;
+    }
+</style>

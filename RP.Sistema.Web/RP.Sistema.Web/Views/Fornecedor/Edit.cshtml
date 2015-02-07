@@ -1,0 +1,193 @@
+﻿@model RP.Sistema.Web.Models.Fornecedor.FornecedorVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i> Salvar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Editar Fornecedor</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+                <div class="form-horizontal">
+                    @Html.HiddenFor(model => model.idFornecedor)
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.nome, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.nome, new { @class = "span6", maxlength = "100" })
+                            @Html.ValidationMessageFor(model => model.nome, null, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.tipo, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.DropDownListFor(model => model.tipo, RP.Sistema.Web.Models.Fornecedor.FornecedorVM.Tipo, new { @class = "span3" })
+                        </div>
+                    </div>
+                    <div class="control-group" id="dv-cpf">
+                        @Html.CustomLabelFor(model => model.cpf, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.cpf, new { @class = "span3", @mask = "999.999.999-99" })
+                        </div>
+                    </div>
+                    <div class="control-group" id="dv-cnpj">
+                        @Html.CustomLabelFor(model => model.cnpj, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.cnpj, new { @class = "span4", @mask = "99.999.999/9999-99" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.email, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.email, new { @class = "span6", maxlength = "150" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.site, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.site, new { @class = "span6", maxlength = "150" })
+                        </div>
+                    </div>
+                    <h4 class="heading controls" style="width: 45%">Endereço</h4>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.logradouro, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.logradouro, new { @class = "span6", maxlength = "100" })
+                            @Html.ValidationMessageFor(model => model.logradouro, null, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.bairro, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.bairro, new { @class = "span6", maxlength = "100" })
+                            @Html.ValidationMessageFor(model => model.bairro, null, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.numero, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.numero, new { @class = "span3", maxlength = "10" })
+                            @Html.ValidationMessageFor(model => model.numero, null, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.cep, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.cep, new { @class = "span3", @mask = "99999-999" })
+                        </div>
+                    </div>
+                    @Html.EditorFor(model => model.Cidade, "Cidade/Consultar")
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.observacao, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextAreaFor(model => model.observacao, new { @class = "span6", maxlength = "200" })
+                        </div>
+                    </div>
+                    <h4 class="heading controls" style="width: 45%">Contato</h4>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.contato, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.contato, new { @class = "span6", maxlength = "100" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.foneContato, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.foneContato, new { @class = "span2", @mask = "(99)9999-9999" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.celularContato, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.celularContato, new { @class = "span2", @mask = "(99)9999-9999" })
+                        </div>
+                    </div>
+                    <h4 class="heading controls" style="width: 45%">Telefones</h4>
+                    <div class="control-group">
+                        <div class="controls  controls-row">
+                            <a id="open-telefone" href="#dlg-telefone" role="button" class="btn" data-toggle="modal"><i class="icon-plus-sign"></i>Adicionar</a>
+                            <div style="width: 50%">
+                                <table id="tblTelefone">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th style="width: 30%">Tipo</th>
+                                            <th style="width: 70%">Número</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="message">
+                                            <td colspan="4">Nenhum telefone</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <input type="hidden" id="tblTelefone_count" name="tblTelefone.count" />
+                            @if (Model != null && Model.Telefones != null)
+                            {
+                                <input type="hidden" id="tblTelefone_data" value="@Json.Encode(Model.Telefones.OrderBy(e => e.tipo))"/>
+                            }
+                        </div>
+                    </div>
+
+                    <div id="dlg-telefone">
+                        <div class="modal-header">
+                            <div class="msg-aviso msg-erro"><button data-dismiss="alert" class="close btn-msg-aviso" type="button">×</button><div class="msg"></div></div>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3>Adicionar telefone</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="control-group">
+                                @Html.Label("Telefone.tipo", "Tipo", new { @class = "control-label" })
+                                <div class="controls  controls-row">
+                                    @Html.DropDownList("Telefone.tipo", RP.Sistema.Web.Models.Telefone.TelefoneVM.Tipo, new { @class = "span4" })
+                                    <span id="tipo-valid" class="field-validation-valid help-inline"></span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                @Html.Label("Telefone.numero", "Número", new { @class = "control-label" })
+                                <div class="controls  controls-row">
+                                    @Html.TextBox("Telefone.numero", null, new { @class = "span4", @mask = "(99)9999-9999" })
+                                    <span id="numero-valid" class="field-validation-valid help-inline"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" id="add-telefone" class="btn btn-primary">Adicionar</a>
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+                        </div>
+                    </div>
+
+                </div>                
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Fornecedor/Create.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

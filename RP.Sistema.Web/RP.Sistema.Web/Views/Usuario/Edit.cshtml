@@ -1,0 +1,112 @@
+﻿@model RP.Sistema.Web.Models.Usuario.UsuarioVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm("Edit", "Usuario", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i> Salvar</a></li>
+                        <li><a href="#" data-form-type="reset" title="Limpar o formulário"><i class="icon-refresh"></i> Limpar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Usuários</a> <span class="divider">/</span></li>
+                    <li class="active">Editar Usuário</li>
+                </ul>
+                
+            	@Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+                    @{
+                        var ativo = (Model.Ativo ? "Sim" : "Não");
+                        RP.Util.Class.Form editor = Html.Editor();
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.CustomLabelFor(model => model.Nome, new { @class = "control-label" }),
+                                Html.TextBoxFor(model => model.Nome, new { @class = "input-xxlarge", maxlength = "100" }).ToString() +
+                                Html.ValidationMessageFor(model => model.Nome)
+                            )
+                        );
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.CustomLabelFor(model => model.Email, new { @class = "control-label" }),
+                                Html.TextBoxFor(model => model.Email, new { @class = "input-xxlarge", maxlength = "100" }).ToString() +
+                                Html.ValidationMessageFor(model => model.Email)
+                            )
+                        );
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.CustomLabelFor(model => model.Login, new { @class = "control-label" }),
+                                Html.TextBoxFor(model => model.Login, new { @class = "input-xxlarge", @readonly = "readonly" }).ToString() 
+                            )
+                        );
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.CustomLabelFor(model => model.ValidadeSenha, new { @class = "control-label" }),
+                                Html.EditorFor(model => model.ValidadeSenha, new { @readonly = "readonly" })
+                            )
+                        );
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.CustomLabelFor(model => model.Ativo, new { @class = "control-label" }),
+                                Html.TextBoxFor(model => ativo, new { @class = "input-small", @readonly = "readonly" })
+                            )
+                        );
+				    }
+				    @editor.Render()
+
+                    <div class="control-group">
+                        <div class="controls">
+                            <div class="@(string.IsNullOrEmpty(Model.dsFoto) ? "fileupload fileupload-new" : "fileupload fileupload-exists")" data-provides="fileupload">
+                                <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;"><img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" /></div>
+                                <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;">
+                                    @if (!string.IsNullOrEmpty(Model.dsFoto))
+                                    {
+                                        @Html.Raw("<img src='" + Model.dsFoto + "?v=" + DateTime.Now.Ticks.ToString("0000000000") + "' />");
+                                    }
+                                </div>
+                                    <span class="btn btn-file"><span class="fileupload-new">Selecionar foto</span><span class="fileupload-exists">Foto</span><input type="file" name="fuFoto" id="fuFoto" /></span>
+                                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remover</a>
+                            </div>
+                        </div>
+                     </div>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string css = "~/" + Guid.NewGuid();
+    string js = "~/" + Guid.NewGuid();
+
+    StyleBundle styleBundle = new StyleBundle(css);
+    styleBundle.Include("~/Content/bootstrap-fileupload.css");
+    BundleTable.Bundles.Add(styleBundle);
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/bootstrap-fileupload.js");
+    scriptBundle.Include("~/Scripts/Usuario/Edit.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+
+@section styles{
+    @Styles.Render(css)
+}
+
+@section scripts{
+    @Scripts.Render(js)
+}

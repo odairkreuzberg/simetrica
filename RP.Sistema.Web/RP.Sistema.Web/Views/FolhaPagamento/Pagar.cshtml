@@ -1,0 +1,127 @@
+﻿@model RP.Sistema.Web.Models.FolhaPagamento.PagarVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Folha de pagamento";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="msg-aviso msg-erro">
+        <button data-dismiss="alert" class="close btn-msg-aviso" type="button">×</button><div class="msg"></div>
+    </div>
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i>Salvar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                        <li class="divider"></li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.Funcionario.nome, null, new { @class = "help-inline no-required" })</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Pagar funcionário</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, false, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+                <div class="form-horizontal">
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.nrAno, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.dsMes, new { @class = "span2", @readonly = "readonly" })
+                            @Html.TextBoxFor(model => model.nrAno, new { @class = "input-small", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(model => model.idFolha)
+                    @Html.HiddenFor(model => model.nrMes)
+                    @Html.EditorFor(model => model.Funcionario, "Funcionario/Consultar", new { desabilitar = true })
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.mensalista, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.mensalista, new { @class = "span2", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <h4 class="heading">EXTRATO PAGAMENTO FOLHA MENSAL</h4>
+                    <table id="tblMovimento">
+                        <thead>
+                            <tr>
+                                <th style="width: 55%">Descrição</th>
+                                <th style="width: 15%">Tipo</th>
+                                <th style="width: 15%">Vencimentos</th>
+                                <th style="width: 15%">Descontos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.mensalista == "Sim")
+                            {
+                            <tr>
+                                <td> Salário normal referente ao mês de @Model.dsMes </td>
+                                <td> Salário </td>
+                                <td> @Html.TextBoxFor(model => model.salario, new { @class = "span12 data-movimento",style="text-align: right" }) </td>
+                                <td><input type="text" readonly="readonly" class="span12" tabindex="-1"></td>
+                            </tr>
+                            }
+                            <tr>
+                                <td> Total de horas extras referente ao mês de @Model.dsMes </td>
+                                <td> Hora extra </td>
+                                <td> @Html.TextBoxFor(model => model.horaExtra, new { @class = "span12 data-movimento",style="text-align: right" }) </td>
+                                <td><input type="text" readonly="readonly" class="span12" tabindex="-1"></td>
+                            </tr>
+                            <tr>
+                                <td> Bonificação referente ao mês de @Model.dsMes </td>
+                                <td> Bonificação </td>
+                                <td> @Html.TextBoxFor(model => model.bonificacao, new { @class = "span12 data-movimento",style="text-align: right" }) </td>
+                                <td><input type="text" readonly="readonly" class="span12" tabindex="-1"></td>
+                            </tr>
+                            <tr>
+                                <td> Descontos adicionais referente @Model.dsMes </td>
+                                <td> Ourtos descontos </td>
+                                <td><input type="text" readonly="readonly" class="span12" tabindex="-1"></td>
+                                <td> @Html.TextBoxFor(model => model.outrosDescontos, new { @class = "span12 data-movimento",style="text-align: right" }) </td>
+                            </tr>
+                            <tr>
+                                <td> INSS referente ao mês de @Model.dsMes </td>
+                                <td> INSS </td>
+                                <td><input type="text" readonly="readonly" class="span12" tabindex="-1"></td>
+                                <td> @Html.TextBoxFor(model => model.inss, new { @class = "span12 data-movimento",style="text-align: right" }) </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right; vertical-align:middle"><b>Totais de vencimentos e descontos</b></td>
+                                <td> @Html.TextBoxFor(model => model.totalVencimento, new { @class = "span12", @readonly = "readonly",style="text-align: right" }) </td>
+                                <td> @Html.TextBoxFor(model => model.totalDesconto, new { @class = "span12", @readonly = "readonly",style="text-align: right" }) </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right; vertical-align:middle"><b>Liquido a receber</b></td>
+                                <td colspan="2" style="text-align:right; vertical-align:middle"> @Html.TextBoxFor(model => model.totalReceber, new { @class = "span6", @readonly = "readonly",style="text-align: right" }) </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input type="hidden" id="tblMovimento_count" name="tblMovimento.count" />
+                    @if (Model != null && Model.Movimentos != null)
+                    {
+                        <input type="hidden" id="tblMovimento_data" value="@Json.Encode(Model.Movimentos.OrderBy(u => u.tipo))"/>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/FolhaPagamento/Pagar.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

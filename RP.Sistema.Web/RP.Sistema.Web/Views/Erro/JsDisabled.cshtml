@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <title>JavaScript desabilitado - Sistema de Gerenciamento</title>
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css"/>
+    <link href="@Url.Content("~/Content/Sistema.css")" rel="stylesheet" type="text/css"/>
+</head>
+
+    <body>
+        <div class="header">
+            <a class="brand">&copy; OK <small>0.5</small></a>
+        </div>
+
+        <div class="content">
+            <h3>JavaScript necessário</h3>
+            <p>Para acessar o sistema, você precisa ter o JavaScript habilitado. Aparentemente este navegador não permite JavaScript ou os scripts estão sendo bloqueados.</p>
+            <a href="@(string.IsNullOrEmpty(ViewBag.returnUrl) ? Url.Action("Index", "Home") : ViewBag.returnUrl)" class="btn"><i class="icon-refresh"></i> Tente acessar novamente esta tela após habilitar o JavaScript</a>
+        </div>
+    </body>
+</html>

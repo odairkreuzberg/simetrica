@@ -1,0 +1,71 @@
+﻿@model RP.Sistema.Web.Models.ContaReceber.ContaReceberVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Detalhes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <div class="container-nav-list well affix">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Ações</li>
+                    @if(Model.Projeto.idProjeto == null)
+                    {
+                    <li>@Html.CustomActionLink("Cancelar", "Cancelar", new { id = Model.idContaReceber }, new { @title = "Excluir registro" }, new { @left = "icon-off" })</li>
+                    <li class="divider"></li>
+                    }
+                    <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="span10">
+            <ul class="breadcrumb">
+                <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                <li class="active">Detalhes da conta</li>
+            </ul>
+            <div class="form-horizontal">
+                @Html.EditorFor(model => model.Projeto, "Projeto/Consultar", new { desabilitar = true })
+                @Html.EditorFor(model => model.Cliente, "Cliente/Consultar", new { desabilitar = true })
+
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.descricao, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextAreaFor(model => model.descricao, new { @class = "span6", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.flFormaPagamento, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.flFormaPagamento, new { @class = "span2", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.vencimento, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.vencimento, new { @class = "input-small", @mask = "99/99/9999", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.valorConta, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.valorConta, new { @class = "input-small", style = "text-align:right", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.pagamento, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.pagamento, new { @class = "input-small", @mask = "99/99/9999", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.valorPago, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.valorPago, new { @class = "input-small", style = "text-align:right", @readonly = "readonly" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

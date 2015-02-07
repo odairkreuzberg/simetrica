@@ -1,0 +1,110 @@
+﻿@model RP.Sistema.Web.Models.Perfil.PerfilVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Adicionar ação ao perfil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Controle = new RP.Sistema.Web.Models.Controle.Consultar();
+}
+<input type="hidden" id="url_listar_acoes" value="@Url.Action("JsListarAcoes", "Perfil")"/>
+
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i> Salvar</a></li>
+                        <li><a href="#" data-form-type="reset" title="Limpar o formulário"><i class="icon-refresh"></i> Limpar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Perfil</a> <span class="divider">/</span></li>
+                    <li class="active">Adicionar Ação</li>
+                </ul>
+
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+                @Html.RenderFlashMessage()
+
+                <div class="form-horizontal">
+                    @{
+        RP.Util.Class.Form editor = Html.Editor();
+
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.CustomLabelFor(model => model.nmPerfil, "Perfil selecionado"),
+                Html.TextBoxFor(model => model.nmPerfil, new { @class = "span6", @readonly = "readonly" })
+            )
+        );
+                    }
+                    @editor.Render()
+
+                    @Html.EditorFor(mdoel => Controle, "Controle/Consultar")
+                </div>
+
+                <h4 class="heading">Ações disponíveis do Controle</h4>
+                <div class="container-fluid">
+                    <table id="tblAcoes">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th style="width: 30%">Ação</th>
+                                <th style="width: 70%">Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="message">
+                                <td colspan="3">Nenhuma ação</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    @if (Model.Acoes != null)
+                    {
+                        <input type="hidden" id="tblAcoes_data" value="@Json.Encode(Model.Acoes.Select(r => new { nmControle = r.nmControle, nmAcao = r.nmAcao, dsAcao = r.dsAcao, idAcao = r.idAcao }).OrderBy(e => e.idAcao))"/>
+                    }
+                    <input type="hidden" id="tblAcoes_count" name="tblAcaoSemPerfil.count"/>
+                </div>
+
+                <h4 class="heading">Ações do Perfil</h4>
+                <div class="container-fluid">
+                    <table id="tblAcoesPerfil">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th style="width: 25%">Ação</th>
+                                <th style="width: 55%">Descrição</th>
+                                <th style="width: 20%">Controle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="message">
+                                <td colspan="4">Nenhuma ação</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    @if (Model.AcoesPerfil != null)
+                    {
+                        <input type="hidden" id="tblAcoesPerfil_data" value="@Json.Encode(Model.AcoesPerfil.Select(r => new { nmControle = r.nmControle, nmAcao = r.nmAcao, dsAcao = r.dsAcao, idAcao = r.idAcao }).OrderBy(e => e.idAcao))"/>
+                    }
+                    <input type="hidden" id="tblAcoesPerfil_count" name="tblAcoesPerfil.count"/>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Perfil/AddAcao.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

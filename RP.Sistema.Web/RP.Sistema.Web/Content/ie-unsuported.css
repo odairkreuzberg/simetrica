@@ -1,0 +1,20 @@
+﻿#login-form, header
+{
+    display: none;
+}
+
+#browser-warning
+{
+    display: block;
+}
+
+#login-box
+{
+    width: 780px;
+    margin-left: -390px;
+}
+
+    #login-box h4
+    {
+        color: #cc0000;
+    }

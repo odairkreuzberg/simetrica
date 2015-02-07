@@ -1,0 +1,88 @@
+﻿@model IEnumerable<RP.Sistema.Web.Repository.UserInfo>
+@using RP.Util;
+@using RP.Util.Class;
+@using RP.Util.Class.Grid;
+@using RP.Sistema.Web.Helpers;
+@{
+    ViewBag.Title = "LoggedUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
+}
+
+<div class="content_main ui-corner-all">
+	@Html.RenderFlashMessage()
+
+ @if (Model != null)
+ {
+     IEnumerable<teGridColumn<RP.Sistema.Web.Repository.UserInfo>> _g = new[] 
+        {
+            new teGridColumn<RP.Sistema.Web.Repository.UserInfo>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","30%"}
+                },
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "ui-widget-content"}
+                },
+                header = "Session ID", 
+                format = item => item.nrSessionID
+            },
+            new teGridColumn<RP.Sistema.Web.Repository.UserInfo>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","20%"}
+                },
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "ui-widget-content"}
+                },
+                header = "Login", 
+                format = item => item.dsLogin
+            },
+            new teGridColumn<RP.Sistema.Web.Repository.UserInfo>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","50%"}
+                },
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "ui-widget-content"}
+                },
+                header = "Nome", 
+                format = item => item.nmUsuario 
+            },
+            new teGridColumn<RP.Sistema.Web.Repository.UserInfo>
+            {
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "ui-widget-content no-text"}
+                }, 
+                header = "", 
+                format = item => (Html.ActionLink( "Remover", "Delete", "Entidade", new { id = item.SessionID }, new { @class = "tgrid-delete", @title = "Remover registro" }))
+            }
+		};
+
+     var __grid = Html.tGrid<RP.Sistema.Web.Repository.UserInfo>(
+          Model,
+          new Dictionary<string, string> { { "id", "grid" } },
+          _g,
+          pager: null
+      );
+      @__grid
+ }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Auth/LoggedUser.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}
+

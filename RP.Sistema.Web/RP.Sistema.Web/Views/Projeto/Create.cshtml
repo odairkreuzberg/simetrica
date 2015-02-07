@@ -1,0 +1,160 @@
+﻿@model RP.Sistema.Web.Models.Projeto.AprovarVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Adicionar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Projetista = new RP.Sistema.Web.Models.Funcionario.Consultar();
+    var Marceneiro = new RP.Sistema.Web.Models.Funcionario.Consultar();
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i>Salvar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                        <li class="divider"></li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.dtInicio, null, new { @class = "help-inline no-required" })</li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.dtFim, null, new { @class = "help-inline no-required" })</li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.descricao, null, new { @class = "help-inline no-required" })</li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.Cliente.nome, null, new { @class = "help-inline no-required" })</li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.Vendedor.nome, null, new { @class = "help-inline no-required" })</li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.Produtos, null, new { @class = "help-inline no-required" })</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Cadastrar projeto</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, false, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.descricao, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.descricao, new { @class = "span6", maxlength = "50" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.dtInicio, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.dtInicio, new { @class = "input-small datepicker", @mask = "99/99/9999" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.dtFim, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.dtFim, new { @class = "input-small datepicker", @mask = "99/99/9999" })
+                        </div>
+                    </div>
+
+                    @Html.EditorFor(model => model.Cliente, "Cliente/Consultar", new { obrigatorio = false })
+                    @Html.EditorFor(model => model.Vendedor, "Funcionario/Consultar", new { tipo = "Vendedor", mensalista = "nao", label = "Vendedor", obrigatorio = false })
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.porcentagemVendedor, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.porcentagemVendedor, new { @class = "input-small", filter = "floatnumber", style = "text-align: right" })
+                        </div>
+                    </div>
+
+                    <h4 class="heading">Produtos</h4>
+                    <div class="container-fluid">
+                        <a id="open-produto" href="#dlg-produto" role="button" class="btn" data-toggle="modal"><i class="icon-plus-sign"></i>Adicionar</a>
+                        <table id="tblProduto">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th style="width: 25%">Nome</th>
+                                    <th style="width: 30%">Projetista<span class="pull-right">(%)</span></th>
+                                    <th style="width: 30%">Marceneiro<span class="pull-right">(%)</span></th>
+                                    <th style="width: 15%; text-align: right">Margem ganho(%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="message">
+                                    <td colspan="5">Nenhum produto</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <input type="hidden" id="tblProduto_count" name="tblProduto.count" />
+                    </div>
+                    @if (Model != null && Model.Produtos != null)
+                    {
+                        <input type="hidden" id="tblProduto_data" value="@Json.Encode(Model.Produtos.OrderBy(e => e.nome))"/>
+                    }
+
+                    <div id="dlg-produto">
+                        <div class="modal-header">
+                            <div class="msg-aviso msg-erro">
+                                <button data-dismiss="alert" class="close btn-msg-aviso" type="button">×</button><div class="msg"></div>
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3>Adicionar produto</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="control-group">
+                                @Html.Label("Produto.nome", "Nome", new { @class = "control-label" })
+                                <div class="controls  controls-row">
+                                    @Html.TextBox("Produto.nome", null, new { @class = "span6", maxlength = "100" })
+                                    <span id="nome-valid" class="field-validation-valid help-inline"></span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                @Html.Label("Produto.margemGanho", "Margem de ganho (%)", new { @class = "control-label" })
+                                <div class="controls  controls-row">
+                                    @Html.TextBox("Produto.margemGanho", null, new { @class = "input-small", filter = "floatnumber", style = "text-align: right" })
+                                    <span id="margemGanho-valid" class="field-validation-valid help-inline"></span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                @Html.Label("Produto.descricao", "Descrição", new { @class = "control-label" })
+                                <div class="controls  controls-row">
+                                    @Html.TextArea("Produto.descricao", null, new { @class = "span10", maxlength = "512" })
+                                    <span id="descricao-valid" class="field-validation-valid help-inline"></span>
+                                </div>
+                            </div>
+                            @Html.EditorFor(model => Projetista, "Funcionario/Consultar", new { tipo = "Projetista", mensalista = "nao", label = "Projetista", obrigatorio = false })
+                            <div class="control-group">
+                                @Html.Label("Produto.porcentagemProjetista", "Comissão (%)", new { @class = "control-label" })
+                                <div class="controls  controls-row">
+                                    @Html.TextBox("Produto.porcentagemProjetista", null, new { @class = "input-small", filter = "floatnumber", style = "text-align: right" })
+                                </div>
+                            </div>
+                            @Html.EditorFor(model => Marceneiro, "Funcionario/Consultar", new { tipo = "Marceneiro", mensalista = "nao", label = "Marceneiro", obrigatorio = false  })
+                            <div class="control-group">
+                                @Html.Label("Produto.porcentagemMarceneiro", "Comissão (%)", new { @class = "control-label" })
+                                <div class="controls  controls-row">
+                                    @Html.TextBox("Produto.porcentagemMarceneiro", null, new { @class = "input-small", filter = "floatnumber", style = "text-align: right" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" id="add-produto" class="btn btn-primary">Adicionar</a>
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Projeto/Create.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

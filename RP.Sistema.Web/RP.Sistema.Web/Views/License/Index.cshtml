@@ -1,0 +1,81 @@
+﻿@model IEnumerable<RP.Auth.Class.License.Info>
+@using RP.Util.Class;
+@using RP.Util.Class.Grid;
+@{
+    ViewBag.Title = "License";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
+}
+<div class="container-fluid">
+    <div class="well well-small">
+    </div>
+
+    @{
+        IEnumerable<teGridColumn<RP.Auth.Class.License.Info>> _g = new[] 
+        {
+            new teGridColumn<RP.Auth.Class.License.Info>
+            {
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "actions b1"}
+                }, 
+                header = "", 
+                format = item => 
+                    Html.CustomActionLink("Liberar", "Kill", "License", new { id = item.idSession }, new { @class = "btn btn-warning", @title = "Liberar licença" }, new { @left = "icon-remove-sign icon-white"}, true).ToString()
+            },            
+            new teGridColumn<RP.Auth.Class.License.Info>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","20%"}
+                },
+                header = "Login", 
+                format = item => item.dsLogin 
+            },
+            new teGridColumn<RP.Auth.Class.License.Info>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","15%"}
+                },
+                header = "Logado", 
+                format = item => (item.isLogged ? "Sim" : "Não")
+            },
+            new teGridColumn<RP.Auth.Class.License.Info>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","15%"}
+                },
+                header = "Logado", 
+                format = item => item.dtLogin != null ? item.dtLogin.Value.ToString("dd 'às' HH:mm:ss") : string.Empty
+            },            
+            new teGridColumn<RP.Auth.Class.License.Info>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","35%"}
+                },
+                header = "Acesso", 
+                format = item => item.idSession 
+            },
+            new teGridColumn<RP.Auth.Class.License.Info>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","15%"}
+                },
+                header = "Nº ocor.", 
+                format = item => item.nrOcor 
+            }
+        };
+
+        var __grid = Html.tGrid<RP.Auth.Class.License.Info>(
+             Model,
+             new Dictionary<string, string> { { "class", "table table-bordered table-condensed table-striped table-hover" } },
+             _g,
+            pager: null
+        );
+        @__grid
+    }
+</div>

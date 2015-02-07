@@ -1,0 +1,65 @@
+﻿@model RP.Sistema.Web.Models.Funcionario.Consultar
+@using RP.Util.Class;
+@{
+    bool desabilitar = Convert.ToBoolean(ViewData["desabilitar"]);
+    bool obrigatorio = Convert.ToBoolean(ViewData["obrigatorio"] ?? true);
+    string tipo = Convert.ToString(ViewData["tipo"] ?? string.Empty);
+    string mensalista = Convert.ToString(ViewData["mensalista"] ?? string.Empty);
+    string label = Convert.ToString(ViewData["label"] ?? "Funcionário");
+}
+<div class="control-group">
+    @Html.CustomLabelFor(model => model.idFuncionario, label, new { @class = "control-label" })
+    @if (desabilitar)
+    {
+        <div class="controls">
+            @Html.TextBoxFor(model => model.nome, new { @class = "span6", @readonly = "readonly" })
+        </div>
+    }
+    else
+    {
+        <div class="controls  controls-row">
+            @Html.TextBoxFor(model => model.nome, new { @class = "span6", maxlength = "50", })
+            @if (obrigatorio){ @Html.ValidationMessageFor(model => model.nome, null, new { @class = "help-inline", @id = Html.ClientPrefixName().ToString() })}
+        </div>
+    }
+    @Html.HiddenFor(model => model.idFuncionario)
+</div>
+@if (!desabilitar)
+{
+
+    @Html.AddScriptBlock(
+
+@<script type="text/javascript">
+     $('#@Html.ClientIdFor(e => e.nome)').bind('onsearch', function () {
+         var consulta = $('#@Html.ClientIdFor(e => e.nome)').iNavigate();
+         consulta.addParams({ tipo: '@tipo', mensalista: '@mensalista' });
+         });
+         $('#@Html.ClientIdFor(e => e.nome)').iNavigate({
+         columns: [,
+             { name: 'Nome', bind: 'nome', width: '55%' },
+             { name: 'Atividade', bind: 'tipo', width: '20%' },
+             { name: 'Comissão (%)', bind: 'comissao', width: '25%' }
+         ],
+         width: 500,
+         source: '@Url.Action("JsSearch", "Funcionario")',
+         minLength: 0,
+         paginate: {
+             size: 10
+         },
+         select: function (data) {
+             if (data) {
+                 $('#@Html.ClientIdFor(e => e.idFuncionario)').val(data.idFuncionario);
+                 $('#@Html.ClientIdFor(e => e.nome)').val(data.nome);
+                 $(document).trigger('@Helper.getInputId(Html.ClientPrefixName().ToString(), "AfterLoad")', data);
+             }
+         },
+         change: function (data) {
+             if (!data) {
+                 $('#@Html.ClientIdFor(e => e.idFuncionario)').val('');
+                 $('#@Html.ClientIdFor(e => e.nome)').blink().select();
+                 $(document).trigger('@Helper.getInputId(Html.ClientPrefixName().ToString(), "AfterLoad")', null);
+             }
+         }
+     });
+</script>
+)}

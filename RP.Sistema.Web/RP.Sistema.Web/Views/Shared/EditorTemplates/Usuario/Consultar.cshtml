@@ -1,0 +1,192 @@
+﻿@model RP.Sistema.Web.Models.Usuario.Consultar
+@using RP.Util.Class;
+@{
+    bool desabilitar = Convert.ToBoolean(ViewData["desabilitar"]);
+    bool obrigatorio = Convert.ToBoolean(ViewData["obrigatorio"] ?? true);
+}
+<div class="control-group">
+    @Html.CustomLabelFor(model => model.idUsuario, "Usuario", new { @class = "control-label" })
+    @if (desabilitar)
+    {
+        <div class="controls">
+            @Html.TextBoxFor(model => model.nmUsuario, new { @class = "span6", @readonly = "readonly" })
+        </div>
+    }
+    else
+    {
+        <div class="controls  controls-row">
+            @Html.TextBoxFor(model => model.nmUsuario, new { @class = "span6", maxlength = "50", })
+            <a id="@Helper.getInputId("btn", Html.ClientPrefixName().ToString())" title="Adicionar pais" class="btn btn-input"><i style="font-size: 300px" class="icon-plus"></i></a>
+            @if (obrigatorio) { Html.ValidationMessageFor(model => model.nmUsuario, null, new { @class = "help-inline", @id = Html.ClientPrefixName().ToString() }); }
+        </div>
+    }
+    @Html.HiddenFor(model => model.idUsuario)
+</div>
+@if (!desabilitar)
+{
+    <div id="@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())">
+        <div class="modal-header">
+            <div class="msg-aviso msg-erro">
+                <button data-dismiss="alert" class="close btn-msg-aviso" type="button">×</button><div class="msg"></div>
+            </div>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>Novo usuário</h3>
+        </div>
+        <div class="modal-body">
+            <div class="control-group">
+                <label for="@Helper.getInputId("nmUsuario_novo", Html.ClientPrefixName().ToString())" class="control-label">Nome</label>
+                <div class="controls">
+                    <input type="text" value="" maxlength="50" id="@Helper.getInputId("nmUsuario_novo", Html.ClientPrefixName().ToString())" class="span7">
+                    <span id="@Helper.getInputId("nmUsuario_valid", Html.ClientPrefixName().ToString())" class="field-validation-valid help-inline"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="@Helper.getInputId("dsEmail_novo", Html.ClientPrefixName().ToString())" class="control-label">E-mail</label>
+                <div class="controls">
+                    <input type="text" value="" maxlength="50" id="@Helper.getInputId("dsEmail_novo", Html.ClientPrefixName().ToString())" class="span7">
+                    <span id="@Helper.getInputId("dsEmail_valid", Html.ClientPrefixName().ToString())" class="field-validation-valid help-inline"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="@Helper.getInputId("dsLogin_novo", Html.ClientPrefixName().ToString())" class="control-label">Login</label>
+                <div class="controls">
+                    <input type="text" value="" maxlength="50" id="@Helper.getInputId("dsLogin_novo", Html.ClientPrefixName().ToString())" class="span7">
+                    <span id="@Helper.getInputId("dsLogin_valid", Html.ClientPrefixName().ToString())" class="field-validation-valid help-inline"></span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" id="@Helper.getInputId("add", Html.ClientPrefixName().ToString())" data-loading-text="Processando" class="btn btn-primary">Adicionar</a>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+        </div>
+    </div>
+
+    @Html.AddScriptBlock(
+
+@<script type="text/javascript">
+     $(function () {
+
+         var Funicionario = shared_function['@Helper.getInputId(Html.ClientPrefixName().ToString(), "Funicionario")'];
+
+         $('#@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())').dialog({
+             width: 960
+         });
+
+         $('#@Helper.getInputId("btn", Html.ClientPrefixName().ToString())').on('click', function () {
+             $("#@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())").modal('show');
+         })
+
+         $('#@Helper.getInputId("add", Html.ClientPrefixName().ToString())').on('click', function () {
+             Funicionario.insert();
+         })
+
+         Funicionario = {
+             insert: function () {
+                 var form = Funicionario.getForm();
+
+                 form.btnAdd.button('loading');
+
+                 var form = Funicionario.getForm();
+
+                 if (Funicionario.validarForm(form)) {
+
+                     var model = Funicionario.getCampos(form);
+
+                     $.ajax({
+                         dataType: 'json',
+                         type: 'POST',
+                         url: '@Url.Action("JsCreate", "Usuario")',
+                         data: model,
+                         beforeSend: function () {
+                             $.loadingBox('show');
+                         },
+                         success: function (data) {
+                             Funicionario.setModel(data);
+
+                             Funicionario.limparForm(form);
+                             ShowMessage("Usuário inserido com sucesso, foi enviado um e-mail para o usuário.", "sucesso");
+                         },
+                         error: function (request) {
+                             form.btnAdd.button('reset');
+                             $.loadingBox('hide');
+                             ShowMessage(request.responseText, "erro");
+                         }
+                     });
+                 } else {
+                     form.btnAdd.button('reset');
+                 }
+             },
+
+             getCampos: function (form) {
+                 return model = {
+                     nmUsuario: form.inputNome.val(),
+                     dsEmail: form.inputEmail.val(),
+                     dsLogin: form.inputLogin.val()
+                 };
+             },
+
+             getForm: function () {
+                 return form = {
+                     inputNome: $('#@Helper.getInputId("nmUsuario_novo", Html.ClientPrefixName().ToString())'),
+                     spanNome: $('#@Helper.getInputId("nmUsuario_valid", Html.ClientPrefixName().ToString())'),
+
+                     inputEmail: $('#@Helper.getInputId("dsEmail_novo", Html.ClientPrefixName().ToString())'),
+                     spanEmail: $('#@Helper.getInputId("dsEmail_valid", Html.ClientPrefixName().ToString())'),
+
+                     inputLogin: $('#@Helper.getInputId("dsLogin_novo", Html.ClientPrefixName().ToString())'),
+                     spanLogin: $('#@Helper.getInputId("dsLogin_valid", Html.ClientPrefixName().ToString())'),
+
+                     btnAdd: $('#@Helper.getInputId("add", Html.ClientPrefixName().ToString())'),
+                     dialog: $("#@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())")
+                 };
+             },
+
+             validarForm: function (form) {
+                 validarCampo(form.spanNome, form.inputNome, "Informe o nome");
+                 validarCampo(form.spanEmail, form.inputEmail, "Informe o e-mail");
+                 validarCampo(form.spanLogin, form.inputLogin, "Informe o login de acesso");
+
+                 return (!window.IsNullOrEmpty(form.inputNome.val()) && !window.IsNullOrEmpty(form.inputEmail.val()) && !window.IsNullOrEmpty(form.inputLogin.val()));
+             },
+
+             setModel: function (model) {
+                 $('#@Html.ClientIdFor(e => e.nmUsuario)').val(model.nmUsuario);
+                 $('#@Html.ClientIdFor(e => e.idUsuario)').val(model.idUsuario);
+             },
+
+             limparForm: function (form) {
+                 form.inputNome.val('');
+                 form.inputEmail.val('');
+                 form.inputLogin.val('');
+                 form.dialog.modal('hide');
+                 form.btnAdd.button('reset');
+                 $.loadingBox('hide');
+             }
+         }
+     });
+     $('#@Html.ClientIdFor(e => e.nmUsuario)').iNavigate({
+         columns: [
+             { name: 'Id', bind: 'idUsuario', width: '20%' },
+             { name: 'Nome', bind: 'nmUsuario', width: '80%' }
+         ],
+         width: 500,
+         source: '@Url.Action("JsSearch", "Usuario")',
+         minLength: 0,
+         paginate: {
+             size: 10
+         },
+         select: function (data) {
+             if (data) {
+                 $('#@Html.ClientIdFor(e => e.idUsuario)').val(data.idUsuario);
+                 $('#@Html.ClientIdFor(e => e.nmUsuario)').val(data.nmUsuario);
+             }
+         },
+         change: function (data) {
+             if (!data) {
+                 $('#@Html.ClientIdFor(e => e.idUsuario)').val('');
+                 $('#@Html.ClientIdFor(e => e.nmUsuario)').blink().select();
+             }
+         }
+     });
+</script>
+)}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="NewDataSet" msprop:Generator_UserDSName="NewDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="table" msprop:Generator_TableClassName="tableDataTable" msprop:Generator_TableVarName="tabletable" msprop:Generator_RowChangedName="tableRowChanged" msprop:Generator_TablePropName="table" msprop:Generator_RowDeletingName="tableRowDeleting" msprop:Generator_RowChangingName="tableRowChanging" msprop:Generator_RowEvHandlerName="tableRowChangeEventHandler" msprop:Generator_RowDeletedName="tableRowDeleted" msprop:Generator_RowClassName="tableRow" msprop:Generator_UserTableName="table" msprop:Generator_RowEvArgName="tableRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="idProduto" msprop:Generator_ColumnVarNameInTable="columnidProduto" msprop:Generator_ColumnPropNameInRow="idProduto" msprop:Generator_ColumnPropNameInTable="idProdutoColumn" msprop:Generator_UserColumnName="idProduto" type="xs:int" minOccurs="0" />
+              <xs:element name="descricaoProduto" msprop:Generator_ColumnVarNameInTable="columndescricaoProduto" msprop:Generator_ColumnPropNameInRow="descricaoProduto" msprop:Generator_ColumnPropNameInTable="descricaoProdutoColumn" msprop:Generator_UserColumnName="descricaoProduto" type="xs:string" minOccurs="0" />
+              <xs:element name="nomeProduto" msprop:Generator_ColumnVarNameInTable="columnnomeProduto" msprop:Generator_ColumnPropNameInRow="nomeProduto" msprop:Generator_ColumnPropNameInTable="nomeProdutoColumn" msprop:Generator_UserColumnName="nomeProduto" type="xs:string" minOccurs="0" />
+              <xs:element name="vlVenda" msdata:Caption="vlDesconto" msprop:Generator_ColumnVarNameInTable="columnvlVenda" msprop:Generator_ColumnPropNameInRow="vlVenda" msprop:Generator_ColumnPropNameInTable="vlVendaColumn" msprop:Generator_UserColumnName="vlVenda" type="xs:decimal" minOccurs="0" />
+              <xs:element name="vlProduto" msdata:Caption="vlDesconto" msprop:Generator_ColumnVarNameInTable="columnvlProduto" msprop:Generator_ColumnPropNameInRow="vlProduto" msprop:Generator_ColumnPropNameInTable="vlProdutoColumn" msprop:Generator_UserColumnName="vlProduto" type="xs:decimal" minOccurs="0" />
+              <xs:element name="margemGanhoProduto" msdata:Caption="vlDesconto" msprop:Generator_ColumnVarNameInTable="columnmargemGanhoProduto" msprop:Generator_ColumnPropNameInRow="margemGanhoProduto" msprop:Generator_ColumnPropNameInTable="margemGanhoProdutoColumn" msprop:Generator_UserColumnName="margemGanhoProduto" type="xs:decimal" minOccurs="0" />
+              <xs:element name="porcentagemMarceneiro" msdata:Caption="vlDesconto" msprop:Generator_ColumnVarNameInTable="columnporcentagemMarceneiro" msprop:Generator_ColumnPropNameInRow="porcentagemMarceneiro" msprop:Generator_ColumnPropNameInTable="porcentagemMarceneiroColumn" msprop:Generator_UserColumnName="porcentagemMarceneiro" type="xs:decimal" minOccurs="0" />
+              <xs:element name="porcentagemProjetista" msdata:Caption="vlDesconto" msprop:Generator_ColumnVarNameInTable="columnporcentagemProjetista" msprop:Generator_ColumnPropNameInRow="porcentagemProjetista" msprop:Generator_ColumnPropNameInTable="porcentagemProjetistaColumn" msprop:Generator_UserColumnName="porcentagemProjetista" type="xs:decimal" minOccurs="0" />
+              <xs:element name="vlDesconto" msprop:Generator_ColumnVarNameInTable="columnvlDesconto" msprop:Generator_ColumnPropNameInRow="vlDesconto" msprop:Generator_ColumnPropNameInTable="vlDescontoColumn" msprop:Generator_UserColumnName="vlDesconto" type="xs:decimal" minOccurs="0" />
+              <xs:element name="nomeProjetista" msprop:Generator_ColumnVarNameInTable="columnnomeProjetista" msprop:Generator_ColumnPropNameInRow="nomeProjetista" msprop:Generator_ColumnPropNameInTable="nomeProjetistaColumn" msprop:Generator_UserColumnName="nomeProjetista" type="xs:string" minOccurs="0" />
+              <xs:element name="nomeMarceneiro" msprop:Generator_ColumnVarNameInTable="columnnomeMarceneiro" msprop:Generator_ColumnPropNameInRow="nomeMarceneiro" msprop:Generator_ColumnPropNameInTable="nomeMarceneiroColumn" msprop:Generator_UserColumnName="nomeMarceneiro" type="xs:string" minOccurs="0" />
+              <xs:element name="nmmaterial" msdata:Caption="nmfabricante" msprop:Generator_ColumnVarNameInTable="columnnmmaterial" msprop:Generator_ColumnPropNameInRow="nmmaterial" msprop:Generator_ColumnPropNameInTable="nmmaterialColumn" msprop:Generator_UserColumnName="nmmaterial" type="xs:string" minOccurs="0" />
+              <xs:element name="nmunidademedida" msdata:Caption="nmfabricante" msprop:Generator_ColumnVarNameInTable="columnnmunidademedida" msprop:Generator_ColumnPropNameInRow="nmunidademedida" msprop:Generator_ColumnPropNameInTable="nmunidademedidaColumn" msprop:Generator_UserColumnName="nmunidademedida" type="xs:string" minOccurs="0" />
+              <xs:element name="nmfabricante" msprop:Generator_ColumnVarNameInTable="columnnmfabricante" msprop:Generator_ColumnPropNameInRow="nmfabricante" msprop:Generator_ColumnPropNameInTable="nmfabricanteColumn" msprop:Generator_UserColumnName="nmfabricante" type="xs:string" minOccurs="0" />
+              <xs:element name="margemGanhoMaterial" msdata:Caption="vlmaterial" msprop:Generator_ColumnVarNameInTable="columnmargemGanhoMaterial" msprop:Generator_ColumnPropNameInRow="margemGanhoMaterial" msprop:Generator_ColumnPropNameInTable="margemGanhoMaterialColumn" msprop:Generator_UserColumnName="margemGanhoMaterial" type="xs:decimal" minOccurs="0" />
+              <xs:element name="vlmaterial" msprop:Generator_ColumnVarNameInTable="columnvlmaterial" msprop:Generator_ColumnPropNameInRow="vlmaterial" msprop:Generator_ColumnPropNameInTable="vlmaterialColumn" msprop:Generator_UserColumnName="vlmaterial" type="xs:decimal" minOccurs="0" />
+              <xs:element name="quantidade1" msprop:Generator_ColumnVarNameInTable="columnquantidade1" msprop:Generator_ColumnPropNameInRow="quantidade1" msprop:Generator_ColumnPropNameInTable="quantidade1Column" msprop:Generator_UserColumnName="quantidade1" type="xs:decimal" minOccurs="0" />
+              <xs:element name="quantidade" msdata:Caption="idprodutomaterial" msprop:Generator_ColumnVarNameInTable="columnquantidade" msprop:Generator_ColumnPropNameInRow="quantidade" msprop:Generator_ColumnPropNameInTable="quantidadeColumn" msprop:Generator_UserColumnName="quantidade" type="xs:decimal" minOccurs="0" />
+              <xs:element name="idmaterial" msdata:Caption="idprodutomaterial" msprop:Generator_ColumnVarNameInTable="columnidmaterial" msprop:Generator_ColumnPropNameInRow="idmaterial" msprop:Generator_ColumnPropNameInTable="idmaterialColumn" msprop:Generator_UserColumnName="idmaterial" type="xs:int" minOccurs="0" />
+              <xs:element name="idprodutomaterial" msprop:Generator_ColumnVarNameInTable="columnidprodutomaterial" msprop:Generator_ColumnPropNameInRow="idprodutomaterial" msprop:Generator_ColumnPropNameInTable="idprodutomaterialColumn" msprop:Generator_UserColumnName="idprodutomaterial" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

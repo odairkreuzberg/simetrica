@@ -1,0 +1,33 @@
+﻿@model RP.Util.Entity.ErroLog.Erro
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Create";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @Html.RenderFlashMessage()
+
+    <fieldset class="ui-corner-all">
+        <legend class="ui-state-active">Erro</legend>
+        <pre>@Model.dsMessage</pre>
+    </fieldset>
+    
+    @if(Model.flInner)
+    {
+        <fieldset class="ui-corner-all">
+            <legend class="ui-state-active">Erro interno</legend>
+            <pre>@Model.dsInner</pre>
+        </fieldset>
+    }
+
+    <fieldset class="ui-corner-all">
+        <legend class="ui-state-active">Rota do erro</legend>
+        <pre>@Model.dsTrace</pre>
+    </fieldset>
+
+    @if (!string.IsNullOrEmpty(Model.dsURL))
+    {
+    <a href="@Model.dsURL"><i class="icon-cog icon-white"></i> Voltar</a>
+    }
+</div>

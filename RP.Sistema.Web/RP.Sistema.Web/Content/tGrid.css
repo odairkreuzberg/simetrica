@@ -1,0 +1,146 @@
+﻿.tgrid-wrap
+{
+    overflow: hidden;
+    position: relative;
+    border-width: 1px;
+    font-weight: normal
+}
+
+/* header */
+.tgrid-wrap .tgrid-header
+{
+	min-height:20px
+}
+
+.tgrid-header-nonpaging 
+{
+	padding: 2px 3px
+}
+
+.tgrid-header-nonpaging .text-search
+{
+	width: 130px
+}
+
+.tgrid-header-nonpaging .text-search-expand
+{
+	width: 280px
+}
+
+.tgrid-wrap .tgrid-content table
+{
+    border-collapse: collapse;
+    border-spacing: 0;
+    empty-cells: show;
+    width: 100%
+}
+
+/* content */
+.tgrid-wrap .tgrid-content table thead tr td, 
+.tgrid-wrap .tgrid-content table thead tr th, 
+.tgrid-wrap .tgrid-content table tbody tr td
+{
+    padding: 5px
+}
+
+.tgrid-wrap .tgrid-content table tbody tr.data.client
+{
+    font-style: italic;
+    font-weight: bold
+}
+
+.tgrid-wrap .tgrid-content table tbody tr td.no-text, 
+.tgrid-wrap .tgrid-content table tbody tr th.no-text
+{
+    padding: 1px !important
+}
+
+.tgrid-wrap .tgrid-content table tbody tr td 
+{
+    background: none repeat scroll 0 0 transparent;
+    border-style: solid;
+    border-width: 0 1px 1px;
+    line-height: 15px;
+    cursor: default
+}
+
+.tgrid-wrap .tgrid-content table tbody tr:nth-child(even)
+{
+    background: #F8F8F8
+}
+
+/*.tgrid-wrap .tgrid-content table tbody tr:nth-child(odd)
+{
+    background: #EAEAEA;
+}*/
+
+.tgrid-content tbody tr.focused td,
+.tgrid-content tbody tr:nth-child(even):hover td, 
+.tgrid-content tbody tr:nth-child(odd):hover td
+{
+    background: #fbec88
+}
+
+.tgrid-wrap .tgrid-content table tbody tr td .ui-button
+{
+    margin-right:0
+}
+
+/* footer */
+.tgrid-wrap .tgrid-footer
+{
+    background-image: none;
+    border-width: 0;
+    overflow: hidden;
+    padding: 2px 3px 3px;
+    font-weight: normal; 
+    font-size: 0.8em;   
+    min-height: 18px
+}
+
+.tgrid-wrap .tgrid-footer table td 
+{
+    text-align: center	
+}
+
+.tgrid-wrap .tgrid-footer table td:first-child,
+.tgrid-wrap .tgrid-footer table td:last-child 
+{
+	width:40%;
+	text-align: left
+}
+
+.tgrid-wrap .tgrid-footer table td:first-child 
+{
+	/*font-weight: bold*/
+}
+
+.tgrid-wrap .tgrid-footer table td:last-child 
+{
+	text-align: right
+}
+
+.tgrid-wrap .tgrid-footer table td:last-child a.noborder
+{
+	margin-right: 0;
+	border-right-width: 0
+}
+
+.tgrid-wrap .tgrid-footer table td:last-child a:last-child
+{
+	border-right-width: 1px
+}
+
+.tgrid-wrap .tgrid-footer .ui-widget-content
+{
+    background: transparent;
+}
+
+.tgrid-wrap .tgrid-footer .ui-button-text-only .ui-button-text,
+.tgrid-wrap .tgrid-footer .ui-button-icon-only .ui-button-text, 
+.tgrid-wrap .tgrid-footer .ui-button-icons-only .ui-button-text 
+{
+    padding: 2px 10px 4px;
+}
+
+

@@ -1,0 +1,229 @@
+﻿@model RP.Sistema.Web.Models.Fornecedor.Consultar
+@using RP.Util.Class;
+@{
+    bool desabilitar = Convert.ToBoolean(ViewData["desabilitar"]);
+    bool obrigatorio = Convert.ToBoolean(ViewData["obrigatorio"] ?? true);
+    var Cidade = new RP.Sistema.Web.Models.Cidade.Consultar();
+}
+<div class="control-group">
+    @Html.CustomLabelFor(model => model.idFornecedor, "Fornecedor", new { @class = "control-label" })
+    @if (desabilitar)
+    {
+        <div class="controls">
+            @Html.TextBoxFor(model => model.nome, new { @class = "span6", @readonly = "readonly" })
+        </div>
+    }
+    else
+    {
+        <div class="controls  controls-row">
+            @Html.TextBoxFor(model => model.nome, new { @class = "span6", maxlength = "50", })
+            <a id="@Helper.getInputId("btn", Html.ClientPrefixName().ToString())" title="Adicionar fornecedor" class="btn btn-input"><i style="font-size: 300px" class="icon-plus"></i></a>
+            @if (obrigatorio) { @Html.ValidationMessageFor(model => model.nome, null, new { @class = "help-inline", @id = Html.ClientPrefixName().ToString() })}
+        </div>
+    }
+    @Html.HiddenFor(model => model.idFornecedor)
+</div>
+@if (!desabilitar)
+{
+    <div id="@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>Novo fornecedor</h3>
+        </div>
+        <div class="modal-body">
+            <div class="control-group">
+                <label for="@Helper.getInputId("nome_novo", Html.ClientPrefixName().ToString())" class="control-label">Nome</label>
+                <div class="controls">
+                    <input type="text" value="" maxlength="50" id="@Helper.getInputId("nome_novo", Html.ClientPrefixName().ToString())" class="span6">
+                    <span id="@Helper.getInputId("nome_valid", Html.ClientPrefixName().ToString())" class="field-validation-valid help-inline"></span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="@Helper.getInputId("tipo_novo", Html.ClientPrefixName().ToString())" class="control-label">Sigla</label>
+                <div class="controls">
+                    <select id="@Helper.getInputId("tipo_novo", Html.ClientPrefixName().ToString())" class="span2">
+                        <option value="Físico" selected="selected">Físico</option>
+                        <option value="Jurídico">Jurídico</option>
+                    </select>
+                    <span id="@Helper.getInputId("tipo_valid", Html.ClientPrefixName().ToString())" class="field-validation-valid help-inline"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="@Helper.getInputId("logradouro", Html.ClientPrefixName().ToString())" class="control-label">Logradouro</label>
+                <div class="controls">
+                    <input type="text" value="" maxlength="50" id="@Helper.getInputId("logradouro", Html.ClientPrefixName().ToString())" class="span6">
+                    <span id="@Helper.getInputId("logradouro_valid", Html.ClientPrefixName().ToString())" class="field-validation-valid help-inline"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="@Helper.getInputId("bairro", Html.ClientPrefixName().ToString())" class="control-label">Bairro</label>
+                <div class="controls">
+                    <input type="text" value="" maxlength="50" id="@Helper.getInputId("bairro", Html.ClientPrefixName().ToString())" class="span6">
+                    <span id="@Helper.getInputId("bairro_valid", Html.ClientPrefixName().ToString())" class="field-validation-valid help-inline"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="@Helper.getInputId("numero", Html.ClientPrefixName().ToString())" class="control-label">Nº. residencial</label>
+                <div class="controls">
+                    <input type="text" value="" maxlength="50" id="@Helper.getInputId("numero", Html.ClientPrefixName().ToString())" class="span2">
+                    <span id="@Helper.getInputId("numero_valid", Html.ClientPrefixName().ToString())" class="field-validation-valid help-inline"></span>
+                </div>
+            </div>
+
+            @Html.EditorFor(model => Cidade, "Cidade/Consultar", new { obrigatorio = true })
+        </div>
+        <div class="modal-footer">
+            <a href="#" id="@Helper.getInputId("add", Html.ClientPrefixName().ToString())" data-loading-text="Processando" class="btn btn-primary">Adicionar</a>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+        </div>
+    </div>
+
+    @Html.AddScriptBlock(
+
+@<script type="text/javascript">
+     $(function () {
+
+         var Fornecedor = shared_function['@Helper.getInputId(Html.ClientPrefixName().ToString(), "Fornecedor")'];
+
+         $('#@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())').dialog({
+             width: 960
+         });
+
+         $('#@Helper.getInputId("btn", Html.ClientPrefixName().ToString())').on('click', function () {
+             $("#@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())").modal('show');
+         })
+
+         $('#@Helper.getInputId("add", Html.ClientPrefixName().ToString())').on('click', function () {
+             Fornecedor.insert();
+             return false;
+         })
+
+         Fornecedor = {
+             insert: function () {
+                 var form = Fornecedor.getForm();
+
+                 form.btnAdd.button('loading');
+
+                 if (Fornecedor.validarForm(form)) {
+
+                     var model = Fornecedor.getCampos(form);
+
+                     $.ajax({
+                         dataType: 'json',
+                         type: 'POST',
+                         url: '@Url.Action("JsCreate", "Fornecedor")',
+                         data: model,
+                         beforeSend: function () {
+                             $.loadingBox('show');
+                         },
+                         success: function (data) {
+                             Fornecedor.setModel(data.model);
+
+                             Fornecedor.limparForm(form);
+                         },
+                         error: function (request) {
+                             form.btnAdd.button('reset');
+                             $.loadingBox('hide');
+                         }
+                     });
+                 } else {
+                     form.btnAdd.button('reset');
+                 }
+             },
+
+             getCampos: function (form) {
+                 return model = {
+                     nome: form.inputNome.val(),
+                     tipo: form.inputTipo.val(),
+                     logradouro: form.inputLogradouro.val(),
+                     bairro: form.inputBairro.val(),
+                     numero: form.inputNumero.val(),
+                     idCidade: form.inputIdCidade.val()
+                 };
+             },
+
+             getForm: function () {
+                 return form = {
+                     inputNome: $('#@Helper.getInputId("nome_novo", Html.ClientPrefixName().ToString())'),
+                     inputTipo: $('#@Helper.getInputId("tipo_novo", Html.ClientPrefixName().ToString())'),
+                     inputLogradouro: $('#@Helper.getInputId("logradouro", Html.ClientPrefixName().ToString())'),
+                     inputBairro: $('#@Helper.getInputId("bairro", Html.ClientPrefixName().ToString())'),
+                     inputNumero: $('#@Helper.getInputId("numero", Html.ClientPrefixName().ToString())'),
+                     inputNmCidade: $('#@Helper.getInputId("Cidade_nome", Html.ClientPrefixName().ToString())'),
+                     inputIdCidade: $('#@Helper.getInputId("Cidade_idCidade", Html.ClientPrefixName().ToString())'),
+
+                     spanNome: $('#@Helper.getInputId("nome_valid", Html.ClientPrefixName().ToString())'),
+                     spanTipo: $('#@Helper.getInputId("tipo_valid", Html.ClientPrefixName().ToString())'),
+                     spanLogradouro: $('#@Helper.getInputId("logradouro_valid", Html.ClientPrefixName().ToString())'),
+                     spanBairro: $('#@Helper.getInputId("bairro_valid", Html.ClientPrefixName().ToString())'),
+                     spanNumero: $('#@Helper.getInputId("numero_valid", Html.ClientPrefixName().ToString())'),
+                     spanCidade: $('#@Helper.getInputId("Cidade", Html.ClientPrefixName().ToString())'),
+
+                     btnAdd: $('#@Helper.getInputId("add", Html.ClientPrefixName().ToString())'),
+                     dialog: $("#@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())")
+                 };
+             },
+
+             validarForm: function (form) {
+                 validarCampo(form.spanNome, form.inputNome, "Informe o nome");
+                 validarCampo(form.spanTipo, form.inputTipo, "Informe o tipo");
+                 validarCampo(form.spanLogradouro, form.inputLogradouro, "Informe o logradouro");
+                 validarCampo(form.spanBairro, form.inputBairro, "Informe o bairro");
+                 validarCampo(form.spanNumero, form.inputNumero, "Informe o número");
+                 validarCampo(form.spanCidade, form.inputNmCidade, "selecione uma cidade");
+
+                 return (!window.IsNullOrEmpty(form.inputNome.val()) &&
+                         !window.IsNullOrEmpty(form.inputTipo.val()) &&
+                         !window.IsNullOrEmpty(form.inputLogradouro.val()) &&
+                         !window.IsNullOrEmpty(form.inputBairro.val()) &&
+                         !window.IsNullOrEmpty(form.inputNmCidade.val()) &&
+                         !window.IsNullOrEmpty(form.inputNumero.val()));
+             },
+
+             setModel: function (model) {
+                 $('#@Html.ClientIdFor(e => e.nome)').val(model.nome);
+                 $('#@Html.ClientIdFor(e => e.idFornecedor)').val(model.idFornecedor);
+             },
+
+             limparForm: function (form) {
+                 form.inputNome.val('');
+                 form.inputTipo.val('');
+                 form.inputLogradouro.val('');
+                 form.inputBairro.val('');
+                 form.inputNumero.val('');
+                 form.inputNmCidade.val('');
+                 form.inputIdCidade.val('');
+                 form.dialog.modal('hide');
+                 form.btnAdd.button('reset');
+                 $.loadingBox('hide');
+             }
+         }
+     });
+     $('#@Html.ClientIdFor(e => e.nome)').iNavigate({
+         columns: [
+             { name: 'Id', bind: 'idFornecedor', width: '10%' },
+             { name: 'Nome', bind: 'nome', width: '60%' },
+             { name: 'Tipo', bind: 'tipo', width: '20%' }
+         ],
+         width: 500,
+         source: '@Url.Action("JsSearch", "Fornecedor")',
+         minLength: 0,
+         paginate: {
+             size: 10
+         },
+         select: function (data) {
+             if (data) {
+                 $('#@Html.ClientIdFor(e => e.idFornecedor)').val(data.idFornecedor);
+                 $('#@Html.ClientIdFor(e => e.nome)').val(data.nome);
+             }
+         },
+         change: function (data) {
+             if (!data) {
+                 $('#@Html.ClientIdFor(e => e.idFornecedor)').val('');
+                 $('#@Html.ClientIdFor(e => e.nome)').blink().select();
+             }
+         }
+     });
+</script>
+)}

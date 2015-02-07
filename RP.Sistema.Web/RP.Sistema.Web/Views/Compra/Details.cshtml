@@ -1,0 +1,106 @@
+﻿@model RP.Sistema.Web.Models.Compra.CompraVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Detalhes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <div class="container-nav-list well affix">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Ações</li>
+                    <li>@Html.CustomActionLink("Cancelar", "Cancelar", new { id = Model.idCompra }, new { @title = "Excluir registro" }, new { @left = "icon-off" })</li>
+                    <li class="divider"></li>
+                    <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="span10">
+            <ul class="breadcrumb">
+                <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                <li class="active">Detalhes da compra</li>
+            </ul>
+
+            @Html.RenderFlashMessage()
+            @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+            <div class="form-horizontal">
+
+                @Html.EditorFor(model => model.Projeto, "Projeto/Consultar", new { @desabilitar = true })
+
+                @Html.EditorFor(model => model.Fornecedor, "Fornecedor/Consultar", new { desabilitar = true })
+
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.descricao, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextAreaFor(model => model.descricao, new { @class = "span6", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.total, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.total, new { @class = "input-small", @readonly = "readonly", style = "text-align:right" })
+                    </div>
+                </div>
+                
+                            <h4 class="heading">Contas a pagar</h4>
+                <table style="padding: 0; margin: 0" id="tblParcela">
+                    <thead>
+                        <tr>
+                            <th style="width: 8%">Parcela</th>
+                            <th style="width: 22%">Forma de pagamento</th>
+                            <th style="width: 40%">Observação</th>
+                            <th style="width: 10%">Vencimento</th>
+                            <th style="width: 10%">Situação</th>
+                            <th style="width: 10%; text-align:right">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="message">
+                            <td colspan="6">Nenhuma parcela</td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <td colspan="5">
+                                <span class="pull-right"><strong>Soma das parcelas (R$):</strong></span>
+                            </td>
+                            <td>
+                                <input class="input-small input-transparent pull-right" id="somaParcelas" value="0,00" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                @if (Model != null && Model.Parcelas != null)
+                {
+                    <input type="hidden" id="tblParcela_data" value="@Json.Encode(Model.Parcelas.Select(r => new { r.vlParcela, r.nrParcela, r.flFormaPagamento, r.dsObservacao, dtVencimento = r.dtVencimento.ToString("dd/MM/yyyy"), r.flSituacao }).OrderByDescending(e => e.nrParcela))"/>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Compra/Details.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}}
+
+<style>
+    .input-transparent {
+        background: transparent !important;
+        border-width: 0 0 0 0;
+        font-weight: bold;
+        text-align: right;
+        color: #333333;
+    }
+</style>
+

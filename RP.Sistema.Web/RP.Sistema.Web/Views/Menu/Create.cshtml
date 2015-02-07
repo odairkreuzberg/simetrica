@@ -1,0 +1,86 @@
+﻿@model RP.Sistema.Web.Models.Menu.MenuVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Create";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i> Salvar</a></li>
+                        <li><a href="#" data-form-type="reset" title="Limpar o formulário"><i class="icon-refresh"></i> Limpar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Menus</a> <span class="divider">/</span></li>
+                    <li class="active">Cadastrar Menu</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+                    @{
+					    RP.Util.Class.Form editor = Html.Editor();
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.LabelFor(model => model.nmMenu),
+                                Html.TextBoxFor(model => model.nmMenu, new { @class = "input-xxlarge", maxlength = "100", @autofocus = "autofocus" }).ToString() +
+                                Html.ValidationMessageFor(model => model.nmMenu)
+                            )
+                        );
+					    editor.Add(new RP.Util.Class.Line()
+						    .Add(
+							    Html.LabelFor(model => model.nrOrdem),
+                                Html.TextBoxFor(model => model.nrOrdem, new { @class = "input-medium spinner", @spinner = "{ min: 0 }", @filter = "numeric", maxlength = "50" }).ToString() +
+                                Html.ValidationMessageFor(model => model.nrOrdem)
+						    )
+					    );
+				    }
+				    @editor.Render()
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.dsCor, new { @class = "control-label" })
+                        <div class="controls">
+                            <div class="input-append color" data-color="" data-color-format="hex">
+                                @Html.TextBoxFor(model => model.dsCor, new { @class = "span10" })<span class="add-on"><i style="display:inline-block; vertical-align:text-top"></i></span>
+			                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string css = "~/" + Guid.NewGuid();
+    string js = "~/" + Guid.NewGuid();
+    
+    StyleBundle styleBundle = new StyleBundle(css);
+    styleBundle.Include("~/Content/colorpicker.css");
+    BundleTable.Bundles.Add(styleBundle);
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/bootstrap-colorpicker.js");
+    scriptBundle.Include("~/Scripts/Menu/Create.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+
+@section styles{
+    @Styles.Render(css)
+}
+
+@section scripts{
+    @Scripts.Render(js)
+    @Scripts.Render("~/bundles/jqueryval")
+}

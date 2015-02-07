@@ -1,0 +1,80 @@
+﻿@model RP.Sistema.Web.Models.Usuario.UsuarioVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <div class="container-nav-list well affix">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Ações</li>
+                    <li>@Html.CustomActionLink("Editar", "Edit", new { id = Model.IdUsuario }, new { @title = "Editar registro" }, new { @left = "icon-edit" })</li>
+                    <li>@Html.CustomActionLink("Excluir", "Delete", new { id = Model.IdUsuario }, new { @title = "Excluir registro" }, new { @left = "icon-trash" })</li>
+                    <li>@Html.CustomActionLink("Adicionar Perfil", "AddPerfil", new { id = Model.IdUsuario }, new { @title = "Adicionar perfil ao Usuário" }, new { @left = "icon-user" })</li>
+                    <li>@Html.CustomActionLink("Enviar nova senha", "AlterPasswordMaster", new { id = Model.IdUsuario }, new { @title = "Enviar nova senha" }, new { @left = "icon-lock" })</li>
+                    <li class="divider"></li>
+                    <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="span10">
+            <ul class="breadcrumb">
+                <li><a href="@Url.Action("Index")">Usuários</a> <span class="divider">/</span></li>
+                <li class="active">Detalhes do Usuário</li>
+            </ul>
+
+        	@Html.RenderFlashMessage()
+            @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+            <div class="form-horizontal">
+                @{
+                    RP.Util.Class.Form editor = Html.Editor();
+                    editor.Add(new RP.Util.Class.Line()
+                        .Add(
+                            Html.CustomLabelFor(model => model.Nome, new { @class = "control-label" }),
+                            Html.TextBoxFor(model => model.Nome, new { @class = "input-xxlarge", @readonly = "readonly" })
+                        )
+                    );
+                    editor.Add(new RP.Util.Class.Line()
+                        .Add(
+                            Html.CustomLabelFor(model => model.Email, new { @class = "control-label" }),
+                            Html.TextBoxFor(model => model.Email, new { @class = "input-xxlarge", @readonly = "readonly" })
+                        )
+                    );
+                    editor.Add(new RP.Util.Class.Line()
+                        .Add(
+                            Html.CustomLabelFor(model => model.Login, new { @class = "control-label" }),
+                            Html.TextBoxFor(model => model.Login, new { @class = "input-xxlarge", @readonly = "readonly" })
+                        )
+                    );
+                    editor.Add(new RP.Util.Class.Line()
+                        .Add(
+                            Html.CustomLabelFor(model => model.ValidadeSenha, new { @class = "control-label" }),
+                            Html.EditorFor(model => model.ValidadeSenha, new { @readonly = "readonly" })
+                        )
+                    );
+                    editor.Add(new RP.Util.Class.Line()
+                        .Add(
+                            Html.CustomLabelFor(model => model.Ativo, new { @class = "control-label" }),
+                            Html.CheckBoxFor(model => model.Ativo, new { @class = "checkboxUI", @disabled = "disabled" })
+                        )
+                    );
+		        }
+			    @editor.Render()
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Usuario/Details.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

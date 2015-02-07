@@ -1,0 +1,111 @@
+﻿@model RP.Sistema.Web.Models.ContaPagar.ContaPagarVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Adicionar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Material = new RP.Sistema.Web.Models.Material.Consultar();
+}
+<div class="container-fluid">
+    <div class="msg-aviso msg-erro">
+        <button data-dismiss="alert" class="close btn-msg-aviso" type="button">×</button><div class="msg"></div>
+    </div>
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i>Salvar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index", "ContaPagar")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                        <li class="divider"></li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.pagamento, null, new { @class = "help-inline no-required" })</li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.valorPago, null, new { @class = "help-inline no-required" })</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index", "ContaPagar")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Cadastrar conta a pagar</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+                    @Html.HiddenFor(model => model.idContaPagar)
+                    @Html.HiddenFor(model => model.idCompra)
+                    @Html.HiddenFor(model => model.idOrigem)
+                    @Html.EditorFor(model => model.Projeto, "Projeto/Consultar", new { desabilitar = true })
+                    @Html.EditorFor(model => model.Fornecedor, "Fornecedor/Consultar", new { desabilitar = true })
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.descricao, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextAreaFor(model => model.descricao, new { @class = "span6", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.flFormaPagamento, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.flFormaPagamento, new { @class = "span2", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.vencimento, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.vencimento, new { @class = "input-small", @mask = "99/99/9999", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.pagamento, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.pagamento, new { @class = "input-small datepicker", @mask = "99/99/9999" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.valorConta, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.valorConta, new { @class = "input-small", style = "text-align:right", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.valorPago, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.valorPago, new { @class = "input-small", maxlength = "8", filter = "floatnumber", style = "text-align:right" })
+                        </div>
+                    </div>
+                    <div id="diferenca">
+                        <h4 class="heading">Deseja gerar uma outra conta a pagar com diferença desta conta?</h4>
+                        <div class="control-group">
+                            @Html.CustomLabelFor(model => model.flDiferenca, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.DropDownListFor(model => model.flDiferenca, Helper.SimNao(Helper.eSimNao.Não), new { @class = "input-small" })
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.CustomLabelFor(model => model.vlDiferenca, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.vlDiferenca, new { @class = "input-small", style = "text-align:right", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/ContaPagar/Pagar.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}
