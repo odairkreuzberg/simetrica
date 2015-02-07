@@ -20,38 +20,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RP.Sprite", "RP.Sprite\RP.Sprite.csproj", "{78F30475-21C3-420D-9F88-251F72AA3E71}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 10
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://192.168.25.6:8080/tfs/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = RP.Auth.Class\\RP.Auth.Class.csproj
-		SccProjectName1 = RP.Auth.Class
-		SccLocalPath1 = RP.Auth.Class
-		SccProjectUniqueName2 = RP.DataAccess\\RP.DataAccess.csproj
-		SccProjectName2 = RP.DataAccess
-		SccLocalPath2 = RP.DataAccess
-		SccProjectUniqueName3 = RP.Report\\RP.Report.csproj
-		SccProjectName3 = RP.Report
-		SccLocalPath3 = RP.Report
-		SccProjectUniqueName4 = RP.Sistema.BLL\\RP.Sistema.BLL.csproj
-		SccProjectName4 = RP.Sistema.BLL
-		SccLocalPath4 = RP.Sistema.BLL
-		SccProjectUniqueName5 = RP.Sistema.Model\\RP.Sistema.Model.csproj
-		SccProjectName5 = RP.Sistema.Model
-		SccLocalPath5 = RP.Sistema.Model
-		SccProjectUniqueName6 = RP.Sistema.Report\\RP.Sistema.Report.csproj
-		SccProjectName6 = RP.Sistema.Report
-		SccLocalPath6 = RP.Sistema.Report
-		SccProjectUniqueName7 = RP.Sistema.Web\\RP.Sistema.Web.csproj
-		SccProjectName7 = RP.Sistema.Web
-		SccLocalPath7 = RP.Sistema.Web
-		SccProjectUniqueName8 = RP.Sprite\\RP.Sprite.csproj
-		SccProjectName8 = RP.Sprite
-		SccLocalPath8 = RP.Sprite
-		SccProjectUniqueName9 = RP.Util.Class\\RP.Util.csproj
-		SccProjectName9 = RP.Util.Class
-		SccLocalPath9 = RP.Util.Class
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
