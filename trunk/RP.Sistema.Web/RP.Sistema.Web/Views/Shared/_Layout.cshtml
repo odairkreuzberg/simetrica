@@ -1,0 +1,62 @@
+﻿@using RP.Util.Class;
+@{
+    StyleBundle styleBundle = new StyleBundle("~/Content/styles");
+    styleBundle.Include("~/Content/bootstrap.css");
+    styleBundle.Include("~/Content/bootstrap-overrides.css");
+    styleBundle.Include("~/Content/bootstrap-responsive.css");
+    styleBundle.Include("~/Content/jquery-ui-1.9.2.custom.css");
+    styleBundle.Include("~/Content/Sistema.css");
+    styleBundle.Include("~/Content/pt-sans.css");
+    BundleTable.Bundles.Add(styleBundle);
+
+    ScriptBundle scriptBundle = new ScriptBundle("~/bundles/scripts");
+    scriptBundle.Include("~/Scripts/browser-detect.js");
+    scriptBundle.Include("~/Scripts/modernizr-{version}.js");
+    scriptBundle.Include("~/Scripts/jquery-{version}.js");
+    scriptBundle.Include("~/Scripts/jquery-ui-1.9.2.custom.js");
+    scriptBundle.Include("~/Scripts/bootstrap.js");
+    scriptBundle.Include("~/Scripts/jquery.maskedinput-1.3.js");
+    scriptBundle.Include("~/Scripts/globalize.js");
+    scriptBundle.Include("~/Scripts/jquery.alphanumeric.js");
+    scriptBundle.Include("~/Scripts/jquery.placeholder.js");
+    scriptBundle.Include("~/Scripts/jquery.inavigate.js");
+    scriptBundle.Include("~/Scripts/jquery.tmpl.js");
+    scriptBundle.Include("~/Scripts/jquery.ui.totop.js");
+    scriptBundle.Include("~/Scripts/jquery.counter.js");
+    scriptBundle.Include("~/Scripts/tmpl.js");
+    scriptBundle.Include("~/Scripts/tGrid.js");
+    scriptBundle.Include("~/Scripts/Functions.js");
+    scriptBundle.Include("~/Scripts/Common.js");
+    scriptBundle.Include("~/Scripts/globalize.culture.pt-BR.js");
+    scriptBundle.Include("~/Scripts/jquery.ui.datepicker-pt-BR.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=@Url.Action("JsDisabled", "Erro", new { @returnUrl = Request.Url })" />
+    </noscript>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024, minimum-scale=0, maximum-scale=2" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <!--[if lt IE 8]>@Styles.Render("~/Content/ie-unsuported.css")<![endif]-->
+    <!--[if lt IE 9]>@Styles.Render("~/Content/jquery-ui-1.9.2.ie.css")<![endif]-->
+    <!--[if lt IE 9]>@Scripts.Render("~/Scripts/html5.js")<![endif]-->
+    @Styles.Render("~/Content/styles")
+    @RenderSection("styles", false)
+    @Html.RenderStyleBlocks()
+</head>
+<body class="nopadding">
+    @RenderBody()
+    <input type="hidden" id="_url_auth_login" value="@Url.Content("~/Auth/Login")"/>
+    <div id="loading-box-message" class="loading-box">
+        <img src="@Url.Content("~/Content/images/ajax-loader.gif")" alt="Carregando"/>
+        <span>Carregando…</span>
+    </div>
+    @Scripts.Render("~/bundles/scripts")
+    @RenderSection("scripts", false)
+    @Html.RenderScriptBlocks()
+</body>
+</html>

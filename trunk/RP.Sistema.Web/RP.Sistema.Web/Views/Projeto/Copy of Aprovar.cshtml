@@ -1,0 +1,187 @@
+﻿@model RP.Sistema.Web.Models.Projeto.AprovarVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Aprovar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i>Salvar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                        <li class="divider"></li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.comissaoVendedor, null, new { @class = "help-inline no-required" })</li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.porcentagemVendedor, null, new { @class = "help-inline no-required" })</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Aprovar projeto</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+                    @Html.HiddenFor(model => model.idProjeto)
+                    @Html.HiddenFor(model => model.Cliente.nome)
+                    @Html.HiddenFor(model => model.Cliente.idCliente)
+                    @Html.HiddenFor(model => model.descricao)
+
+                    <input type="hidden" id="tblProduto_count" name="tblProduto.count" />
+                    @if (Model != null && Model.Produtos != null)
+                    {
+                        <input type="hidden" id="tblProduto_data" value="@Json.Encode(Model.Produtos.OrderBy(e => e.nome))"/>
+                    }
+
+                    <div class="container-fluid">
+                        <table id="tblExtrato">
+                            <thead>
+                                <tr>
+                                    <th>Cliente - @Model.Cliente.nome
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display: table; width: 100%; margin: 0">
+                                            <div style="display: table-row">
+                                                <div class="dv-cell-head" style="width:40%; border: 0 none; color: #fff;"><strong>Projeto - @Model.descricao</strong></div>
+                                                <div class="dv-cell-head" style="width: 15%; border: 0 none"></div>
+                                                <div class="dv-cell-head" style="width: 15%; border: 0 none"></div>
+                                                <div class="dv-cell-head" style="width: 15%; border: 0 none; text-align: right; color: #fff;"><strong>Lucro (R$):</strong></div>
+                                                <div class="dv-cell-head" style="width: 15%; border: 0 none; text-align: right;"><input class="input-transparent" id="custoProjeto" style="color: #fff;"  disabled="disabled" value="@String.Format("{0:0,0.00}", Model.lucroProjeto)"/></div>
+                                            </div>
+                                            <div style="display: table-row">
+                                                <div class="dv-cell" style="font-weight: bold">Descrição</div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none; font-weight: bold">Base Cálculo</div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none; font-weight: bold">Referência</div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none; font-weight: bold;">Despesa</div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none; font-weight: bold">Receita</div>
+                                            </div>
+                                            <div style="display: table-row">
+                                                <div class="dv-cell">Custos do projeto <strong>(materiais, projetistas, marceneiros e custos em geral)</strong></div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none">                                                    
+                                                    <input class="input-transparent" id="totalCusto"  style="color:red" disabled="disabled" value="@String.Format("{0:0,0.00}", Model.custoProjeto)"/>
+                                                </div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                                            </div>
+                                            <div style="display: table-row">
+                                                <div class="dv-cell">Comissão vendedor @Model.Vendedor.nome</div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                                    @Html.TextBoxFor(model => model.porcentagemVendedor, new { @class = "input-small", maxlength = "5", filter = "floatnumber", style = "text-align: right" })
+                                                </div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                                    <input class="input-transparent valor-total" disabled="disabled" value="@String.Format("{0:0,0.00}", Model.total)"/>
+                                                </div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                                   <input class="input-transparent" id="comissaoVendedor"  style="color:red" disabled="disabled" value="@String.Format("{0:0,0.00}", Model.comissaoVendedor)"/>
+                                                </div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                                            </div>
+                                            <div style="display: table-row">
+                                                <div class="dv-cell">Desconto para o cliente</div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                                    <input class="input-transparent" disabled="disabled" value="@String.Format("{0:0,0.00}", Model.total)"/>
+                                                </div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none">
+                                                    @Html.TextBoxFor(model => model.desconto, new { @class = "input-small", maxlength = "5", filter = "floatnumber", style = "text-align: right; color: red" })
+                                                </div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none"></div>
+                                            </div>
+                                            <div style="display: table-row">
+                                                <div class="dv-cell">Soma do lucro ganho com os materiais do(s) produto(s)</div>
+                                                <div class="dv-cell" style="border-left: 0 none"></div>
+                                                <div class="dv-cell" style="border-left: 0 none"></div>
+                                                <div class="dv-cell" style="border-left: 0 none"></div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none; color: green">                                                    
+                                                   <input class="input-transparent" id="totalLiquidoMaterial"  style="color:green" disabled="disabled" value="@String.Format("{0:0,0.00}", Model.totalLiquidoMaterial)"/>
+                                                </div>
+                                            </div>
+                                            <div style="display: table-row">
+                                                <div class="dv-cell">Soma da porcentagem ganha no(s) produto(s)</div>
+                                                <div class="dv-cell" style="border-left: 0 none"></div>
+                                                <div class="dv-cell" style="border-left: 0 none"></div>
+                                                <div class="dv-cell" style="border-left: 0 none"></div>
+                                                <div class="dv-cell" style="text-align: right; border-left: 0 none; color: green">                                                    
+                                                   <input class="input-transparent" id="totalLiquidoProduto"  style="color:green" disabled="disabled" value="@String.Format("{0:0,0.00}", Model.totalLiquidoProduto)"/>
+                                                </div>
+                                            </div>
+                                            <div style="display: table-row">
+                                                <div class="dv-cell" style="text-align: right;"><strong>Totais (R$)</strong></div>
+                                                <div class="dv-cell" style="border-left: 0 none">
+                                                   <input class="input-transparent" id="valor" disabled="disabled" value="@String.Format("{0:0,0.00}", Model.valor)"/>
+                                                </div>
+                                                <div class="dv-cell" style="text-align: right;border-left: 0 none">
+                                                   <input class="input-transparent" id="total"  style="color:grey" disabled="disabled" value="@String.Format("{0:0,0.00}", Model.total)"/>
+                                                </div>
+                                                <div class="dv-cell" style="text-align: right;border-left: 0 none">                                                    
+                                                   <input class="input-transparent" id="despesaProjeto"  style="color:red" disabled="disabled" value="@String.Format("{0:0,0.00}", Model.despesaProjeto)"/>
+                                                </div>
+                                                <div class="dv-cell" style="text-align: right;border-left: 0 none">                                                    
+                                                   <input class="input-transparent" id="liquidoProjeto"  style="color:green" disabled="disabled" value="@String.Format("{0:0,0.00}", Model.liquidoProjeto)"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Projeto/aprovar.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}
+
+<style>
+    .dv-cell-head {
+        display: table-cell;
+        border: 1px solid grey;
+        vertical-align: middle;
+        padding: 5px;
+        background: #808080;
+    }
+
+    .dv-cell {
+        display: table-cell;
+        border: 1px solid grey;
+        vertical-align: middle;
+        padding: 5px;
+        border-top: 0 none;
+    }
+
+    .dv-border-left {
+        border-left: 0 none;
+        border-right: 0 none;
+    }
+
+    .input-transparent {
+        background: transparent !important;
+        border-width: 0 0 0 0;
+        font-weight: bold;
+        text-align: right;
+        color:#333333;
+    }
+</style>

@@ -1,0 +1,139 @@
+﻿@model RP.Sistema.Web.Models.Compra.CompraVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Adicionar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Material = new RP.Sistema.Web.Models.Material.Consultar();
+}
+<div class="container-fluid">
+    <div class="msg-aviso msg-erro">
+        <button data-dismiss="alert" class="close btn-msg-aviso" type="button">×</button><div class="msg"></div>
+    </div>
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i>Salvar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index", "Projeto")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                        <li class="divider"></li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.descricao, null, new { @class = "help-inline no-required" })</li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.Fornecedor.nome, null, new { @class = "help-inline no-required" })</li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.total, null, new { @class = "help-inline no-required" })</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index", "Projeto")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Cadastrar Compra</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+
+                    @Html.EditorFor(model => model.Fornecedor, "Fornecedor/Consultar", new { obrigatorio = false })
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.descricao, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextAreaFor(model => model.descricao, new { @class = "span6", maxlength = "255" })
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.total, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.total, new { @class = "input-small", maxlength = "8", filter = "floatnumber", style = "text-align:right" })
+                        </div>
+                    </div>   
+                    <table id="tblParcela">
+                        <thead>
+                            <tr>
+                                <th colspan="5" style="width: 100%">
+                                    <span class="label">Qtd. Parcelas</span> @Html.TextBox("Compra.qtdParcela", null, new { @class = "input-small", @filter = "numeric", style = "margin: 0;text-align: right" })
+                                    <span style="margin-left:20px" class="label">Vencimento 1º parcela</span> @Html.TextBox("Compra.dtVencimento", null, new { @class = "input-small datepicker", style = "margin: 0", @mask = "99/99/9999" })
+                                     <button style="margin-left:20px" id="gerar-parcela" class="btn btn-success">Gerar parcelas</button>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th style="width: 8%">Parcela</th>
+                                <th style="width: 20%">Forma de pagamento</th>
+                                <th style="width: 48%">Observação</th>
+                                <th style="width: 12%">Vencimento</th>
+                                <th style="width: 12%">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="message">
+                                <td colspan="5">Nenhuma parcela</td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">
+                                    <span class="pull-right"><strong>Soma das parcelas (R$):</strong></span>
+                                </td>
+                                <td>
+                                    <input class="input-small input-transparent pull-right" id="somaParcelas" value="0,00" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    @if (Model != null && Model.Parcelas != null)
+                    {
+                        <input type="hidden" id="tblParcela_data" value="@Json.Encode(Model.Parcelas.Select(r => new { r.vlParcela, r.nrParcela, r.flFormaPagamento, r.dsObservacao, dtVencimento = r.dtVencimento.ToString("dd/MM/yyyy") }).OrderBy(e => e.nrParcela))"/>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Compra/Vulso.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}
+
+<style>
+    .dv-cell-head {
+        display: table-cell;
+        border: 1px solid grey;
+        vertical-align: middle;
+        padding: 5px;
+        background: #808080;
+    }
+
+    .dv-cell {
+        display: table-cell;
+        border: 1px solid grey;
+        vertical-align: middle;
+        padding: 5px;
+        border-top: 0 none;
+    }
+
+    .dv-border-left {
+        border-left: 0 none;
+        border-right: 0 none;
+    }
+
+    .input-transparent {
+        background: transparent !important;
+        border-width: 0 0 0 0;
+        font-weight: bold;
+        text-align: right;
+        color: #333333;
+    }
+</style>

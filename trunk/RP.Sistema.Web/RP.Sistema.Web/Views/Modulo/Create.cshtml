@@ -1,0 +1,77 @@
+﻿@model RP.Sistema.Web.Models.Modulo.ModuloVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i> Salvar</a></li>
+                        <li><a href="#" data-form-type="reset" title="Limpar o formulário"><i class="icon-refresh"></i> Limpar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Módulos</a> <span class="divider">/</span></li>
+                    <li class="active">Cadastrar Módulo</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+                    @{
+        RP.Util.Class.Form editor = Html.Editor();
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.nmModulo),
+                Html.TextBoxFor(model => model.nmModulo, new { @class = "input-xxlarge", maxlength = "100" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.dsModulo),
+                Html.TextAreaFor(model => model.dsModulo, new { @class = "input-xxlarge", maxlength = "255", @data_textarea_label = true, @data_textarea_type = "char" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.nrOrdem),
+                Html.TextBoxFor(model => model.nrOrdem, new { @class = "input-medium spinner", @spinner = "{ min: 0 }", maxlength = "50" })
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.nmURL),
+                Html.TextBoxFor(model => model.nmURL, new { @class = "input-xxlarge", maxlength = "100" })
+            )
+        );
+				    }
+				    @editor.Render()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/jquery.spinner.js");
+    scriptBundle.Include("~/Scripts/Modulo/Create.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}
+

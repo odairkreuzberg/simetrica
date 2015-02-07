@@ -1,0 +1,67 @@
+﻿@model RP.Sistema.Web.Models.Controle.ControleVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i> Salvar</a></li>
+                        <li><a href="#" data-form-type="reset" title="Limpar o formulário"><i class="icon-refresh"></i> Limpar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Controles</a> <span class="divider">/</span></li>
+                    <li class="active">Cadastrar Controle</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+			        @{
+        RP.Util.Class.Form editor = Html.Editor();
+
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.nmControle),
+                Html.TextBoxFor(model => model.nmControle, new { @class = "input-xxlarge", maxlength = "100" }).ToString() +
+                Html.ValidationMessageFor(model => model.nmControle)
+            )
+        );
+        editor.Add(new RP.Util.Class.Line()
+            .Add(
+                Html.LabelFor(model => model.dsControle),
+                Html.TextAreaFor(model => model.dsControle, new { @class = "input-xxlarge", maxlength = "255" })
+            )
+        );
+                    }
+                    @editor.Render()    
+
+                    @Html.EditorFor(model => model.Area, "Area/Consultar")
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Controle/Create.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

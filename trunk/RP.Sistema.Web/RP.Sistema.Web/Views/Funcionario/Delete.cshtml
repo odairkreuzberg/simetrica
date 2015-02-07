@@ -1,0 +1,206 @@
+﻿@model RP.Sistema.Web.Models.Funcionario.FuncionarioVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Excluir";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                        <li class="divider"></li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.motivoSaida, null, new { @class = "help-inline no-required" })</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Excluir funcionário</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="alert alert-block">
+                    <h4>Aviso!</h4>
+                    <p>@Html.Raw("Deseja mesmo desativar este funcionário da empresa")</p>
+                    <p>
+                        @Html.CustomButton("Sim, desativar!", "submit", new { @class = "btn btn-danger" }, new { @left = "icon-off icon-white" })
+                        <a href="@Url.Action("Index")" title="Volta para tela inicial" class="btn">Não</a>
+                    </p>
+                </div>
+                <div class="tabbable">
+                    <ul class="nav nav-tabs" id="tabContainer">
+                        <li class="active"><a href="#tab-dado-pessoal" data-toggle="tab">Dados pessoais</a></li>
+                        <li><a href="#tab-endereco" data-toggle="tab">Endereço</a></li>
+                        <li><a href="#tab-empresa" data-toggle="tab">Empresa</a></li>
+                    </ul>
+                    <div class="form-horizontal">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab-dado-pessoal">
+                                <h4 class="heading controls" style="width: 45%">Pessoal</h4>
+                                <div class="control-group">
+                                    @Html.HiddenFor(model => model.idFuncionario)
+                                    @Html.CustomLabelFor(model => model.nome, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBoxFor(model => model.nome, new { @class = "span6", @readonly = "readonly" })
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(e => e.dtNascimento, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextBoxFor(model => model.dtNascimento, new { @class = "span2", @readonly = "readonly", @mask = "99/99/9999" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.cpf, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBoxFor(model => model.cpf, new { @class = "span2", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.rg, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBoxFor(model => model.rg, new { @class = "span2", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.fone, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBoxFor(model => model.fone, new { @class = "span2", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.celular, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBoxFor(model => model.celular, new { @class = "span2", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <h4 class="heading controls" style="width: 45%">Motivo</h4>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.motivoSaida, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextAreaFor(model => model.motivoSaida, new { @class = "span6", maxlength = "250" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane" id="tab-endereco">
+                                <h4 class="heading controls" style="width: 45%">Endereço</h4>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.email, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBoxFor(model => model.email, new { @class = "span6", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.logradouro, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBoxFor(model => model.logradouro, new { @class = "span6", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.bairro, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBoxFor(model => model.bairro, new { @class = "span6", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.numero, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBoxFor(model => model.numero, new { @class = "span3", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.cep, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBoxFor(model => model.cep, new { @class = "span3", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                @Html.EditorFor(model => model.Cidade, "Cidade/Consultar", new { desabilitar = true })
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.observacao, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextAreaFor(model => model.observacao, new { @class = "span6", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab-empresa">
+                                <h4 class="heading controls" style="width: 45%">Situação na empresa</h4>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(e => e.dtEntrada, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextBoxFor(model => model.dtEntrada, new { @class = "span2", @readonly = "readonly", @mask = "99/99/9999" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(e => e.ctps, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextBoxFor(model => model.ctps, new { @class = "span2", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(e => e.nrCargaHoraria, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextBoxFor(model => model.nrCargaHoraria, new { @class = "span2", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.status, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBoxFor(model => model.status, new { @class = "span2", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.tipo, new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBoxFor(model => model.tipo, new { @class = "span2", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(e => e.flMensalista, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextBoxFor(model => model.flMensalista, new { @class = "span2", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(e => e.salario, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextBoxFor(model => model.salario, new { @class = "span2", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(e => e.comissao, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextBoxFor(model => model.comissao, new { @class = "span2", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                @Html.EditorFor(model => model.Usuario, "Usuario/Consultar", new { desabilitar = true })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Funcionario/Details.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}
+

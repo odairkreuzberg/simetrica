@@ -1,0 +1,252 @@
+﻿<#@ template language="C#" HostSpecific="True" #>
+<#@ output extension=".cshtml" #>
+<#@ import namespace="Microsoft.VisualStudio.Web.Mvc.Scaffolding.BuiltIn" #>
+<#@ assembly name="System.ComponentModel.DataAnnotations" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Entity" #>
+<#@ assembly name="System.Data.Linq" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Data.Linq.Mapping" #>
+<#@ import namespace="System.Data.Objects.DataClasses" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="Microsoft.VisualStudio.Web.Mvc.Scaffolding.BuiltIn" #>
+<#
+	MvcTextTemplateHost mvcHost = MvcTemplateHost;
+	var Model = (MvcTextTemplateHost)Host;
+	var routePrefix = String.Empty;
+	routePrefix += "/" + Model.ControllerRootName + "/";
+#>
+@model <#= mvcHost.ViewDataTypeName #>
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "<#= mvcHost.ViewName#>";
+<#
+if (!String.IsNullOrEmpty(mvcHost.MasterPageFile)) {
+#>
+    Layout = "<#= mvcHost.MasterPageFile#>";
+<#
+}
+#>
+}
+<div class="content_main ui-corner-all">
+	@Html.ValidationSummary(false, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "ui-state-error ui-corner-all" })
+    @Html.FlashMessage()
+
+	<fieldset class="ui-corner-all">
+        <legend class="ui-state-active">Detalhes de <#= mvcHost.ViewDataType.Name #></legend>
+		<div class="block_content">
+			@{
+				RP.Util.Class.Form editor = Html.Editor();
+<#
+string pkName = GetPrimaryKeyName(mvcHost.ViewDataType);
+foreach (ModelProperty property in GetModelProperties(mvcHost.ViewDataType)) 
+{
+    if (!property.IsPrimaryKey && property.Scaffold) 
+	{
+#>
+				editor.Add(new RP.Util.Class.Line()
+					.Add(
+						Html.LabelFor(model => model.<#= property.ValueExpression #>),
+						Html.TextBoxFor(model => model.<#= property.ValueExpression #>, new { @class = "ui-corner-all textboxUI", @style = "width: 150px", @readonly = "readonly" })
+					)
+				);
+<#
+    }
+}
+#>
+		}
+			@editor.Render()
+
+			<p class="separator"><span class="ui-state-active">Ações</span></p>
+
+			@Html.ActionLink("Editar", "Edit", new { id = Model.<#= pkName #> }, new { @class = "buttonUI", @title = "Editar registro", @button = "{icons:{primary:'ui-icon-pencil'}}" })
+			@Html.ActionLink("Excluir", "Delete", new { id = Model.<#= pkName #> }, new { @class = "buttonUI", @title = "Excluir registro", @button = "{icons:{primary:'ui-icon-trash'}}" })
+			@Html.ActionLink("Voltar", "Index", null, new { @class = "buttonUI", @title = "Voltar para tela inicial", @button = "{icons:{primary:'ui-icon-circle-arrow-w'}}" })
+		</div>
+	</fieldset>
+</div>
+<#
+string path = "C:\\Projetos\\RP\\RP.Sistema.Web\\Scripts\\" + getControllerNameByViewDataTypeName(mvcHost.ViewDataTypeName) + "\\" ;
+string file = "Details.js";
+string content;
+
+if (!System.IO.Directory.Exists(path))
+{
+	System.IO.Directory.CreateDirectory(path);
+}
+
+if (!System.IO.File.Exists(path + file))
+{
+	System.IO.StreamWriter f = new System.IO.StreamWriter(path + file, false, System.Text.Encoding.UTF8);
+
+	content = @"";
+	f.WriteLine(content);
+
+	f.Flush();
+	f.Close();
+}
+#>
+@Html.AddScript("~/Scripts/<#= getControllerNameByViewDataTypeName(mvcHost.ViewDataTypeName) #>/Details.js")
+<#+
+// Describes the information about a property on the model
+class ModelProperty {
+    public string Name { get; set; }
+    public string AssociationName { get; set; }
+    public string ValueExpression { get; set; }
+    public string ModelValueExpression { get; set; }
+    public string ItemValueExpression { get; set; }
+    public Type UnderlyingType { get; set; }
+    public bool IsPrimaryKey { get; set; }
+    public bool IsForeignKey { get; set; }
+    public bool IsReadOnly { get; set; }
+    public bool Scaffold { get; set; }
+}
+
+// Change this list to include any non-primitive types you think should be eligible for display/edit
+static Type[] bindableNonPrimitiveTypes = new[] {
+    typeof(string),
+    typeof(decimal),
+    typeof(Guid),
+    typeof(DateTime),
+    typeof(DateTimeOffset),
+    typeof(TimeSpan),
+};
+
+// Call this to get the list of properties in the model. Change this to modify or add your
+// own default formatting for display values.
+List<ModelProperty> GetModelProperties(Type type) {
+    List<ModelProperty> results = GetEligibleProperties(type);
+    
+    foreach (ModelProperty prop in results) {
+        if (prop.UnderlyingType == typeof(double) || prop.UnderlyingType == typeof(decimal)) {
+            prop.ModelValueExpression = "String.Format(\"{0:F}\", " + prop.ModelValueExpression + ")";
+        }
+        else if (prop.UnderlyingType == typeof(DateTime)) {
+            prop.ModelValueExpression = "String.Format(\"{0:g}\", " + prop.ModelValueExpression + ")";
+        }
+    }
+
+    return results;
+}
+
+// Call this to determine if property has scaffolding enabled
+bool Scaffold(PropertyInfo property) {
+    foreach (object attribute in property.GetCustomAttributes(true)) {
+        var scaffoldColumn = attribute as ScaffoldColumnAttribute;
+        if (scaffoldColumn != null && !scaffoldColumn.Scaffold) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Call this to determine if the property represents a primary key. Change the
+// code to change the definition of primary key.
+bool IsPrimaryKey(PropertyInfo property) {
+    if (string.Equals(property.Name, "id", StringComparison.OrdinalIgnoreCase)) {  // EF Code First convention
+        return true;
+    }
+
+    if (string.Equals(property.Name, property.DeclaringType.Name + "id", StringComparison.OrdinalIgnoreCase)) {  // EF Code First convention
+        return true;
+    }
+
+    foreach (object attribute in property.GetCustomAttributes(true)) {
+        if (attribute is KeyAttribute) {  // WCF RIA Services and EF Code First explicit
+            return true;
+        }
+        
+        var edmScalar = attribute as EdmScalarPropertyAttribute;
+        if (edmScalar != null && edmScalar.EntityKeyProperty) {  // EF traditional
+            return true;
+        }
+
+        var column = attribute as ColumnAttribute;
+        if (column != null && column.IsPrimaryKey) {  // LINQ to SQL
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+// This will return the primary key property name, if and only if there is exactly
+// one primary key. Returns null if there is no PK, or the PK is composite.
+string GetPrimaryKeyName(Type type) {
+    IEnumerable<string> pkNames = GetPrimaryKeyNames(type);
+    return pkNames.Count() == 1 ? pkNames.First() : null;
+}
+
+// This will return all the primary key names. Will return an empty list if there are none.
+IEnumerable<string> GetPrimaryKeyNames(Type type) {
+    return GetEligibleProperties(type).Where(mp => mp.IsPrimaryKey).Select(mp => mp.Name);
+}
+
+// Call this to determine if the property represents a foreign key.
+bool IsForeignKey(PropertyInfo property) {
+    return MvcTemplateHost.RelatedProperties.ContainsKey(property.Name);
+}
+
+// A foreign key, e.g. CategoryID, will have a value expression of Category.CategoryID
+string GetValueExpressionSuffix(PropertyInfo property) {
+    RelatedModel propertyModel;
+    MvcTemplateHost.RelatedProperties.TryGetValue(property.Name, out propertyModel);
+
+    return propertyModel != null ? propertyModel.PropertyName + "." + propertyModel.DisplayPropertyName : property.Name;
+}
+
+// A foreign key, e.g. CategoryID, will have an association name of Category
+string GetAssociationName(PropertyInfo property) {
+    RelatedModel propertyModel;
+    MvcTemplateHost.RelatedProperties.TryGetValue(property.Name, out propertyModel);
+
+    return propertyModel != null ? propertyModel.PropertyName : property.Name;
+}
+
+// Helper
+List<ModelProperty> GetEligibleProperties(Type type) {
+    List<ModelProperty> results = new List<ModelProperty>();
+
+    foreach (PropertyInfo prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)) {
+        Type underlyingType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+        if (prop.GetGetMethod() != null && prop.GetIndexParameters().Length == 0 && IsBindableType(underlyingType)) {
+            string valueExpression = GetValueExpressionSuffix(prop);
+
+            results.Add(new ModelProperty {
+                Name = prop.Name,
+                AssociationName = GetAssociationName(prop),
+                ValueExpression = valueExpression,
+                ModelValueExpression = "Model." + valueExpression,
+                ItemValueExpression = "item." + valueExpression,
+                UnderlyingType = underlyingType,
+                IsPrimaryKey = IsPrimaryKey(prop),
+                IsForeignKey = IsForeignKey(prop),
+                IsReadOnly = prop.GetSetMethod() == null,
+                Scaffold = Scaffold(prop)
+            });
+        }
+    }
+
+    return results;
+}
+
+// Helper
+bool IsBindableType(Type type) {
+    return type.IsPrimitive || bindableNonPrimitiveTypes.Contains(type);
+}
+
+MvcTextTemplateHost MvcTemplateHost {
+    get {
+        return (MvcTextTemplateHost)Host;
+    }
+}
+
+string getControllerNameByViewDataTypeName(string model)
+{
+	string[] part = model.Split('.');
+	return part[part.Length - 1];
+}
+#>

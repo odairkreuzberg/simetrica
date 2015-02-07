@@ -1,0 +1,20 @@
+﻿@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Acesso negado.";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @Html.RenderFlashMessage()
+
+    <div class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Atenção!</strong> Acesso negado, você não possui permissão na ação desejada, caso seja necessária a liberação entre em contato com o administrador do sistema.
+    </div>
+    @if (!string.IsNullOrEmpty(Request["area"]))
+    {
+        <pre>Area: @Request["area"]</pre>
+    }
+    <pre>Ação: @Request["action"]</pre>
+    <pre>Controle: @Request["controller"]</pre>
+</div>

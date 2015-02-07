@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FA231E6C-2C02-424A-B5F5-0E3B1F6F4CBE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RP.Sistema.Model</RootNamespace>
+    <AssemblyName>RP.Sistema.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Context.cs" />
+    <Compile Include="ContextEntities.cs" />
+    <Compile Include="ContextGeral.cs" />
+    <Compile Include="Entities\Acao.cs" />
+    <Compile Include="Entities\Area.cs" />
+    <Compile Include="Entities\Caixa.cs" />
+    <Compile Include="Entities\Compra.cs" />
+    <Compile Include="Entities\ContaPagar.cs" />
+    <Compile Include="Entities\ContaReceber.cs" />
+    <Compile Include="Entities\Controle.cs" />
+    <Compile Include="Entities\Cidade.cs" />
+    <Compile Include="Entities\CartaoPonto.cs" />
+    <Compile Include="Entities\RequisicaoItem.cs" />
+    <Compile Include="Entities\Requisicao.cs" />
+    <Compile Include="Entities\Feriado.cs" />
+    <Compile Include="Entities\HoraExtra.cs" />
+    <Compile Include="Entities\ItemCompra.cs" />
+    <Compile Include="Entities\FolhaPagamento.cs" />
+    <Compile Include="Entities\Funcionario.cs" />
+    <Compile Include="Entities\Material.cs" />
+    <Compile Include="Entities\MovimentoProfissional.cs" />
+    <Compile Include="Entities\Produto.cs" />
+    <Compile Include="Entities\ProdutoMaterial.cs" />
+    <Compile Include="Entities\Projeto.cs" />
+    <Compile Include="Entities\ProjetoCusto.cs" />
+    <Compile Include="Entities\UnidadeMedida.cs" />
+    <Compile Include="Entities\Fabricante.cs" />
+    <Compile Include="Entities\FornecedorFone.cs" />
+    <Compile Include="Entities\ClienteFone.cs" />
+    <Compile Include="Entities\Fornecedor.cs" />
+    <Compile Include="Entities\Cliente.cs" />
+    <Compile Include="Entities\Estado.cs" />
+    <Compile Include="Entities\Pais.cs" />
+    <Compile Include="Entities\Entidade.cs" />
+    <Compile Include="Entities\Menu.cs" />
+    <Compile Include="Entities\Modulo.cs" />
+    <Compile Include="Entities\Parametro.cs" />
+    <Compile Include="Entities\Perfil.cs" />
+    <Compile Include="Entities\PerfilAcao.cs" />
+    <Compile Include="Entities\PerfilUsuario.cs" />
+    <Compile Include="Entities\Tabela.cs" />
+    <Compile Include="Entities\Usuario.cs" />
+    <Compile Include="Entities\ModuloUsuario.cs" />
+    <Compile Include="Mapping\AcaoMap.cs" />
+    <Compile Include="Mapping\AreaMap.cs" />
+    <Compile Include="Mapping\CaixaMap.cs" />
+    <Compile Include="Mapping\ClienteFoneMap.cs" />
+    <Compile Include="Mapping\ClienteMap.cs" />
+    <Compile Include="Mapping\CompraMap.cs" />
+    <Compile Include="Mapping\ContaPagarMap.cs" />
+    <Compile Include="Mapping\ContaReceberMap.cs" />
+    <Compile Include="Mapping\ControleMap.cs" />
+    <Compile Include="Mapping\CidadeMap.cs" />
+    <Compile Include="Mapping\CartaoPontoMap.cs" />
+    <Compile Include="Mapping\RequisicaoItemMap.cs" />
+    <Compile Include="Mapping\RequisicaoMap.cs" />
+    <Compile Include="Mapping\HoraExtraMap.cs" />
+    <Compile Include="Mapping\FeriadoMap.cs" />
+    <Compile Include="Mapping\ItemCompraMap.cs" />
+    <Compile Include="Mapping\FolhaPagamentoMap.cs" />
+    <Compile Include="Mapping\MaterialMap.cs" />
+    <Compile Include="Mapping\MovimentoProfissionalMap.cs" />
+    <Compile Include="Mapping\ProdutoMap.cs" />
+    <Compile Include="Mapping\ProdutoMaterialMap.cs" />
+    <Compile Include="Mapping\ProjetoCustoMap.cs" />
+    <Compile Include="Mapping\ProjetoMap.cs" />
+    <Compile Include="Mapping\FabricanteMap.cs" />
+    <Compile Include="Mapping\EstadoMap.cs" />
+    <Compile Include="Mapping\FornecedorFoneMap.cs" />
+    <Compile Include="Mapping\FornecedorMap.cs" />
+    <Compile Include="Mapping\FuncionarioMap.cs" />
+    <Compile Include="Mapping\PaisMap.cs" />
+    <Compile Include="Mapping\EntidadeMap.cs" />
+    <Compile Include="Mapping\MenuMap.cs" />
+    <Compile Include="Mapping\ModuloMap.cs" />
+    <Compile Include="Mapping\ParametroMap.cs" />
+    <Compile Include="Mapping\PerfilAcaoMap.cs" />
+    <Compile Include="Mapping\PerfilMap.cs" />
+    <Compile Include="Mapping\PerfilUsuarioMap.cs" />
+    <Compile Include="Mapping\TabelaMap.cs" />
+    <Compile Include="Mapping\UnidadeMedidaMap.cs" />
+    <Compile Include="Mapping\UsuarioMap.cs" />
+    <Compile Include="Mapping\ModuloUsuarioMap.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RP.DataAccess\RP.DataAccess.csproj">
+      <Project>{2ceb0d44-823f-4c19-afbc-94aa2ac17fd6}</Project>
+      <Name>RP.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RP.Util.Class\RP.Util.csproj">
+      <Project>{cf7bc31f-bcf5-404d-aead-c1078690965c}</Project>
+      <Name>RP.Util</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,117 @@
+﻿@model RP.Sistema.Web.Models.Acao.AcaoVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <div class="container-nav-list well affix">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Ações</li>
+                    <li>@Html.CustomActionLink("Editar", "Edit", new { id = Model.idAcao }, new { @title = "Editar registro" }, new { @left = "icon-edit" })</li>
+                    <li>@Html.CustomActionLink("Excluir", "Delete", new { id = Model.idAcao }, new { @title = "Excluir registro" }, new { @left = "icon-trash" })</li>
+                    <li class="divider"></li>
+                    <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="span10">
+            <ul class="breadcrumb">
+                <li><a href="@Url.Action("Index")">Ações</a> <span class="divider">/</span></li>
+                <li class="active">Detalhes da Ação</li>
+            </ul>
+
+        	@Html.RenderFlashMessage()
+            @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+            <div class="form-horizontal">
+                @{
+				    RP.Util.Class.Form editor = Html.Editor();
+				    editor.Add(new RP.Util.Class.Line()
+					    .Add(
+						    Html.LabelFor(model => model.nmAcao),
+						    Html.TextBoxFor(model => model.nmAcao, new { @class = "input-xxlarge", @readonly = "readonly" })
+					    )
+				    );
+				    editor.Add(new RP.Util.Class.Line()
+					    .Add(
+						    Html.LabelFor(model => model.dsAcao),
+                            Html.TextAreaFor(model => model.dsAcao, new { @class = "input-xxlarge", @readonly = "readonly" })
+					    )
+				    );
+                }
+                @editor.Render()
+                
+                @Html.EditorFor(model => model.Controle, "Controle/Consultar", new { @Disabled = true})
+
+                @Html.EditorFor(model => model.Menu, "Menu/Consultar", new { @Disabled = true })
+                
+                @{
+                    editor = Html.Editor();
+				    editor.Add(new RP.Util.Class.Line()
+					    .Add(
+						    Html.LabelFor(model => model.nmMenu),
+                            Html.TextBoxFor(model => model.nmMenu, new { @class = "input-xxlarge", @readonly = "readonly" })
+					    )
+				    );
+                    editor.Add(new RP.Util.Class.Line()
+                        .Add(
+                            Html.LabelFor(model => model.nrOrdem),
+                            Html.TextBoxFor(model => model.nrOrdem, new { @class = "input-small", @readonly = "readonly" })
+                        )
+                    );
+
+                    editor.Add(new RP.Util.Class.Line()
+                        .Add(
+                            Html.LabelFor(model => model.flMenu),
+                            Html.CheckBox("flMenu", (Model.flMenu == "Sim"), new { @class = "checkboxUI", @disabled = "disabled" })
+                        )
+                    ); 
+		        }
+                @editor.Render()
+
+                <div class="control-group">
+                    <div class="controls controls-row">
+                        @Html.TextBox("listaIcone", (!string.IsNullOrEmpty(Model.dsIcone) ? Model.dsIcone.Replace("atalho-", "") : ""), new { @class = "input-large pull-left", @readonly = "readonly" })
+                        <div class="thumbnail pull-left" style="width: 45px; height: 45px; margin-left:5px; margin-top: -24px">
+                            <span id="preview-atalho" class="@Model.dsIcone"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    string css = "~/" + Guid.NewGuid();
+    string js = "~/" + Guid.NewGuid();
+
+    StyleBundle styleBundle = new StyleBundle(css);
+    styleBundle.Include("~/Content/sprites-atalho.css");
+    BundleTable.Bundles.Add(styleBundle);
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Acao/Details.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+
+@section styles{
+    @Styles.Render(css)
+    <style type="text/css">
+        span[class^="atalho-"], #preview-atalho {
+            display: inline-block;
+            height: 45px;
+            margin-right: 10px;
+            width: 45px;
+            float: left;
+        }
+    </style>
+}
+
+@section scripts{
+    @Scripts.Render(js)
+}

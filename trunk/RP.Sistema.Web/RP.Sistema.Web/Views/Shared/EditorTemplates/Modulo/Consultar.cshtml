@@ -1,0 +1,108 @@
+﻿@model RP.Sistema.Web.Models.Modulo.Consultar
+@using RP.Util.Class;
+@{
+    bool Disabled = Convert.ToBoolean(ViewData["Disabled"]);
+}
+<div class="control-group">
+    @if (Disabled)
+    {
+        @Html.CustomLabelFor(model => model.idModulo, "Módulo", new { @class = "control-label" })
+        <div class="controls controls-row">
+            @Html.TextBoxFor(model => model.idModulo, new { @class = "input-small", @readonly = "readonly" })
+            @Html.TextBoxFor(model => model.nmModulo, new { @class = "input-xxlarge input-inavigate", @readonly = "readonly" })
+        </div>
+    }
+    else
+    {
+        @Html.CustomLabelFor(model => model.idModulo, "Módulo", new { @class = "control-label" })
+        <div class="controls">
+            @Html.TextBoxFor(model => model.idModulo, new { @class = "input-small", @filter = "numeric", @autocomplete = "off", @maxlength = 8, @prefix = Html.ClientPrefixName().ToString(), @from = "idModulo" })
+            <a href="#@Helper.getInputId("modal", Html.ClientPrefixName().ToString())" id="@Helper.getInputId("btn-localizar", Html.ClientPrefixName().ToString())" title="Localizar Módulo" class="btn" data-toggle="modal"><i class="icon-search"></i></a>
+            @Html.TextBoxFor(model => model.nmModulo, new { @class = "input-xxlarge input-inavigate", @prefix = Html.ClientPrefixName().ToString(), @from = "nmModulo" })
+        </div>
+        
+        @Html.Partial("_ModalPartial", 
+            new RP.Sistema.Web.Models.ModalVM{ 
+                Prefix = Html.ClientPrefixName().ToString(), 
+                Url = Url.Action("Query", "Modulo"),
+                Title = "Localizar Módulo"
+            }
+        )
+    }
+</div>
+
+@if (!Disabled)
+{
+@Html.AddScriptBlock(
+@<script type="text/javascript">
+     $(function () {
+         $('#@Html.ClientIdFor(e => e.idModulo)').change(function () {
+             var value = $(this).val();
+             if (!IsNullOrEmpty(value)) {
+                 $.ajax({
+                     dataType: 'json',
+                     type: 'GET',
+                     url: '@Url.Action("JsDetails", "Modulo")',
+                     data: { idModulo: value },
+                     beforeSend: function () {
+                         $.loadingBox('show');
+                     },
+                     success: function (data) {
+                         $.loadingBox('hide');
+                         if (data) {
+                             $('#@Html.ClientIdFor(e => e.idModulo)').val(data.idModulo);
+                             $('#@Html.ClientIdFor(e => e.nmModulo)').val(data.nmModulo);
+                         }
+                         else {
+                             $('#@Html.ClientIdFor(e => e.idModulo)').blink().select();
+                             $('#@Html.ClientIdFor(e => e.nmModulo)').val('');
+                         }
+                     },
+                     error: function (request) {
+                         Functions.checkRequest(request);
+                         $.loadingBox('hide');
+                     }
+                 });
+             }
+             else {
+                 $('#@Html.ClientIdFor(e => e.idModulo)').val('');
+                 $('#@Html.ClientIdFor(e => e.nmModulo)').val('');
+             }
+         })
+        .focus(function () {
+            $(this).select();
+        });
+
+        $('#@Helper.getInputId("modal", Html.ClientPrefixName().ToString())').on('shown', function () {
+            $(this).find('.modal-body').find('iframe').contents().find('#nome').focus();
+        })
+     });
+
+     $('#@Html.ClientIdFor(e => e.nmModulo)').iNavigate({
+         columns: [
+			{ name: 'Id', bind: 'idModulo', width: '30px' },
+			{ name: 'Nome', bind: 'nmModulo', width: '80px', label: true },
+			{ name: 'Descrição', bind: 'dsModulo', width: '290px' }
+		],
+         width: 500,
+         source: '@Url.Action("JsSearch", "Modulo")',
+         minLength: 0,
+         paginate: {
+             size: 10
+         },
+         select: function (data) {
+             if (data) {
+                 $('#@Html.ClientIdFor(e => e.idModulo)').val(data.idModulo);
+                 $('#@Html.ClientIdFor(e => e.nmModulo)').val(data.nmModulo);
+             }
+         },
+         change: function (data) {
+             if (!data) {
+                 $('#@Html.ClientIdFor(e => e.idModulo)').val('');
+                 $('#@Html.ClientIdFor(e => e.nmModulo)').blink().select();
+             }
+         }
+     });
+</script>
+)
+}

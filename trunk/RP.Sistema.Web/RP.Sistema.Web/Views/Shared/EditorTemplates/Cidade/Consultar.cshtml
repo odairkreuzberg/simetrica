@@ -1,0 +1,168 @@
+﻿@model RP.Sistema.Web.Models.Cidade.Consultar
+@using RP.Util.Class;
+@{
+    bool desabilitar = Convert.ToBoolean(ViewData["desabilitar"]);
+    bool obrigatorio = Convert.ToBoolean(ViewData["obrigatorio"] ?? true);
+    var Estado = new RP.Sistema.Web.Models.Estado.Consultar();
+}
+<div class="control-group">
+    @Html.CustomLabelFor(model => model.idCidade, "Cidade", new { @class = "control-label" })
+    @if (desabilitar)
+    {
+        <div class="controls">
+            @Html.TextBoxFor(model => model.nome, new { @class = "span6", @readonly = "readonly" })
+        </div>
+    }
+    else
+    {
+        <div class="controls  controls-row">
+            @Html.TextBoxFor(model => model.nome, new { @class = "span6", maxlength = "50", })
+            <a id="@Helper.getInputId("btn", Html.ClientPrefixName().ToString())" title="Adicionar estado" class="btn btn-input"><i class="icon-plus"></i></a>
+            @if (obrigatorio){ @Html.ValidationMessageFor(model => model.nome, null, new { @class = "help-inline", @id = Html.ClientPrefixName().ToString() })}
+        </div>
+    }
+    @Html.HiddenFor(model => model.idCidade)
+</div>
+@if (!desabilitar)
+{
+<div id="@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Nova cidade</h3>
+    </div>
+    <div class="modal-body">
+        @Html.EditorFor(model => Estado, "Estado/Consultar")
+        <div class="control-group">
+            <label for="@Helper.getInputId("nome_novo", Html.ClientPrefixName().ToString())" class="control-label">Nome</label>
+            <div class="controls">
+                <input type="text" value="" maxlength="50" id="@Helper.getInputId("nome_novo", Html.ClientPrefixName().ToString())" class="span6">
+                <span id="@Helper.getInputId("nome_valid", Html.ClientPrefixName().ToString())" class="field-validation-valid help-inline"></span>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" id="@Helper.getInputId("add", Html.ClientPrefixName().ToString())" data-loading-text="Processando" class="btn btn-primary">Adicionar</a>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+    </div>
+</div>
+
+@Html.AddScriptBlock(
+
+@<script type="text/javascript">
+     $(function () {
+
+         var Cidade = shared_function['@Helper.getInputId(Html.ClientPrefixName().ToString(), "container")'];
+
+         $('#@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())').dialog({
+             width: 960
+         });
+
+         $('#@Helper.getInputId("btn", Html.ClientPrefixName().ToString())').on('click', function () {
+             $("#@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())").modal('show');
+         })
+
+         $('#@Helper.getInputId("add", Html.ClientPrefixName().ToString())').on('click', function () {
+             Cidade.insert();
+         })
+
+         Cidade = {
+             insert: function () {
+                 var form = Cidade.getForm();
+                 form.btnAdd.button('loading');
+
+                 if (Cidade.validarForm(form)) {
+
+                     var model = Cidade.getCampos(form);
+
+                     $.ajax({
+                         dataType: 'json',
+                         type: 'POST',
+                         url: '@Url.Action("JsCreate", "Cidade")',
+                         data: model,
+                         beforeSend: function () {
+                             $.loadingBox('show');
+                         },
+                         success: function (data) {
+                             Cidade.setModel(data.model);
+
+                             Cidade.limparForm(form);
+                         },
+                         error: function (request) {
+                             form.btnAdd.button('reset');
+                             $.loadingBox('hide');
+                         }
+                     });
+                 } else {
+                     form.btnAdd.button('reset');
+                 }
+             },
+
+             getCampos: function (form) {
+                 return model = {
+                     nome: form.inputNome.val(),
+                     idEstado: form.inputIdEstado.val()
+                 };
+             },
+
+             getForm: function () {
+                 return form = {
+                     inputNome: $('#@Helper.getInputId("nome_novo", Html.ClientPrefixName().ToString())'),
+                     inputIdEstado: $('#@Helper.getInputId("Estado_idEstado", Html.ClientPrefixName().ToString())'),
+                     inputNomeEstado: $('#@Helper.getInputId("Estado_nome", Html.ClientPrefixName().ToString())'),
+                     spanNome: $('#@Helper.getInputId("nome_valid", Html.ClientPrefixName().ToString())'),
+                     spanEstado: $('#@Helper.getInputId("Estado", Html.ClientPrefixName().ToString())'),
+                     btnAdd: $('#@Helper.getInputId("add", Html.ClientPrefixName().ToString())'),
+                     dialog: $("#@Helper.getInputId("dlg", Html.ClientPrefixName().ToString())")
+                 };
+                 console.log(form)
+             },
+
+             validarForm: function (form) {
+                 validarCampo(form.spanNome, form.inputNome, "Informe o nome");
+                 validarCampo(form.spanEstado, form.inputNomeEstado, "Informe o estado");
+
+                 return (!window.IsNullOrEmpty(form.inputNome.val()) && !window.IsNullOrEmpty(form.inputIdEstado.val()));
+             },
+
+             setModel: function (model) {
+                 $('#@Html.ClientIdFor(e => e.nome)').val(model.nome);
+                 $('#@Html.ClientIdFor(e => e.idCidade)').val(model.idCidade);
+             },
+
+             limparForm: function (form) {
+                 form.inputNome.val('');
+                 form.inputIdEstado.val('');
+                 form.inputNomeEstado.val('');
+                 form.dialog.modal('hide');
+                 form.btnAdd.button('reset');
+                 $.loadingBox('hide');
+             }
+         }
+     });
+     $('#@Html.ClientIdFor(e => e.nome)').iNavigate({
+         columns: [,
+             { name: 'Nome', bind: 'nome', width: '40%' },
+             { name: 'Estado', bind: 'estado', width: '30%' },
+             { name: 'Pais', bind: 'pais', width: '30%' }
+         ],
+         width: 500,
+         source: '@Url.Action("JsSearch", "Cidade")',
+         minLength: 0,
+         paginate: {
+             size: 10
+         },
+         select: function (data) {
+             if (data) {
+                 $('#@Html.ClientIdFor(e => e.idCidade)').val(data.idCidade);
+                 $('#@Html.ClientIdFor(e => e.nome)').val(data.nome);
+             }
+         },
+         change: function (data) {
+             if (!data) {
+                 $('#@Html.ClientIdFor(e => e.idCidade)').val('');
+                 $('#@Html.ClientIdFor(e => e.nome)').blink().select();
+             }
+         }
+     });
+</script>
+)}

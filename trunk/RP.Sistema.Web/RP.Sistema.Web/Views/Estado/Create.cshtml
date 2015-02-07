@@ -1,0 +1,65 @@
+﻿@model RP.Sistema.Web.Models.Estado.EstadoVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Adicionar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<input type="hidden" id="url_create" value="@Url.Action("JsCreate", "Pais")"/>
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i>Salvar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Cadastrar Estado</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+
+                    @Html.EditorFor(model => model.Pais, "Pais/Consultar")
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.nome, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.nome, new { @class = "span6", maxlength = "50" })
+                            @Html.ValidationMessageFor(model => model.nome, null, new { @class = "help-inline"})
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.sigla, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.sigla, new { @class = "input-small", maxlength = "2" })
+                            @Html.ValidationMessageFor(model => model.sigla, null, new { @class = "help-inline"})
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Estado/Create.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

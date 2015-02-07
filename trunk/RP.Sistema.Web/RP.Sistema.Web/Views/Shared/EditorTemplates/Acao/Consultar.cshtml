@@ -1,0 +1,107 @@
+﻿@model RP.Sistema.Web.Models.Acao.Consultar
+@using RP.Util.Class;
+@{
+    bool Disabled = Convert.ToBoolean(ViewData["Disabled"]);
+}
+<div class="control-group">
+    @if (Disabled)
+    {
+        @Html.CustomLabelFor(model => model.idAcao, "Ação", new { @class = "control-label" })
+        <div class="controls">
+            @Html.TextBoxFor(model => model.idAcao, new { @class = "input-small", @readonly = "readonly" })
+            @Html.TextBoxFor(model => model.dsAcao, new { @class = "input-xxlarge input-inavigate", @readonly = "readonly" })
+        </div>
+    }
+    else
+    {
+        @Html.CustomLabelFor(model => model.idAcao, "Ação", new { @class = "control-label" })
+        <div class="controls">
+            @Html.TextBoxFor(model => model.idAcao, new { @class = "input-small", @filter = "numeric", @autocomplete = "off", @maxlength = 8, @prefix = Html.ClientPrefixName().ToString(), @from = "idAcao" })
+            <a href="#@Helper.getInputId("modal", Html.ClientPrefixName().ToString())" id="@Helper.getInputId("btn-localizar", Html.ClientPrefixName().ToString())" title="Localizar Ação" class="btn" data-toggle="modal"><i class="icon-search"></i></a>
+            @Html.TextBoxFor(model => model.dsAcao, new { @class = "input-xxlarge input-inavigate", @prefix = Html.ClientPrefixName().ToString(), @from = "dsAcao" })
+        </div>
+        
+        @Html.Partial("_ModalPartial", 
+            new RP.Sistema.Web.Models.ModalVM{ 
+                Prefix = Html.ClientPrefixName().ToString(), 
+                Url = Url.Action("Query", "Acao"),
+                Title = "Localizar Acao"
+            }
+        )
+    }
+</div>
+
+@if (!Disabled)
+{
+@Html.AddScriptBlock(
+@<script type="text/javascript">
+    $(function () {
+        $('#@Html.ClientIdFor(e => e.idAcao)').change(function () {
+            var value = $(this).val();
+            if (!IsNullOrEmpty(value)) {
+                $.ajax({
+                    dataType: 'json',
+                    type: 'GET',
+                    url: '@Url.Action("JsDetails", "Acao")',
+                    data: { idAcao: value },
+                    beforeSend: function () {
+                        $.loadingBox('show');
+                    },
+                    success: function (data) {
+                        $.loadingBox('hide');
+                        if (data) {
+                            $('#@Html.ClientIdFor(e => e.idAcao)').val(data.idAcao);
+                            $('#@Html.ClientIdFor(e => e.dsAcao)').val(data.dsAcao);
+                        }
+                        else {
+                            $('#@Html.ClientIdFor(e => e.idAcao)').blink().select();
+                            $('#@Html.ClientIdFor(e => e.dsAcao)').val('');
+                        }
+                    },
+                    error: function (request) {
+                        Functions.checkRequest(request);
+                        $.loadingBox('hide');
+                    }
+                });
+            }
+            else {
+                $('#@Html.ClientIdFor(e => e.idAcao)').val('');
+                $('#@Html.ClientIdFor(e => e.dsAcao)').val('');
+            }
+        })
+        .focus(function () {
+            $(this).select();
+        });
+
+        //$('#@Helper.getInputId("modal", Html.ClientPrefixName().ToString())').on('shown', function () {
+        //    $(this).find('.modal-body').find('iframe').contents().find('#nome').focus();
+        //})
+    });
+
+    $('#@Html.ClientIdFor(e => e.dsAcao)').iNavigate({
+        columns: [
+			{ name: 'Id', bind: 'idAcao', width: '30px' },
+			{ name: 'Descrição', bind: 'dsAcao', width: '470px' }
+		],
+        width: 500,
+        source: '@Url.Action("JsSearch", "Acao")',
+        minLength: 2,
+        paginate: {
+            size: 10
+        },
+        select: function (data) {
+            if (data) {
+                $('#@Html.ClientIdFor(e => e.idAcao)').val(data.idAcao);
+                $('#@Html.ClientIdFor(e => e.dsAcao)').val(data.dsAcao);
+            }
+        },
+        change: function (data) {
+            if (!data) {
+                $('#@Html.ClientIdFor(e => e.idAcao)').val('');
+                $('#@Html.ClientIdFor(e => e.dsAcao)').blink().select();
+            }
+        }
+    });
+</script>
+)
+}

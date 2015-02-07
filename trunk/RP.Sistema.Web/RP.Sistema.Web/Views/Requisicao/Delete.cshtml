@@ -1,0 +1,86 @@
+﻿@model RP.Sistema.Web.Models.Requisicao.RequisicaoVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Excluir";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                <li><a href="@Url.Action("Index", "Requisicao")">Início</a> <span class="divider">/</span></li>
+                <li><a href="@Url.Action("Projeto", "Requisicao")">Projetos ativos</a> <span class="divider"></span></li>
+                <li class="active">Excluir requisição</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="alert alert-block">
+                    <h4>Aviso!</h4>
+                    <p>@Html.Raw(RP.Util.Resource.Message.DELETE_CONFIRM)</p>
+                    <p>
+                        @Html.CustomButton("Sim, excluir!", "submit", new { @class = "btn btn-danger" }, new { @left = "icon-trash icon-white" })
+                        <a href="@Url.Action("Index")" title="Volta para tela inicial" class="btn">Não</a>
+                    </p>
+                </div>
+
+                <div class="form-horizontal">
+                @Html.EditorFor(model => model.Projeto, "Projeto/Consultar", new { desabilitar = true })
+                @Html.EditorFor(model => model.Funcionario, "Funcionario/Consultar", new { desabilitar = true })
+
+
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.dsObservacao, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextAreaFor(model => model.dsObservacao, new { @class = "span6", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <h4 class="heading">Itens</h4>
+                <table id="tblItem">
+                    <thead>
+                        <tr>
+                            <th style="width: 85%">Material</th>
+                            <th style="width: 15%; text-align: right">Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="message">
+                            <td colspan="3">Nenhum item</td>
+                        </tr>
+                    </tbody>
+                </table>
+                @if (Model != null && Model.Itens != null)
+                {
+                    <input type="hidden" id="tblItem_data" value="@Json.Encode(Model.Itens.OrderBy(e => e.nome))"/>
+                }
+            </div>
+
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Requisicao/Details.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}
+

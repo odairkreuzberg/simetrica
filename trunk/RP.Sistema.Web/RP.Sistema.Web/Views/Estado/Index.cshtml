@@ -1,0 +1,102 @@
+﻿@model RP.DataAccess.PaginatedList<RP.Sistema.Model.Entities.Estado>
+@using RP.Util;
+@using RP.Util.Class;
+@using RP.Util.Class.Grid;
+@using RP.Sistema.Web.Helpers;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
+}
+<div class="container-fluid">
+    @Html.RenderFlashMessage()
+    @using (Html.BeginForm("Search", "Estado", FormMethod.Get, new { @class = "well form-inline" }))
+    {
+        <div class="container center">
+            <div class="input-prepend input-append">
+                <span class="add-on">Filtro</span>
+                @Html.TextBox("filter", null, new { @class = "span6", maxlength = "100", @placeholder = "Pesquisar por nome..." })
+                @Html.CustomButton("Localizar", "submit", new { @class = "btn" }, new { @left = "icon-search" }, true)
+                @Html.CustomActionLink("Limpar pesquisa", "Index", new { @clear = true }, new { @class = "btn" }, new { @left = "icon-remove" }, true)
+            </div>
+            @Html.CustomActionLink("Adicionar", "Create", new { @class = "btn btn-success", @title = "Novo registro" }, new { @left = "icon-plus-sign icon-white" }, false)
+            <div class="btn-group">
+                <a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#" title="Mais ações"><i class="icon-cog icon-white"></i>Ações <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="@Url.Action("Report", new { clear = true})" id="btn-report"><i class="icon-print"></i>Relatório</a></li>
+                </ul>
+            </div>
+        </div>
+    }
+
+    @if (_action.ToLower() == "search")
+    {
+        IEnumerable<teGridColumn<RP.Sistema.Model.Entities.Estado>> _g = new[] 
+        {
+            new teGridColumn<RP.Sistema.Model.Entities.Estado>
+            {
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "actions b3"}
+                }, 
+                header = "", 
+                format = item => 
+                    Html.CustomActionLink("Visualizar", "Details", "Estado", new { id = item.idEstado }, new { @class = "btn btn-success", @title = "Detalhar registro" }, new { @left = "icon-eye-open icon-white"}, true).ToString() + 
+                    Html.CustomActionLink("Editar", "Edit", "Estado", new { id = item.idEstado }, new {@class = "btn btn-info", @title = "Editar registro" }, new { @left = "icon-edit icon-white"}, true).ToString() +
+                    Html.CustomActionLink( "Remover", "Delete", "Estado", new { id = item.idEstado }, new { @class = "btn btn-danger", @title = "Remover registro" }, new { @left = "icon-trash icon-white"}, true).ToString()
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Estado>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","20%"}
+                },
+                header = "Sigla", 
+                format = item => item.sigla 
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Estado>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","40%"}
+                },
+                header = "Nome", 
+                format = item => item.nome 
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Estado>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","40%"}
+                },
+                header = "Pais", 
+                format = item => item.Pais.nome
+            }
+		};
+
+        var __grid = Html.tGrid<RP.Sistema.Model.Entities.Estado>(
+            Model,
+            new Dictionary<string, string> { { "class", "table table-bordered table-condensed table-striped table-hover" } },
+            _g,
+            pager: new teGridPager
+            {
+                pagerAttributes = new Dictionary<string, string> { },
+                currentPage = int.Parse(Request["page"] ?? RP.Util.Resource.Message.DEFAULT_PAGE),
+                pageSize = int.Parse(Request["pagesize"] ?? RP.Util.Resource.Message.DEFAULT_PAGESIZE),
+                totalItemCount = Model.TotalCount,
+                routeValues = new RouteValueDictionary(new { controller = "Estado", action = _action })
+            }
+        );
+        @__grid
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Estado/Index.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

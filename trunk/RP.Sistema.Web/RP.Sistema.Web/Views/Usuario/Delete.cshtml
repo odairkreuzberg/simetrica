@@ -1,0 +1,78 @@
+﻿@model RP.Sistema.Web.Models.Usuario.UsuarioVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Controles</a> <span class="divider">/</span></li>
+                    <li class="active">Excluir Controle</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="alert alert-block">
+                    <h4>Aviso!</h4> 
+                    <p>@Html.Raw(RP.Util.Resource.Message.DELETE_CONFIRM)</p>
+                    <p>
+                        @Html.CustomButton("Sim, excluir!", "submit", new { @class = "btn btn-danger" }, new { @left = "icon-trash icon-white" })
+                        <a href="@Url.Action("Index")" title="Volta para tela inicial" class="btn">Não</a>
+                    </p>
+                </div>
+
+                <div class="form-horizontal">
+                    @{
+                        RP.Util.Class.Form editor = Html.Editor();
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.CustomLabelFor(model => model.Nome, new { @class = "control-label" }),
+                                Html.TextBoxFor(model => model.Nome, new { @class = "input-xxlarge", @readonly = "readonly" })
+                            )
+                        );
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.CustomLabelFor(model => model.Email, new { @class = "control-label" }),
+                                Html.TextBoxFor(model => model.Email, new { @class = "input-xxlarge", @readonly = "readonly" })
+                            )
+                        );
+				        editor.Add(new RP.Util.Class.Line()
+					        .Add(
+                                Html.CustomLabelFor(model => model.Login, new { @class = "control-label" }),
+                                Html.TextBoxFor(model => model.Login, new { @class = "input-xxlarge", @readonly = "readonly" })
+					        )
+				        );
+				        editor.Add(new RP.Util.Class.Line()
+					        .Add(
+                                Html.CustomLabelFor(model => model.ValidadeSenha, new { @class = "control-label" }),
+                                Html.EditorFor(model => model.ValidadeSenha, new { @readonly = "readonly"})
+					        )
+				        );
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.CustomLabelFor(model => model.Ativo, new { @class = "control-label" }),
+                                Html.CheckBoxFor(model => model.Ativo, new { @class = "checkboxUI", @disabled = "disabled" })
+                            )
+                        );
+		            }
+			        @editor.Render()
+                </div>
+            </div>
+        </div>
+	}
+</div>

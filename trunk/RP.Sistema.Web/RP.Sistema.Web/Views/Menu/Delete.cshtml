@@ -1,0 +1,90 @@
+﻿@model RP.Sistema.Web.Models.Menu.MenuVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Controles</a> <span class="divider">/</span></li>
+                    <li class="active">Excluir Controle</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="alert alert-block">
+                    <h4>Aviso!</h4> 
+                    <p>@Html.Raw(RP.Util.Resource.Message.DELETE_CONFIRM)</p>
+                    <p>
+                        @Html.CustomButton("Sim, excluir!", "submit", new { @class = "btn btn-danger" }, new { @left = "icon-trash icon-white" })
+                        <a href="@Url.Action("Index")" title="Volta para tela inicial" class="btn">Não</a>
+                    </p>
+                </div>
+
+                <div class="form-horizontal">
+                    @{
+					    RP.Util.Class.Form editor = Html.Editor();
+					    editor.Add(new RP.Util.Class.Line()
+						    .Add(
+							    Html.LabelFor(model => model.nmMenu),
+							    Html.TextBoxFor(model => model.nmMenu, new { @class = "input-xxlarge", @readonly = "readonly" })
+						    )
+					    );
+					    editor.Add(new RP.Util.Class.Line()
+						    .Add(
+							    Html.LabelFor(model => model.nrOrdem),
+							    Html.TextBoxFor(model => model.nrOrdem, new { @class = "input-medium", @readonly = "readonly" })
+						    )
+					    );
+			        }
+				    @editor.Render()
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.dsCor, new { @class = "control-label" })
+                        <div class="controls">
+                            <div class="input-append color" data-color="@Model.dsCor" data-color-format="hex">
+                                @Html.TextBoxFor(model => model.dsCor, new { @class = "span9", @readonly = "readonly" })
+                                <span class="add-on"><i style="display:inline-block; vertical-align:text-top; background-color:@Model.dsCor"></i></span>
+			                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	}
+</div>
+@{
+    string css = "~/" + Guid.NewGuid();
+    string js = "~/" + Guid.NewGuid();
+    
+    StyleBundle styleBundle = new StyleBundle(css);
+    styleBundle.Include("~/Content/colorpicker.css");
+    BundleTable.Bundles.Add(styleBundle);
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Menu/Delete.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+
+@section styles{
+    @Styles.Render(css)
+}
+
+@section scripts{
+    @Scripts.Render(js)
+}

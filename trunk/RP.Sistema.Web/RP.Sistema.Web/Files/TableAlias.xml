@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+    <table name="dbo.tabsusrlprocedimentoocupacao" alias="Procedimento ocupação"/>
+    <table name="dbo.tabsustbcid" alias="CID"/>
+    <table name="dbo.tabsustbdescricao" alias="SUS descrição" />
+    <table name="dbo.tabsustbprocedimento" alias="Procedimento SUS" />
+    <table name="dbo.tbatributo" alias="Atributo" />
+    <table name="dbo.tbatributovalor" alias="Atributo valor"/>
+    <table name="dbo.tbcbo" alias="CBO"/>
+    <table name="dbo.tbcep" alias="CEP"/>
+    <table name="dbo.tbcid" alias="CID"/>
+    <table name="dbo.tbcidade" alias="Cidade"/>
+    <table name="dbo.tbclassificacaorisco" alias="Classificação de risco"/>
+    <table name="dbo.tbconvenio" alias="Convênio"/>
+    <table name="dbo.tbficha" alias="Ficha"/>
+    <table name="dbo.tbfichaopcao" alias="Opção ficha"/>
+    <table name="dbo.tbfichapergunta" alias="Perfunta ficha"/>
+    <table name="dbo.tbficharesposta" alias="Resposta ficha"/>
+    <table name="dbo.tbfichatipo" alias="Fipo ficha"/>
+    <table name="dbo.tblogradouro" alias="Logradouro"/>
+    <table name="dbo.tborgaoclasse" alias="Orgão classe"/>
+    <table name="dbo.tbpaciente" alias="Paciente"/>
+    <table name="dbo.tbpacienteatributo" alias="Atributo paciente"/>
+    <table name="dbo.tbbairro" alias="Bairro"/>
+    <table name="dbo.tbpacientetelefone" alias="Telefones paciente"/>
+    <table name="dbo.tbpadraoclassificacaorisco" alias="Padrão de classificação"/>
+    <table name="dbo.tbpais" alias="País"/>
+    <table name="dbo.tbprocedimento" alias="Procedimento"/>
+    <table name="dbo.tbprocedimentocbo" alias="Procedimento CBO"/>
+    <table name="dbo.tbprofissional" alias="Profissional"/>
+    <table name="dbo.tbprofissionalcbo" alias="Prifissional CBO"/>
+    <table name="dbo.tbprofissionalunidade" alias="Profissional unidade de saúde"/>
+    <table name="dbo.tbprograma" alias="Programa"/>
+    <table name="dbo.tbprogramapaciente" alias="Programa paciente"/>
+    <table name="dbo.tbpsfarea" alias="Área"/>
+    <table name="dbo.tbpsfareaprofissional" alias="Área profissional"/>
+    <table name="dbo.tbpsfdomicilio" alias="Domicílio"/>
+    <table name="dbo.tbpsfdomicilioatributo" alias="Atributo domicílio"/>
+    <table name="dbo.tbpsffamilia" alias="Família"/>
+    <table name="dbo.tbpsffamiliaatributo" alias="Atributo família"/>
+    <table name="dbo.tbpsfmicroarea" alias="Microárea"/>
+    <table name="dbo.tbpsfmicroareaprofissional" alias="Microárea profissional"/>
+    <table name="dbo.tbpsfsegmento" alias="Segmento"/>
+    <table name="dbo.tbpsfvisita" alias="Visita"/>
+    <table name="dbo.tbsetor" alias="Setor"/>
+    <table name="dbo.tbunidadesaude" alias="Unidade de saúde"/>
+    <table name="dbo.tbunidadesaudesetor" alias="Setor unidade de saúde"/>
+    <table name="dbo.tbupaagendamento" alias="Agendamento"/>
+    <table name="dbo.tbupaatendimento" alias="Atendimento"/>
+    <table name="dbo.tbupaatendimentoprocedimento" alias="Atendimento procedimento"/>
+    <table name="dbo.tbupaencerramento" alias="Encerramento"/>
+    <table name="dbo.tbupasinalvital" alias="Sinal vital"/>
+    <table name="dbo.tbupasinalvitalprocedimento" alias="Sinal vital procedimento"/>
+    <table name="dbo.tbupatransferencia" alias="Tranferência"/>
+    <table name="dbo.tbusuariounidadesaude" alias="Usuário unidade de saúde"/>
+</root>

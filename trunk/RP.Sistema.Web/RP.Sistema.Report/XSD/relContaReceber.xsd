@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="NewDataSet" msprop:Generator_UserDSName="NewDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="table" msprop:Generator_TableClassName="tableDataTable" msprop:Generator_TableVarName="tabletable" msprop:Generator_TablePropName="table" msprop:Generator_RowDeletingName="tableRowDeleting" msprop:Generator_RowChangingName="tableRowChanging" msprop:Generator_RowEvHandlerName="tableRowChangeEventHandler" msprop:Generator_RowDeletedName="tableRowDeleted" msprop:Generator_UserTableName="table" msprop:Generator_RowChangedName="tableRowChanged" msprop:Generator_RowEvArgName="tableRowChangeEvent" msprop:Generator_RowClassName="tableRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="idcontareceber" msprop:Generator_ColumnVarNameInTable="columnidcontareceber" msprop:Generator_ColumnPropNameInRow="idcontareceber" msprop:Generator_ColumnPropNameInTable="idcontareceberColumn" msprop:Generator_UserColumnName="idcontareceber" type="xs:int" minOccurs="0" />
+              <xs:element name="parcela" msprop:Generator_ColumnVarNameInTable="columnparcela" msprop:Generator_ColumnPropNameInRow="parcela" msprop:Generator_ColumnPropNameInTable="parcelaColumn" msprop:Generator_UserColumnName="parcela" type="xs:int" minOccurs="0" />
+              <xs:element name="descricao" msprop:Generator_ColumnVarNameInTable="columndescricao" msprop:Generator_ColumnPropNameInRow="descricao" msprop:Generator_ColumnPropNameInTable="descricaoColumn" msprop:Generator_UserColumnName="descricao" type="xs:string" minOccurs="0" />
+              <xs:element name="vencimento" msprop:Generator_ColumnVarNameInTable="columnvencimento" msprop:Generator_ColumnPropNameInRow="vencimento" msprop:Generator_ColumnPropNameInTable="vencimentoColumn" msprop:Generator_UserColumnName="vencimento" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="pagamento" msprop:Generator_ColumnVarNameInTable="columnpagamento" msprop:Generator_ColumnPropNameInRow="pagamento" msprop:Generator_ColumnPropNameInTable="pagamentoColumn" msprop:Generator_UserColumnName="pagamento" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="valorconta" msprop:Generator_ColumnVarNameInTable="columnvalorconta" msprop:Generator_ColumnPropNameInRow="valorconta" msprop:Generator_ColumnPropNameInTable="valorcontaColumn" msprop:Generator_UserColumnName="valorconta" type="xs:decimal" minOccurs="0" />
+              <xs:element name="valorpago" msprop:Generator_ColumnVarNameInTable="columnvalorpago" msprop:Generator_ColumnPropNameInRow="valorpago" msprop:Generator_ColumnPropNameInTable="valorpagoColumn" msprop:Generator_UserColumnName="valorpago" type="xs:decimal" minOccurs="0" />
+              <xs:element name="situacao" msprop:Generator_ColumnVarNameInTable="columnsituacao" msprop:Generator_ColumnPropNameInRow="situacao" msprop:Generator_ColumnPropNameInTable="situacaoColumn" msprop:Generator_UserColumnName="situacao" type="xs:string" minOccurs="0" />
+              <xs:element name="flformapagamento" msprop:Generator_ColumnVarNameInTable="columnflformapagamento" msprop:Generator_ColumnPropNameInRow="flformapagamento" msprop:Generator_ColumnPropNameInTable="flformapagamentoColumn" msprop:Generator_UserColumnName="flformapagamento" type="xs:string" minOccurs="0" />
+              <xs:element name="nome" msprop:Generator_ColumnVarNameInTable="columnnome" msprop:Generator_ColumnPropNameInRow="nome" msprop:Generator_ColumnPropNameInTable="nomeColumn" msprop:Generator_UserColumnName="nome" type="xs:string" minOccurs="0" />
+              <xs:element name="tipo" msprop:Generator_ColumnVarNameInTable="columntipo" msprop:Generator_ColumnPropNameInRow="tipo" msprop:Generator_ColumnPropNameInTable="tipoColumn" msprop:Generator_UserColumnName="tipo" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

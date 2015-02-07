@@ -1,0 +1,27 @@
+﻿@model RP.Sistema.Web.Models.ModalVM
+@using RP.Util.Class
+<div id="@Helper.getInputId("modal", Model.Prefix)">
+    <div class="modal-header">
+        <button type="button" class="close" data-toggle="modal" data-target="#@Helper.getInputId("modal", Model.Prefix)" aria-hidden="true">×</button>
+        <h4>@Model.Title</h4>
+    </div>
+    <div class="modal-body" data-iframe-url="@Model.Url" data-iframe-prefix="@Model.Prefix" style="padding-top:3px">
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#@Helper.getInputId("modal", Model.Prefix)" aria-hidden="true">Fechar</button>
+    </div>
+</div>
+@Html.AddScriptBlock(
+@<script type="text/javascript">
+     $(function () {
+         $('#@Helper.getInputId("modal", Model.Prefix)').dialog({
+             width: 900,
+             height: 500
+         });
+     });
+
+     $(document).bind('@Helper.getInputId("modal-close", Model.Prefix)', function () {
+         $('#@Helper.getInputId("modal", Model.Prefix)').modal('hide');
+     });
+</script>
+)

@@ -1,0 +1,136 @@
+﻿@model RP.DataAccess.PaginatedList<RP.Sistema.Model.Entities.Caixa>
+@using RP.Util;
+@using RP.Util.Class;
+@using RP.Util.Class.Grid;
+@using RP.Sistema.Web.Helpers;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
+    string situacao = ViewBag.situacao;
+    DateTime dtFim = ViewBag.dtFim ?? DateTime.Now;
+    DateTime dtInicio = ViewBag.dtInicio ?? dtFim.AddDays(-10);
+   
+}
+<div class="container-fluid">
+    @Html.RenderFlashMessage()
+    @using (Html.BeginForm("Search", "Caixa", FormMethod.Get, new { @class = "well form-inline" }))
+    {
+        <div class="container center">
+            <div class="control-group">
+                <span style="margin-left:18px">Filtro</span>
+                @Html.TextBox("filter", null, new { @class = "span6", maxlength = "100", @placeholder = "Pesquisar por nome...", style="width:608px" })
+            </div>
+
+            <div class="control-group">
+                <span>Período</span>
+                @Html.TextBox("dtInicio", dtInicio, new { @class = "input-small datepicker", @mask = "99/99/9999" })
+                @Html.TextBox("dtFim", dtFim, new { @class = "input-small datepicker", @mask = "99/99/9999" })
+                <select  name="situacao" id="situacao" class="input-large">
+                    <option value="Corrente" @((string.IsNullOrEmpty(situacao) || situacao == "Corrente") ? "selected" : string.Empty)>Corrente</option>
+                    <option value="Cancelado"@((situacao == "Cancelado") ? "selected" : string.Empty)>Cancelado</option>
+                    <option value="Todos"@((situacao == "Todos") ? "selected" : string.Empty)>Todos</option>
+                </select>
+                @Html.CustomButton("Localizar", "submit", new { @class = "btn" }, new { @left = "icon-search" }, false)
+               <a href="@Url.Action("Report", new { clear = true})" class="btn" id="btn-report"><i class="icon-print"></i>Relatório</a>
+            </div>
+        </div>
+    }
+
+    @if (_action.ToLower() == "search")
+    {
+        IEnumerable<teGridColumn<RP.Sistema.Model.Entities.Caixa>> _g = new[] 
+        {
+            new teGridColumn<RP.Sistema.Model.Entities.Caixa>
+            {
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "actions b1"}
+                }, 
+                header = "", 
+                format = item => 
+                    Html.CustomActionLink("Visualizar", "Details", "Caixa", new { id = item.idCaixa }, new { @class = "btn btn-success", @title = "Detalhar registro" }, new { @left = "icon-eye-open icon-white"}, true).ToString()
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Caixa>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","14%"}
+                },
+                header = "Dt. de lançamento", 
+                format = item => item.dtLancamento.ToString("dd/MM/yyyy")
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Caixa>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","30%"}
+                },
+                header = "Descrição", 
+                format = item => item.descricao
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Caixa>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","14%"}
+                },
+                header = "Situação", 
+                format = item => item.situacao
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Caixa>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","14%"}
+                },
+                header = "Saldo anterior R$", 
+                format = item => item.saldoAnterior
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Caixa>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","14%"}
+                },
+                header = "Valor de lançamento R$", 
+                format = item => "<strong style='color:" + (item.valor < 0 ? "red" :"green") + "'>"  + item.valor + "</strong>"
+                
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Caixa>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","14%"}
+                },
+                header = "Saldo em caixa R$", 
+                format = item => "<strong style='color:" + (item.saldoAtual < 0 ? "red" :"green") + "'>"  + item.saldoAtual + "</strong>"
+            }
+		};
+
+        var __grid = Html.tGrid<RP.Sistema.Model.Entities.Caixa>(
+            Model,
+            new Dictionary<string, string> { { "class", "table table-bordered table-condensed table-striped table-hover" } },
+            _g,
+            pager: new teGridPager
+            {
+                pagerAttributes = new Dictionary<string, string> { },
+                currentPage = int.Parse(Request["page"] ?? RP.Util.Resource.Message.DEFAULT_PAGE),
+                pageSize = int.Parse(Request["pagesize"] ?? RP.Util.Resource.Message.DEFAULT_PAGESIZE),
+                totalItemCount = Model.TotalCount,
+                routeValues = new RouteValueDictionary(new { controller = "Caixa", action = _action })
+            }
+        );
+        @__grid
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Caixa/Index.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

@@ -1,0 +1,113 @@
+﻿@model RP.Sistema.Web.Models.Controle.Consultar
+@using RP.Util.Class;
+@{
+    bool Disabled = Convert.ToBoolean(ViewData["Disabled"]);
+}
+<div class="control-group">
+    @if (Disabled)
+    {
+        @Html.CustomLabelFor(model => model.idControle, "Controle", new { @class = "control-label" })
+        <div class="controls">
+            @Html.TextBoxFor(model => model.idControle, new { @class = "input-small", @readonly = "readonly" })
+            @Html.TextBoxFor(model => model.dsControle, new { @class = "input-xxlarge input-inavigate", @readonly = "readonly" })
+        </div>
+    }
+    else
+    {
+        @Html.CustomLabelFor(model => model.idControle, "Controle", new { @class = "control-label" })
+        <div class="controls">
+            @Html.TextBoxFor(model => model.idControle, new { @class = "input-small", @filter = "numeric", @autocomplete = "off", @maxlength = 8, @prefix = Html.ClientPrefixName().ToString(), @from = "idControle" })
+            <a href="#@Helper.getInputId("modal", Html.ClientPrefixName().ToString())" id="@Helper.getInputId("btn-localizar", Html.ClientPrefixName().ToString())" title="Localizar Controle" class="btn" data-toggle="modal"><i class="icon-search"></i></a>
+            @Html.TextBoxFor(model => model.dsControle, new { @class = "input-xxlarge input-inavigate", @prefix = Html.ClientPrefixName().ToString(), @from = "dsControle" })
+        </div>
+        
+        @Html.Partial("_ModalPartial", 
+            new RP.Sistema.Web.Models.ModalVM{ 
+                Prefix = Html.ClientPrefixName().ToString(), 
+                Url = Url.Action("Query", "Controle"),
+                Title = "Localizar Controle"
+            }
+        )
+    }
+</div>
+
+@if (!Disabled)
+{
+@Html.AddScriptBlock(
+@<script type="text/javascript">
+     $(function () {
+         $('#@Html.ClientIdFor(e => e.idControle)').change(function () {
+             var value = $(this).val();
+             if (!IsNullOrEmpty(value)) {
+                 $.ajax({
+                     dataType: 'json',
+                     type: 'GET',
+                     url: '@Url.Action("JsDetails", "Controle")',
+                     data: { idControle: value },
+                     beforeSend: function () {
+                         $.loadingBox('show');
+                     },
+                     success: function (data) {
+                         $.loadingBox('hide');
+                         if (data) {
+                             $('#@Html.ClientIdFor(e => e.idControle)').val(data.idControle);
+                             $('#@Html.ClientIdFor(e => e.dsControle)').val(data.dsControle);
+                             $(document).trigger('AfterLoadControle', data);
+                         }
+                         else {
+                             $('#@Html.ClientIdFor(e => e.idControle)').blink().select();
+                             $('#@Html.ClientIdFor(e => e.dsControle)').val('');
+                             $(document).trigger('AfterLoadControle', null);
+                         }
+                     },
+                     error: function (request) {
+                         Functions.checkRequest(request);
+                         $.loadingBox('hide');
+                     }
+                 });
+             }
+             else {
+                 $('#@Html.ClientIdFor(e => e.idControle)').val('');
+                 $('#@Html.ClientIdFor(e => e.dsControle)').val('');
+             }
+         })
+        .focus(function () {
+            $(this).select();
+        });
+
+        $('#@Helper.getInputId("modal", Html.ClientPrefixName().ToString())').on('shown', function () {
+            $(this).find('.modal-body').find('iframe').contents().find('#nome').focus();
+        })
+     });
+
+     $('#@Html.ClientIdFor(e => e.dsControle)').iNavigate({
+         columns: [
+			{ name: 'Id', bind: 'idControle', width: '30px' },
+			{ name: 'Nome', bind: 'nmControle', width: '120px', label: true },
+            { name: 'Descrição', bind: 'dsControle', width: '300px', },
+			{ name: 'Área', bind: 'nmArea', width: '150px' }
+		 ],
+         width: 600,
+         source: '@Url.Action("JsSearch", "Controle")',
+         minLength: 1,
+         paginate: {
+             size: 10
+         },
+         select: function (data) {
+             if (data) {
+                 $('#@Html.ClientIdFor(e => e.idControle)').val(data.idControle);
+                 $('#@Html.ClientIdFor(e => e.dsControle)').val(data.dsControle);
+                 $(document).trigger('AfterLoadControle', data);
+             }
+         },
+         change: function (data) {
+             if (!data) {
+                 $('#@Html.ClientIdFor(e => e.idControle)').val('');
+                 $('#@Html.ClientIdFor(e => e.dsControle)').blink().select();
+                 $(document).trigger('AfterLoadControle', null);
+             }
+         }
+     });
+</script>
+)
+}

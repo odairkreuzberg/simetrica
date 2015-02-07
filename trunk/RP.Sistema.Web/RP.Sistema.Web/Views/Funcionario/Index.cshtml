@@ -1,0 +1,148 @@
+﻿@model RP.DataAccess.PaginatedList<RP.Sistema.Model.Entities.Funcionario>
+@using RP.Util;
+@using RP.Util.Class;
+@using RP.Util.Class.Grid;
+@using RP.Sistema.Web.Helpers;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
+    string status = Request["status"];
+}
+<div class="container-fluid">
+    @Html.RenderFlashMessage()
+    @using (Html.BeginForm("Search", "Funcionario", FormMethod.Get, new { @class = "well form-inline" }))
+    {
+        <div class="container center">
+            <div class="input-prepend input-append">
+                <span class="add-on">Status</span>
+                <select name="status" id="status" class="input-small">
+                    <option value="Todos" @((string.IsNullOrEmpty(status) || status == "Todos")?"selected":string.Empty)>Todos</option>
+                    <option value="Ativo"@((status == "Ativo")?"selected":string.Empty)>Ativo</option>
+                    <option value="Férias"@((status == "Férias")?"selected":string.Empty)>Férias</option>
+                    <option value="Inativo"@((status == "Inativo")?"selected":string.Empty)>Inativo</option>
+                </select>
+                @Html.TextBox("filter", null, new { @class = "span6", maxlength = "100", @placeholder = "Pesquisar por nome do funcionário..." })
+                @Html.CustomButton("Localizar", "submit", new { @class = "btn" }, new { @left = "icon-search" }, true)
+                @Html.CustomActionLink("Limpar pesquisa", "Index", new { @clear = true }, new { @class = "btn" }, new { @left = "icon-remove" }, true)
+            </div>
+            @Html.CustomActionLink("Adicionar", "Create", new { @class = "btn btn-success", @title = "Novo registro" }, new { @left = "icon-plus-sign icon-white" }, false)
+            <div class="btn-group">
+                <a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#" title="Mais ações"><i class="icon-cog icon-white"></i> Ações <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="@Url.Action("Report", new { clear = true })" id="btn-report"><i class="icon-print"></i>Relatório</a></li>
+                </ul>
+            </div>
+        </div>
+    }
+
+    @if (_action.ToLower() == "search")
+    {
+        IEnumerable<teGridColumn<RP.Sistema.Model.Entities.Funcionario>> _g = new[] 
+        {
+            new teGridColumn<RP.Sistema.Model.Entities.Funcionario>
+            {
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "actions b3"}
+                }, 
+                header = "", 
+                format = item => 
+                    Html.CustomActionLink("Visualizar", "Details", "Funcionario", new { id = item.idFuncionario }, new { @class = "btn btn-success", @title = "Detalhar registro" }, new { @left = "icon-eye-open icon-white"}, true).ToString() + 
+                    ((item.status == RP.Sistema.Model.Entities.Funcionario.INATIVO) ? 
+                    ("<a class='btn'  rel='popover' data-placement='right' data-trigger='hover' data-content='Não é possível editar funcionários inativos.' title='Status " + item.status + "' ><i class='icon-info-sign'></i></a>" +                    
+                    "<a class='btn'  rel='popover' data-placement='right' data-trigger='hover' data-content='Este funcionario já esta inativo.' title='Status " + item.status + "' ><i class='icon-info-sign'></i></a>" ) :
+                    (Html.CustomActionLink("Editar", "Edit", "Funcionario", new { id = item.idFuncionario }, new {@class = "btn btn-info", @title = "Editar registro" }, new { @left = "icon-edit icon-white"}, true).ToString() +
+                    Html.CustomActionLink( "Remover", "Delete", "Funcionario", new { id = item.idFuncionario }, new { @class = "btn btn-danger", @title = "Remover registro" }, new { @left = "icon-off icon-white"}, true).ToString()))
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Funcionario>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","10%"}
+                },
+                header = "Dt. admissão", 
+                format = item => item.dtEntrada.Value.ToString("dd/MM/yyyy")
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Funcionario>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","25%"}
+                },
+                header = "Nome", 
+                format = item => item.nome
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Funcionario>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","25%"}
+                },
+                header = "Endereço", 
+                format = item => item.logradouro + ", Nº. " + item.numero + " - " + item.bairro
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Funcionario>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","10%"}
+                },
+                header = "Telefone", 
+                format = item => item.fone
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Funcionario>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","10%"}
+                },
+                header = "Celular", 
+                format = item => item.celular
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Funcionario>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","10%"}
+                },
+                header = "Atividade", 
+                format = item => item.tipo
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Funcionario>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","10%"}
+                },
+                header = "Status", 
+                format = item => item.status
+            }
+		};
+
+        var __grid = Html.tGrid<RP.Sistema.Model.Entities.Funcionario>(
+            Model,
+            new Dictionary<string, string> { { "class", "table table-bordered table-condensed table-striped table-hover" } },
+            _g,
+            pager: new teGridPager
+            {
+                pagerAttributes = new Dictionary<string, string> { },
+                currentPage = int.Parse(Request["page"] ?? RP.Util.Resource.Message.DEFAULT_PAGE),
+                pageSize = int.Parse(Request["pagesize"] ?? RP.Util.Resource.Message.DEFAULT_PAGESIZE),
+                totalItemCount = Model.TotalCount,
+                routeValues = new RouteValueDictionary(new { controller = "Funcionario", action = _action })
+            }
+        );
+        @__grid
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Funcionario/Index.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

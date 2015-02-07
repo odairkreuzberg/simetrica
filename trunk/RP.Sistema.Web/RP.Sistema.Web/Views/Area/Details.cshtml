@@ -1,0 +1,73 @@
+﻿@model RP.Sistema.Web.Models.Area.AreaVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <div class="container-nav-list well affix">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Ações</li>
+                    <li>@Html.CustomActionLink("Editar", "Edit", new { id = Model.idArea }, new { @title = "Editar registro" }, new { @left = "icon-edit" })</li>
+                    <li>@Html.CustomActionLink("Excluir", "Delete", new { id = Model.idArea }, new { @title = "Excluir registro" }, new { @left = "icon-trash" })</li>
+                    <li class="divider"></li>
+                    <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="span10">
+            <ul class="breadcrumb">
+                <li><a href="@Url.Action("Index")">Área</a> <span class="divider">/</span></li>
+                <li class="active">Detalhes da Área</li>
+            </ul>
+
+        	@Html.RenderFlashMessage()
+            @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+            <div class="form-horizontal">
+                @{
+                    RP.Util.Class.Form editor = Html.Editor();
+                    editor.Add(new RP.Util.Class.Line()
+                        .Add(
+                            Html.LabelFor(model => model.nmArea),
+                            Html.TextBoxFor(model => model.nmArea, new { @class = "input-xxlarge", @readonly = "readonly" })
+                        )
+                    );
+                    editor.Add(new RP.Util.Class.Line()
+                        .Add(
+                            Html.LabelFor(model => model.dsArea),
+                            Html.TextAreaFor(model => model.dsArea, new { @class = "input-xxlarge", @readonly = "readonly" })
+                        )
+                    );
+                    }
+                    @editor.Render()
+                    
+                    @Html.EditorFor(model => model.Modulo, "Modulo/Consultar", new { @Disabled = true })                
+
+                    @{
+                        editor.Clear();
+                        editor.Add(new RP.Util.Class.Line()
+                            .Add(
+                                Html.LabelFor(model => model.flUsaURL),
+                                Html.CheckBox("flUsaURL", (Model.flUsaURL == "Sim"), new { @class = "checkboxUI", @disabled = "disabled" })
+                            )
+                        );
+		            }
+                    @editor.Render()
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Area/Details.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

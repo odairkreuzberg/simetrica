@@ -1,0 +1,445 @@
+﻿<#@ template language="C#" HostSpecific="True" #>
+<#
+var Model = (MvcTextTemplateHost)Host;
+var routePrefix = String.Empty;
+routePrefix += "/" + Model.ControllerRootName + "/";
+#>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.Objects" #>
+<#@ import namespace="System.Linq" #>
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Transactions;
+using RP.Sistema.Model.Entities;
+using RP.Sistema.Model;
+using RP.Util.Class;
+
+namespace <#= Model.Namespace #>
+{ 
+<#  
+    var modelName = Model.ModelType.Name; 
+    var entitySetName = Model.EntitySetName; 
+    var modelVariable = modelName.ToLower();
+    var entitySetVariable = entitySetName.ToLower();
+    var primaryKey = Model.PrimaryKeys[0];
+    var lambdaVar = modelVariable[0];
+    var isObjectContext = typeof(ObjectContext).IsAssignableFrom(Model.ContextType);
+#>
+    public class <#= Model.ControllerName #> : Controller
+    {
+		#region ActionResult
+        //
+        // GET: <#= routePrefix #>
+        public ActionResult Index()
+        {
+            return View();
+        }
+		
+        //
+        // GET: <#= routePrefix #>Search?filter=
+        public ActionResult Search(string filter, int? page, int? pagesize)
+        {
+            try
+            {
+                using (Context db = new Context())
+                {
+                    BLL.<#= modelName #>BLL <#= modelVariable #>BLL = new BLL.<#= modelName #>BLL(db);
+                    var result = <#= modelVariable #>BLL.Search(filter, page, pagesize);
+
+                    return View("Index", result);
+				}
+            }
+            catch (Exception ex)
+            {
+                this.AddFlashMessage(RP.Util.Exception.Message.Get(ex), RP.Util.MessageHelper.ERROR);
+                return RedirectToAction("Index");
+            }
+        }		
+
+        //
+        // GET: <#= routePrefix #>Details/5
+        public ActionResult Details(<#= primaryKey.ShortTypeName #> id)
+        {
+            try
+            {
+                using (Context db = new Context())
+                {
+                    BLL.<#= modelName #>BLL <#= modelVariable #>BLL = new BLL.<#= modelName #>BLL(db);
+                    <#= modelName #> <#= modelVariable #> = <#= modelVariable #>BLL.Select(id);
+
+                    return View(<#= modelVariable #>);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.AddFlashMessage(RP.Util.Exception.Message.Get(ex), RP.Util.MessageHelper.ERROR);
+                return RedirectToAction("Index");
+            }
+        }
+
+        //
+        // GET: <#= routePrefix #>Create
+        public ActionResult Create()
+        {
+            return View();
+        } 
+
+        //
+        // POST: <#= routePrefix #>Create
+        [HttpPost]
+        public ActionResult Create(<#= modelName #> <#= modelVariable #>)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    using (Context db = new Context())
+                    {
+                        using (TransactionScope trans = new TransactionScope())
+                        {
+                            BLL.<#= modelName #>BLL <#= modelVariable #>BLL = new BLL.<#= modelName #>BLL(db);
+                            <#= modelVariable #>BLL.Insert(<#= modelVariable #>);
+                            <#= modelVariable #>BLL.SaveChanges();
+                            trans.Complete();
+
+                            this.AddFlashMessage(RP.Util.Resource.Message.INSERT_SUCCESS, RP.Util.MessageHelper.SUCCESS);
+                            return RedirectToAction("Index");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.AddFlashMessage(RP.Util.Exception.Message.Get(ex), RP.Util.MessageHelper.ERROR);
+                    return RedirectToAction("Index");
+                }
+
+            }
+
+            return View(<#= modelVariable #>);
+        }
+        
+        //
+        // GET: <#= routePrefix #>Edit/5
+        public ActionResult Edit(<#= primaryKey.ShortTypeName #> id)
+        {
+            try
+            {
+                using (Context db = new Context())
+                {
+                    BLL.<#= modelName #>BLL <#= modelVariable #>BLL = new BLL.<#= modelName #>BLL(db);
+                    <#= modelName #> <#= modelVariable #> = <#= modelVariable #>BLL.Select(id);
+
+                    return View(<#= modelVariable #>);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                this.AddFlashMessage(RP.Util.Exception.Message.Get(ex), RP.Util.MessageHelper.ERROR);
+                return RedirectToAction("Index");
+            }
+        }
+
+        //
+        // POST: <#= routePrefix #>Edit/5
+        [HttpPost]
+        public ActionResult Edit(<#= modelName #> <#= modelVariable #>)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    using (Context db = new Context())
+                    {
+                        using (TransactionScope trans = new TransactionScope())
+                        {
+		                    BLL.<#= modelName #>BLL <#= modelVariable #>BLL = new BLL.<#= modelName #>BLL(db);
+                            <#= modelVariable #>BLL.Update(<#= modelVariable #>);
+                            <#= modelVariable #>BLL.SaveChanges();
+                            trans.Complete();
+
+                            this.AddFlashMessage(RP.Util.Resource.Message.EDIT_SUCCESS, RP.Util.MessageHelper.SUCCESS);
+                            return RedirectToAction("Index");
+                        }
+                    }
+                }
+                return View(<#= modelVariable #>);
+            }
+            catch (Exception ex) 
+            {
+                this.AddFlashMessage(RP.Util.Exception.Message.Get(ex), RP.Util.MessageHelper.ERROR);
+                return RedirectToAction("Index");
+            }        
+		}
+
+        //
+        // GET: <#= routePrefix #>Delete/5
+        public ActionResult Delete(<#= primaryKey.ShortTypeName #> id)
+        {
+            try
+            {
+                using (Context db = new Context())
+                {
+	                BLL.<#= modelName #>BLL <#= modelVariable #>BLL = new BLL.<#= modelName #>BLL(db);
+                    <#= modelName #> <#= modelVariable #> = <#= modelVariable #>BLL.Select(id);
+
+                    this.AddFlashMessage(RP.Util.Resource.Message.DELETE_CONFIRM, RP.Util.MessageHelper.ALERT);
+                    return View(<#= modelVariable #>);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.AddFlashMessage(RP.Util.Exception.Message.Get(ex), RP.Util.MessageHelper.ERROR);
+                return RedirectToAction("Index");
+            }
+        }
+
+        //
+        // POST: <#= routePrefix #>Delete/5
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(<#= primaryKey.ShortTypeName #> id)
+        {            
+            try
+            {
+                using (Context db = new Context())
+                {
+                    using (TransactionScope trans = new TransactionScope())
+                    {
+	                    BLL.<#= modelName #>BLL <#= modelVariable #>BLL = new BLL.<#= modelName #>BLL(db);
+                        <#= modelVariable #>BLL.Delete(id);
+                        <#= modelVariable #>BLL.SaveChanges();
+                        trans.Complete();
+
+                        this.AddFlashMessage(RP.Util.Resource.Message.DELETE_SUCCESS, RP.Util.MessageHelper.SUCCESS);
+                        return RedirectToAction("Index");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.AddFlashMessage(RP.Util.Exception.Message.Get(ex), RP.Util.MessageHelper.ERROR);
+                return RedirectToAction("Index");
+            }
+        }
+
+		//
+        // GET: <#= routePrefix #>Report?filter=
+        public ActionResult Report(string filter)
+        {
+            return View();
+        }
+		#endregion
+
+		#region JsonResult
+		//
+        // GET: <#= routePrefix #>JsSearch?filter=
+        public JsonResult JsSearch(string filter, int? page, int? pagesize)
+        {
+            try
+            {
+                using (Context db = new Context())
+                {
+                    BLL.<#= modelName #>BLL <#= modelVariable #>BLL = new BLL.<#= modelName #>BLL(db);
+                    var result = <#= modelVariable #>BLL.Search(filter, page, pagesize);
+					var list = result.Select(s => new 
+					{ 
+                        s.id<#= modelName#>
+                    });
+
+                    return Json(new Util.Class.JsonCollection{ result = list, count = result.TotalCount }, JsonRequestBehavior.AllowGet);
+				}
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return Json(RP.Util.Exception.Message.Get(ex), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+		//
+        // GET: <#= routePrefix #>JsDetails/5
+        public JsonResult JsDetails(<#= primaryKey.ShortTypeName #> id<#= modelName#>)
+        {
+            try
+            {
+                using (Context db = new Context())
+                {
+                    BLL.<#= modelName #>BLL <#= modelVariable #>BLL = new BLL.<#= modelName #>BLL(db);
+                    <#= modelName #> <#= modelVariable #> = <#= modelVariable #>BLL.Select(id<#= modelName#>);
+                    
+					if (<#= modelVariable #> == null) 
+                    {
+                        return Json(string.Empty, JsonRequestBehavior.AllowGet);
+                    }
+
+					var result = new
+					{
+						id<#= modelName#>
+					};
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return Json(RP.Util.Exception.Message.Get(ex), JsonRequestBehavior.AllowGet);
+            }
+        }
+		#endregion
+    }
+}
+
+<#
+string path = "C:\\Projetos\\RP\\RP.Sistema.BLL\\";
+string file = modelName + "BLL.cs";
+string content;
+
+if (!System.IO.Directory.Exists(path))
+{
+	System.IO.Directory.CreateDirectory(path);
+}
+
+if (!System.IO.File.Exists(path + file))
+{
+	System.IO.StreamWriter f = new System.IO.StreamWriter(path + file, false, System.Text.Encoding.UTF8);
+
+	content = @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using RP.Sistema.Model.Entities;
+using RP.Util.Class;";
+	
+	f.WriteLine(content);
+
+	content = @"
+namespace RP.Sistema.BLL" + @"
+{
+    public class " + modelName + @"BLL : RP.Sistema.Model.AbstractBLL<RP.Sistema.Model.Entities." + modelName +  @"> 
+    {
+
+        public " + modelName + @"BLL(RP.Sistema.Model.Context db) : base(db)
+        { }
+
+        /*
+        private void BeforeInsert() { }
+        private void AfterInsert() { }
+        private void BeforeUpdate() { }
+        private void AfterUpdate() { }
+        private void BeforeDelete() { }
+        private void AfterDelete() { }
+        */";
+
+	f.WriteLine(content);
+
+	content = @"      
+		public override void Insert(" + modelName + @" bean)
+        {
+            //BeforeInsert();
+            db." + modelName + @"s.Add(bean);
+            //AfterInsert();
+        }";
+
+	f.WriteLine(content);
+
+	content = @"
+        public override void Update(" + modelName + @" bean)
+        {
+            //BeforeUpdate();
+            db.Entry(bean).State = EntityState.Modified;
+            //AfterUpdate();
+        }";
+
+	f.WriteLine(content);
+
+	content = @"
+        public override void Delete(params object[] id)
+        {
+            //BeforeDelete();
+            " + modelName + " " + modelVariable + @" = db." + modelName + @"s.Find(id);
+            db." + modelName + @"s.Remove(" + modelVariable + @");
+            //AfterDelete();
+        }";
+
+	f.WriteLine(content);
+
+	content = @"
+        public override " + modelName + @" Select(params object[] id)
+        {
+			int id" + modelName + @" = (int)id[0];
+			" + modelName + " " + modelVariable + @" = db." + modelName + @"s.FirstOrDefault(e => e.id" + modelName + @" == id" + modelName + @");
+			if (" + modelVariable + @" == null)
+			{
+				throw new NotFoundException(string.Format(RP.Util.Class.Message.RECORD_NOT_FOUND, id" + modelName + @"));
+			}
+
+			return " + modelVariable + @";
+        }";
+
+	f.WriteLine(content);
+
+	content = @"
+        public override RP.DataAccess.PaginatedList<" + modelName + @"> Search(string filter, int? page, int? pagesize)
+        {
+            IQueryable<" + modelName + @"> query = preSearch(filter);
+
+            var result = new RP.DataAccess.PaginatedList<RP.Sistema.Model.Entities." + modelName + @">(query.OrderBy(o => o.id" + modelName + @"), page ?? int.Parse(Message.DEFAULT_PAGE), pagesize ?? int.Parse(Message.DEFAULT_PAGESIZE));
+
+            return result;
+        }";
+
+	f.WriteLine(content);
+
+	content = @"
+        public override ICollection<" + modelName + @"> Search(string filter)
+        {
+            IQueryable<" + modelName + @"> query = preSearch(filter);
+
+            return query.ToList();
+        }";
+
+	f.WriteLine(content);
+
+	content = @"
+        private IQueryable<" + modelName + @"> preSearch(string filter)
+        {
+
+            IQueryable<" + modelName + @"> query = from " + modelName + @" in db." + modelName + @"
+                                     select " + modelName + @";
+
+	        if (!string.IsNullOrEmpty(filter))
+            {
+                filter = RP.Util.Class.Fonetiza.Fonetizar(filter);
+
+                foreach (string word in filter.Split(' '))
+                {
+                    string temp = word;
+                    query = query.Where(p => p.nm" + modelName + @".Contains(temp));
+                }
+            }
+            return query;
+        }
+	";
+	
+	f.WriteLine(content);
+
+	content = @"
+	}
+}";
+
+	f.WriteLine(content);
+
+	f.Flush();
+	f.Close();
+}
+#>

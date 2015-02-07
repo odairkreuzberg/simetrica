@@ -1,0 +1,79 @@
+﻿@model RP.Sistema.Web.Models.Material.MaterialVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i>Salvar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                        <li class="divider"></li>
+                        <li style="margin-left:-25px">@Html.ValidationMessageFor(model => model.nome, null, new { @class = "help-inline no-required" })</li>
+                        
+                        <li style="margin-left:-25px">@Html.ValidationMessageFor(model => model.UnidadeMedida.nome, null, new { @class = "help-inline no-required" })</li>
+                        <li style="margin-left:-25px">@Html.ValidationMessageFor(model => model.preco, null, new { @class = "help-inline no-required" })</li>
+                        <li style="margin-left:-25px">@Html.ValidationMessageFor(model => model.margemGanho, null, new { @class = "help-inline no-required" })</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Editar material</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+                @Html.HiddenFor(model => model.idMaterial)
+                <div class="form-horizontal">
+
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.nome, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.nome, new { @class = "span6", maxlength = "50" })
+                        </div>
+                    </div>
+                    @*@Html.EditorFor(model => model.Fabricante, "Fabricante/Consultar")*@
+                    @Html.EditorFor(model => model.UnidadeMedida, "UnidadeMedida/Consultar")
+                    <div class="control-group">
+                        @Html.CustomLabelFor(e => e.preco, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.preco, new { @class = "span2", @filter = "floatnumber" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(e => e.nrQuantidade, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.nrQuantidade, new { @class = "span2", @filter = "numeric" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(e => e.margemGanho, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.margemGanho, new { @class = "span2", @filter = "floatnumber" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Material/Create.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

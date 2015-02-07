@@ -1,0 +1,49 @@
+﻿@model RP.Sistema.Web.Models.Perfil.ReportPerfilVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm("ReportPerfil", "Perfil", FormMethod.Post, new { @data_modal_report = "true", @target = "_blank" }))
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Gerar relatório"><i class="icon-print"></i> Gerar</a></li>
+                        <li><a href="#" data-form-type="reset" title="Limpar o formulário"><i class="icon-refresh"></i> Limpar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb clearfix">
+                    <li><a href="@Url.Action("Index")">Perfil</a> <span class="divider">/</span></li>
+                    <li class="active">Relatórios</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+                      @Html.EditorFor(model => model.Perfil, "Perfil/Consultar", new { @Disabled = false })
+		        </div>
+            </div>
+        </div>
+    }
+</div>
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('#Perfil_idPerfil, #Perfil_nmPerfil')
+                .attr('data-val', 'true')
+                .attr('data-val-required', 'Campo obrigatório');
+        });
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+}

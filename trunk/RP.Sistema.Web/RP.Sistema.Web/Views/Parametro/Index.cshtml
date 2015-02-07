@@ -1,0 +1,86 @@
+﻿@model RP.DataAccess.PaginatedList<RP.Sistema.Model.Entities.Parametro>
+@using RP.Util;
+@using RP.Util.Class; 
+@using RP.Util.Class.Grid;
+@using RP.Sistema.Web.Helpers;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
+}
+<div class="container-fluid">
+	@Html.RenderFlashMessage()
+	@using (Html.BeginForm("Search", "Parametro", FormMethod.Get, new { @class = "well form-inline" }))
+    {
+        <div class="container center">
+            <div class="input-prepend input-append">
+                <span class="add-on">Filtro</span>
+                @Html.TextBox("filter", null, new { @class = "span6", maxlength = "100", @placeholder = "Pesquisar por nome...", @autofocus = "autofocus" })
+                @Html.CustomButton("Localizar", "submit", new { @class = "btn" }, new { @left = "icon-search"}, true)
+                @Html.CustomActionLink("Limpar pesquisa", "Index", new { @clear = true }, new { @class = "btn" }, new { @left = "icon-remove"}, true)
+            </div>
+        </div>
+    }
+
+	@if (_action.ToLower() == "search")
+    {
+        IEnumerable<teGridColumn<RP.Sistema.Model.Entities.Parametro>> _g = new[] 
+        {
+            new teGridColumn<RP.Sistema.Model.Entities.Parametro>
+            {
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "actions b2"}
+                }, 
+                header = "", 
+                format = item => 
+                    Html.CustomActionLink("Visualizar", "Details", "Parametro", new { parametros = item.nmParametro }, new { @class = "btn btn-success", @title = "Detalhar registro" }, new { @left = "icon-eye-open icon-white"}, true).ToString() + 
+                    Html.CustomActionLink("Editar", "Edit", "Parametro", new { parametros = item.nmParametro }, new {@class = "btn btn-info", @title = "Editar registro" }, new { @left = "icon-edit icon-white"}, true).ToString() 
+            },            
+            
+            new teGridColumn<RP.Sistema.Model.Entities.Parametro>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","20%"}
+                },
+                header = "Nome", 
+                format = item => item.nmParametro 
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Parametro>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","60%"}
+                },
+                header = "Descrição", 
+                format = item => item.dsParametro 
+            },
+               new teGridColumn<RP.Sistema.Model.Entities.Parametro>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","20%"}
+                },
+                header = "Valor", 
+                format = item => item.dsValor 
+            }
+		};
+
+        var __grid = Html.tGrid<RP.Sistema.Model.Entities.Parametro>(
+          Model,
+          new Dictionary<string, string> { { "class", "table table-bordered table-condensed table-striped table-hover" } },
+          _g,
+          pager: new teGridPager
+          {
+              pagerAttributes = new Dictionary<string, string> { },
+              currentPage = int.Parse(Request["page"] ?? RP.Util.Resource.Message.DEFAULT_PAGE),
+              pageSize = int.Parse(Request["pagesize"] ?? RP.Util.Resource.Message.DEFAULT_PAGESIZE),
+              totalItemCount = Model.TotalCount,
+              routeValues = new RouteValueDictionary(new { controller = "Parametro", action = _action })
+          }
+      );
+        @__grid
+ }
+</div>
+

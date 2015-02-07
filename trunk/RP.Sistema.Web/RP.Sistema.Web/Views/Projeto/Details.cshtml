@@ -1,0 +1,114 @@
+﻿@model RP.Sistema.Web.Models.Projeto.AprovarVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Detalhes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <div class="container-nav-list well affix">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Ações</li>
+                    <li>@Html.CustomActionLink("Atualizar", "Details", new { id = Model.idProjeto }, new { @title = "Atualizar pagina" }, new { @left = "icon-refresh" })</li>
+                    <li>@Html.CustomActionLink("Editar", "Edit", new { id = Model.idProjeto }, new { @title = "Editar registro" }, new { @left = "icon-edit" })</li>
+                    <li>@Html.CustomActionLink("Cancelar", "Delete", new { id = Model.idProjeto }, new { @title = "Excluir registro" }, new { @left = "icon-off" })</li>
+                    <li class="divider"></li>
+                    <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="span10">
+            <ul class="breadcrumb">
+                <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                <li class="active">Detalhes do projeto</li>
+            </ul>
+
+            @Html.RenderFlashMessage()
+            @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+
+            <div class="form-horizontal">
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.descricao, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.descricao, new { @class = "span6", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                @Html.EditorFor(model => model.Cliente, "Cliente/Consultar", new { desabilitar = true })
+                @Html.EditorFor(model => model.Vendedor, "Funcionario/Consultar", new { label = "Vendedor", desabilitar = true })
+
+                <div class="control-group">
+                    @Html.CustomLabelFor(e => e.dtInicio, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.dtInicio, new { @class = "span2", @readonly = "readonly", @mask = "99/99/9999 99:99" })
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.status, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.status, new { @class = "span2", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <h4 class="heading">Produtos</h4>
+                <table id="tblProduto">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%">Produto</th>
+                            <th style="width: 20%; text-align: right">Projetista</th>
+                            <th style="width: 20%; text-align: right">Marceneiro</th>
+                            <th style="width: 14%; text-align: right">Custo(R$)</th>
+                            <th style="width: 14%; text-align: right">Ganho(R$)</th>
+                            <th style="width: 12%; text-align: right">Liquido(R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="message">
+                            <td colspan="5">Nenhum produto</td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">
+                                <span class="pull-right"><strong>Total Geral (R$):</strong></span>
+                            </td>
+                            <td>
+                                <span class="pull-right"><strong id="vl-total-custo">0,00</strong></span>
+                            </td>
+                            <td>
+                                <span class="pull-right"><strong id="vl-total-ganho">0,00</strong></span>
+                            </td>
+                            <td>
+                                <span class="pull-right"><strong id="vl-total-liquido">0,00</strong></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" id="tblProduto_count" name="tblProduto.count" />
+                @if (Model != null && Model.Produtos != null)
+                {
+                    <input type="hidden" id="tblProduto_data" value="@Json.Encode(Model.Produtos.OrderBy(e => e.nome))"/>
+                }
+            </div>
+            <h4 class="heading">Legenda</h4>
+            <span class="label" style="font-size: larger; color: rgb(129, 100, 100); background: #fff">* OBS. Os valorres acima poderão sofrer alteração até a finalização do projeto.</span><br />
+            <span class="label" style="font-size: larger; color: rgb(129, 100, 100); background: #fff">* Custo(R$): O calculo é realizado com base no preço de custo de cada item.</span><br />
+            <span class="label" style="font-size: larger; color: rgb(129, 100, 100); background: #fff">* Ganho(R$): O calculo é realizado com base no preço de custo + a margem de ganho de cada item.</span><br />
+            <span class="label" style="font-size: larger; color: rgb(129, 100, 100); background: #fff">* Liquido(R$): O calculo realizado é a subtração entre ganho e custo total do produto.</span>
+        </div>
+    </div>
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Projeto/Details.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

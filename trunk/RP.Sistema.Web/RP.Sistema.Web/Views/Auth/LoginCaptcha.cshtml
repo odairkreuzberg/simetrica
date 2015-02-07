@@ -1,0 +1,107 @@
+﻿@model RP.Sistema.Web.Models.Usuario.LoginCaptchaVM
+@using RP.Util;
+@using RP.Util.Class;
+@using CaptchaLib;
+@{
+    ViewBag.Title = "Acessar o sistema - Sistema de Gerenciamento";
+	Layout = "~/Views/Shared/_Login.cshtml";
+
+    StyleBundle styleBundle = new StyleBundle("~/Content/styles-logincaptcha");
+    styleBundle.Include("~/Content/bootstrap.css");
+    styleBundle.Include("~/Content/bootstrap-overrides.css");
+    styleBundle.Include("~/Content/login.css");
+    styleBundle.Include("~/Content/sprites-browser.css");
+    styleBundle.Include("~/Content/pt-sans.css");
+    styleBundle.Include("~/Content/font-awesome.css");
+    BundleTable.Bundles.Add(styleBundle);
+
+    ScriptBundle scriptBundle = new ScriptBundle("~/bundles/js-logincaptcha");
+    scriptBundle.Include("~/Scripts/browser-detect.js");
+    scriptBundle.Include("~/Scripts/modernizr-{version}.js");
+    scriptBundle.Include("~/Scripts/jquery-{version}.js");
+    scriptBundle.Include("~/Scripts/bootstrap.js");
+    scriptBundle.Include("~/Scripts/tmpl.js");
+    scriptBundle.Include("~/Scripts/jquery.placeholder.js");
+    scriptBundle.Include("~/Scripts/Functions.js");
+    scriptBundle.Include("~/Scripts/captcha.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+
+@section styles
+{
+    @Styles.Render("~/Content/styles-logincaptcha")
+    <!--[if lt IE 8]>@Styles.Render("~/Content/ie-unsuported.css")<![endif]--> 
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/js-logincaptcha")
+    <!--[if lt IE 9]>@Scripts.Render("~/Scripts/html5.js")<![endif]-->
+
+    <script type="text/javascript">
+        $(function () {
+            Functions.detectIeVersion();
+
+            Functions.handlers.placeholder();
+
+            if (IsNullOrEmpty($('#Usuario').val()) || $('#Usuario').val() == $('#Usuario').attr('placeholder')) {
+                $('#Usuario').focus();
+            }
+            else {
+                $('#Senha').focus();
+            }
+
+            $(".captchaContainer").addClass("pull-left");
+
+            $(".newCaptcha")
+                .addClass("btn")
+                .css('margin', '5px 0 0 8px')
+                .attr('title', 'Recarregar código')
+                .html('<i class="icon-refresh"></i>');
+
+            var $wrap = $('<div class="input-prepend" id="wrap-input-code" style="margin-top:10px"/>');
+            var $input = $("#Codigo").attr("placeholder", "Insira o código de segurança").val('');
+            var $span = $input.next('span');
+
+            $input.wrap($wrap);
+            $wrap = $('#wrap-input-code');
+            $wrap.append($span);
+            $wrap.prepend('<span class="add-on"><i class="icon-picture"></i></span>');
+        });
+    </script>
+}
+
+@using (Html.BeginForm("LoginCaptcha", "Auth", FormMethod.Post, new { @id = "login-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="top">Acessar o sistema</div>
+    <div class="content">
+        @Html.RenderFlashMessage()
+        @Html.CustomValidationSummary(true, true, "Verifique os erros abaixo", new { @class = "alert alert-error" })
+        <div class="inner">
+            <div class="input-prepend">
+                <span class="add-on">
+                    <i class="icon-user"></i>
+                </span>
+                @Html.TextBoxFor(e => e.Usuario, new { @maxlength = "200", @placeholder = "Usuário" })
+                @Html.ValidationMessageFor(e => e.Usuario, null, new { @class = "no-required" })
+            </div>
+            <div class="input-prepend">
+                <span class="add-on">
+                    <i class="icon-lock"></i>
+                </span>
+                @Html.PasswordFor(e => e.Senha, new { @maxlength = "200", @placeholder = "Senha" })
+                @Html.ValidationMessageFor(e => e.Senha, null, new { @class = "no-required" })
+            </div>
+            <label class="checkbox">
+                @Html.CheckBoxFor(e => e.LembrarUsuario) Lembrar usuário
+            </label>
+            @Html.CaptchaFor(m => m.Codigo, "GetCaptcha", "Auth", "Recarregar código")
+            @Html.ValidationMessageFor(m => m.Codigo)
+        </div>
+    </div>
+    <div class="form-actions">
+        <button class="btn btn-primary pull-right" type="submit" title="Acessar o sistema">Entrar</button>
+        <a href="#">Esqueceu sua senha?</a>
+    </div>
+}

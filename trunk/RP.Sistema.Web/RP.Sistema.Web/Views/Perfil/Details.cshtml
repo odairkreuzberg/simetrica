@@ -1,0 +1,76 @@
+﻿@model RP.Sistema.Web.Models.Perfil.PerfilVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <div class="container-nav-list well affix">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Ações</li>
+                    <li>@Html.CustomActionLink("Editar", "Edit", new { id = Model.idPerfil }, new { @title = "Editar registro" }, new { @left = "icon-edit" })</li>
+                    <li>@Html.CustomActionLink("Excluir", "Delete", new { id = Model.idPerfil }, new { @title = "Excluir registro" }, new { @left = "icon-trash" })</li>
+                    <li class="divider"></li>
+                    <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="span10">
+            <ul class="breadcrumb">
+                <li><a href="@Url.Action("Index")">Perfil</a> <span class="divider">/</span></li>
+                <li class="active">Detalhes do Perfíl</li>
+            </ul>
+
+            @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+            @Html.RenderFlashMessage()
+
+            <div class="form-horizontal">
+                @{
+                    RP.Util.Class.Form editor = Html.Editor();
+                    editor.Add(new RP.Util.Class.Line()
+                        .Add(
+                            Html.LabelFor(model => model.nmPerfil),
+                            Html.TextBoxFor(model => model.nmPerfil, new { @class = "input-xxlarge", @readonly = "readonly" })
+                        )
+                    );
+		        }
+			    @editor.Render()
+                <div class="container-fluid">
+                    <h4 class="heading">Usuarios</h4>
+                    <table id="tblUsuario">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%">Login</th>
+                                <th style="width: 55%">Nome</th>
+                                <th style="width: 15%">Ativo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="message">
+                                    <td colspan="4">Nenhum usuário</td>
+                                </tr>
+                            </tbody>
+                    </table>
+                    <input type="hidden" id="tblUsuario_count" name="tblUsuario.count"/>
+                    @if (Model != null && Model.Usuarios != null)
+                    {
+                        <input type="hidden" id="tblUsuario_data" value="@Json.Encode(Model.Usuarios.Select(r => new { login = r.Login, nome = r.Nome, ativo = (r.Ativo ? "Sim" : "Não") }).OrderBy(e => e.nome))"/>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Perfil/Details.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

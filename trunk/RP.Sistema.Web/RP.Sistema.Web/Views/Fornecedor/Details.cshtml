@@ -1,0 +1,162 @@
+﻿@model RP.Sistema.Web.Models.Fornecedor.FornecedorVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Detalhes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <div class="container-nav-list well affix">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Ações</li>
+                    <li>@Html.CustomActionLink("Editar", "Edit", new { id = Model.idFornecedor }, new { @title = "Editar registro" }, new { @left = "icon-edit" })</li>
+                    <li>@Html.CustomActionLink("Excluir", "Delete", new { id = Model.idFornecedor }, new { @title = "Excluir registro" }, new { @left = "icon-trash" })</li>
+                    <li class="divider"></li>
+                    <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="span10">
+            <ul class="breadcrumb">
+                <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                <li class="active">Detalhes do Fornecedor</li>
+            </ul>
+
+            @Html.RenderFlashMessage()
+            @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+            <div class="form-horizontal">
+                @Html.HiddenFor(model => model.idFornecedor)
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.nome, new { @class = "control-label" })
+                    <div class="controls  controls-row">
+                        @Html.TextBoxFor(model => model.nome, new { @class = "span6", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.tipo, new { @class = "control-label" })
+                    <div class="controls  controls-row">
+                        @Html.TextBoxFor(model => model.tipo, new { @class = "span3", @readonly = "readonly" })
+                    </div>
+                </div>
+                @if (Model.tipo == "Físico")
+                {
+                    <div class="control-group" id="dv-cpf">
+                        @Html.CustomLabelFor(model => model.cpf, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.cpf, new { @class = "span3", @mask = "999.999.999-99", @readonly = "readonly" })
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="control-group" id="dv-cnpj">
+                        @Html.CustomLabelFor(model => model.cnpj, new { @class = "control-label" })
+                        <div class="controls  controls-row">
+                            @Html.TextBoxFor(model => model.cnpj, new { @class = "span4", @mask = "99.999.999/9999-99", @readonly = "readonly" })
+                        </div>
+                    </div>
+                }
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.email, new { @class = "control-label" })
+                    <div class="controls  controls-row">
+                        @Html.TextBoxFor(model => model.email, new { @class = "span6", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.site, new { @class = "control-label" })
+                    <div class="controls  controls-row">
+                        @Html.TextBoxFor(model => model.site, new { @class = "span6", @readonly = "readonly" })
+                    </div>
+                </div>
+                <h4 class="heading controls" style="width: 45%">Endereço</h4>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.logradouro, new { @class = "control-label" })
+                    <div class="controls  controls-row">
+                        @Html.TextBoxFor(model => model.logradouro, new { @class = "span6", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.bairro, new { @class = "control-label" })
+                    <div class="controls  controls-row">
+                        @Html.TextBoxFor(model => model.bairro, new { @class = "span6", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.numero, new { @class = "control-label" })
+                    <div class="controls  controls-row">
+                        @Html.TextBoxFor(model => model.numero, new { @class = "span3", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.cep, new { @class = "control-label" })
+                    <div class="controls  controls-row">
+                        @Html.TextBoxFor(model => model.cep, new { @class = "span3", @mask = "99999-999", @readonly = "readonly" })
+                    </div>
+                </div>
+                @Html.EditorFor(model => model.Cidade, "Cidade/Consultar", new {desabilitar = true })
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.observacao, new { @class = "control-label" })
+                    <div class="controls  controls-row">
+                        @Html.TextAreaFor(model => model.observacao, new { @class = "span6", @readonly = "readonly" })
+                    </div>
+                </div>
+                <h4 class="heading controls" style="width: 45%">Contato</h4>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.contato, new { @class = "control-label" })
+                    <div class="controls  controls-row">
+                        @Html.TextBoxFor(model => model.contato, new { @class = "span6", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.foneContato, new { @class = "control-label" })
+                    <div class="controls  controls-row">
+                        @Html.TextBoxFor(model => model.foneContato, new { @class = "span2", @mask = "(99)9999-9999", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.CustomLabelFor(model => model.celularContato, new { @class = "control-label" })
+                    <div class="controls  controls-row">
+                        @Html.TextBoxFor(model => model.celularContato, new { @class = "span2", @mask = "(99)9999-9999", @readonly = "readonly" })
+                    </div>
+                </div>
+                <h4 class="heading controls" style="width: 45%">Telefones</h4>
+                <div class="control-group">
+                    <div class="controls  controls-row">
+                        <div style="width: 50%">
+                            <table id="tblTelefone">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%">Tipo</th>
+                                        <th style="width: 70%">Número</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="message">
+                                        <td colspan="4">Nenhum telefone</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <input type="hidden" id="tblTelefone_count" name="tblTelefone.count" />
+                        @if (Model != null && Model.Telefones != null)
+                        {
+                            <input type="hidden" id="tblTelefone_data" value="@Json.Encode(Model.Telefones.OrderBy(e => e.tipo))"/>
+                        }
+                    </div>
+                </div>      
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Fornecedor/Details.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

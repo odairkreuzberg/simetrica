@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=@Url.Action("JsDisabled", "Erro", new { @returnUrl = Request.Url })" />
+    </noscript>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024, minimum-scale=0, maximum-scale=1.5" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    @RenderSection("styles", false)
+</head>
+
+<body style="overflow:hidden" class="login">
+    <header class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="brand" href="@Url.Action("Index", "Home")">
+                    &copy; OK <small>0.5</small>
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav pull-right">
+                        <li><a href="@Url.Action("Index", "Ticket")" target="_blank" title="Reportar erros e sugestões">Reportar <i class="icon-bug"></i></a></li>
+                        <li><a href="/RP/Portal" title="Acessar o portal">Portal <i class="icon-home"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section>
+        <div id="login-box">
+            @RenderBody()
+            <div id="browser-warning">
+                <div class="well">
+                    <h4>Ops, parece que você está usando um navagador desatualizado!</h4>
+                    <p>O Navegador desatualizado além de possuir falhas de segurança, tem funcionalidades limitadas prejudicando sua usabilidade.</p>
+                    <p>Verifique a versão do seu navegador e aproveite para fazer a <a href="http://www.whatbrowser.org/" target="_blank">atualização</a> para uma nova versão.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="login">
+        <div class="container">
+            <div class="well">
+                <div>
+                    <h5 style="margin:0">Browsers suportados</h5>
+                    <p>Confira a lista de navegadores e suas versões que foram homologados para esta aplicação. Mantenha seu navegador sempre atualizado para uma melhor experiência!</p>
+                    <ul class="clearfix list-browsers">
+                        <li class="item">
+                            <a href="http://www.mozilla.com/firefox/" target="_blank">
+                                <div class="content-logo">
+                                    <img src="@Url.Content("~/Content/images/blank.png")" class="browser browser-mozilla-firefox">
+                                    <span class="label label-success">14</span>
+                                </div>
+                                <span class="browser-name">Mozila Firefox</span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="http://www.google.com/chrome?hl=pt" target="_blank">
+                                <div class="content-logo">
+                                    <img src="@Url.Content("~/Content/images/blank.png")" class="browser browser-google-chrome">
+                                </div>
+                                <span class="browser-name">Google Chrome</span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="http://www.opera.com/browser/" target="_blank">
+                                <div class="content-logo">
+                                    <img src="@Url.Content("~/Content/images/blank.png")" class="browser browser-opera">
+                                </div>
+                                <span class="browser-name">Opera</span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="http://www.apple.com/pt/safari/" target="_blank">
+                                <div class="content-logo">
+                                    <img src="@Url.Content("~/Content/images/blank.png")" class="browser browser-safari">
+                                    <span class="label label-success">5.1.7</span>
+                                </div>
+                                <span class="browser-name">Safari</span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="http://windows.microsoft.com/pt-BR/internet-explorer/downloads/ie" target="_blank">
+                                <div class="content-logo">
+                                    <img src="@Url.Content("~/Content/images/blank.png")" class="browser browser-ie">
+                                    <span class="label label-success">9</span>
+                                </div>
+                                <span class="browser-name">Internet Explorer</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="divisor-browser"></p>
+                </div>
+                <div class="row-fluid">
+                    <p class="nomargin">
+                        <span class="span2 muted">&copy 2013 OK Kreuzberg</span>
+                        <span class="span10" style="text-align:right">
+                            <a href="#">Politica de privacidade</a> - <a href="#">Termos de uso</a> - <a href="#">Ajuda</a>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    @RenderSection("scripts", false)
+</body>
+</html>

@@ -1,0 +1,108 @@
+﻿@model RP.Sistema.Web.Models.Area.Consultar
+@using RP.Util.Class;
+@{
+    bool Disabled = Convert.ToBoolean(ViewData["Disabled"]);
+}
+<div class="control-group">
+    @if (Disabled)
+    {
+        @Html.CustomLabelFor(model => model.idArea, "Área", new { @class = "control-label" })
+        <div class="controls">
+            @Html.TextBoxFor(model => model.idArea, new { @class = "input-small", @readonly = "readonly" })
+            @Html.TextBoxFor(model => model.nmArea, new { @class = "input-xxlarge input-inavigate", @readonly = "readonly" })
+        </div>
+    }
+    else
+    {
+        @Html.CustomLabelFor(model => model.idArea, "Área", new { @class = "control-label" })
+        <div class="controls">
+            @Html.TextBoxFor(model => model.idArea, new { @class = "input-small", @filter = "numeric", @autocomplete = "off", @maxlength = 8, @prefix = Html.ClientPrefixName().ToString(), @from = "idArea" })
+            <a href="#@Helper.getInputId("modal", Html.ClientPrefixName().ToString())" id="@Helper.getInputId("btn-localizar", Html.ClientPrefixName().ToString())" title="Localizar Área" class="btn" data-toggle="modal"><i class="icon-search"></i></a>
+            @Html.TextBoxFor(model => model.nmArea, new { @class = "input-xxlarge input-inavigate", @prefix = Html.ClientPrefixName().ToString(), @from = "nmArea" })
+        </div>
+        
+        @Html.Partial("_ModalPartial", 
+            new RP.Sistema.Web.Models.ModalVM{ 
+                Prefix = Html.ClientPrefixName().ToString(), 
+                Url = Url.Action("Query", "Area"),
+                Title = "Localizar Área"
+            }
+        )
+    }
+</div>
+
+@if (!Disabled)
+{
+    @Html.AddScriptBlock(
+@<script type="text/javascript">
+     $(function () {
+         $('#@Html.ClientIdFor(e => e.idArea)').change(function () {
+             var value = $(this).val();
+             if (!IsNullOrEmpty(value)) {
+                 $.ajax({
+                     dataType: 'json',
+                     type: 'GET',
+                     url: '@Url.Action("JsDetails", "Area")',
+                     data: { idArea: value },
+                     beforeSend: function () {
+                         $.loadingBox('show');
+                     },
+                     success: function (data) {
+                         $.loadingBox('hide');
+                         if (data) {
+                             $('#@Html.ClientIdFor(e => e.idArea)').val(data.idArea);
+                             $('#@Html.ClientIdFor(e => e.nmArea)').val(data.nmArea);
+                         }
+                         else {
+                             $('#@Html.ClientIdFor(e => e.idArea)').blink().select();
+                             $('#@Html.ClientIdFor(e => e.nmArea)').val('');
+                         }
+                     },
+                     error: function (request) {
+                         Functions.checkRequest(request);
+                         $.loadingBox('hide');
+                     }
+                 });
+             }
+             else {
+                 $('#@Html.ClientIdFor(e => e.idArea)').val('');
+                 $('#@Html.ClientIdFor(e => e.nmArea)').val('');
+             }
+         })
+        .focus(function () {
+            $(this).select();
+        });
+
+        $('#@Helper.getInputId("modal", Html.ClientPrefixName().ToString())').on('shown', function () {
+            $(this).find('.modal-body').find('iframe').contents().find('#area').focus();
+        })
+     });
+
+    $('#@Html.ClientIdFor(e => e.nmArea)').iNavigate({
+         columns: [
+			{ name: 'Id', bind: 'idArea', width: '30px' },
+			{ name: 'Nome', bind: 'nmArea', width: '100px', label: true },
+			{ name: 'Descrição', bind: 'dsArea', width: '570px' }
+         ],
+         width: 700,
+         source: '@Url.Action("JsSearch", "Area")',
+         minLength: 0,
+         paginate: {
+             size: 10
+         },
+         select: function (data) {
+             if (data) {
+                 $('#@Html.ClientIdFor(e => e.idArea)').val(data.idArea);
+                 $('#@Html.ClientIdFor(e => e.nmArea)').val(data.nmArea);
+             }
+         },
+         change: function (data) {
+             if (!data) {
+                 $('#@Html.ClientIdFor(e => e.idArea)').val('');
+                 $('#@Html.ClientIdFor(e => e.nmArea)').blink().select();
+             }
+         }
+     });
+</script>
+)
+}

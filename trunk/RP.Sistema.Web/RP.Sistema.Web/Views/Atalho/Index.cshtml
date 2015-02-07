@@ -1,0 +1,235 @@
+﻿@using RP.Util
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <div class="container-nav-list well affix affix">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Ações</li>
+                    <li><a href="@Url.Action("GerarSprite")" id="btn-gerar-sprite" title="Gerar Sprites"><i class="icon-share"></i>Gerar Sprites</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="span10">
+            @Html.RenderFlashMessage()
+
+
+            <div id="dv-msg" class="fade in alert alert-success">
+                <button id="btn-msg" class="close" type="button">×</button>
+                <label id="lb-msg">Aguarde, gerando novo arquivo.</label>
+            </div>
+
+            @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+            <div class="form-horizontal">
+                <h4 class="heading">Anexar Imagens</h4>
+                <div id="fileupload" data-url="@Url.Action("Upload", "Atalho")" data-auto-upload="false">
+                    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+                    <div class="fileupload-buttonbar">
+                        <div class="span7">
+                            <!-- The fileinput-button span is used to style the file input field as button -->
+                            <span class="btn btn-success fileinput-button">
+                                <i class="icon-plus icon-white"></i>
+                                <span>Adicionar...</span>
+                                <input type="file" name="files[]" multiple>
+                            </span>
+                            <button type="submit" class="btn btn-primary start">
+                                <i class="icon-upload icon-white"></i>
+                                <span>Enviar todos</span>
+                            </button>
+                            <button type="reset" class="btn btn-warning cancel">
+                                <i class="icon-ban-circle icon-white"></i>
+                                <span>Cancelar todos</span>
+                            </button>
+                            <button type="button" class="btn btn-danger delete">
+                                <i class="icon-trash icon-white"></i>
+                                <span>Remover</span>
+                            </button>
+                            <input type="checkbox" class="toggle" title="Selecionar todas imagens">
+                        </div>
+                        <!-- The global progress information -->
+                        <div class="span5 fileupload-progress fade">
+                            <!-- The global progress bar -->
+                            <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                <div class="bar" style="width: 0%;"></div>
+                            </div>
+                            <!-- The extended global progress information -->
+                            <div class="progress-extended">&nbsp;</div>
+                        </div>
+                    </div>
+                    <!-- The loading indicator is shown during file processing -->
+                    <div class="fileupload-loading"></div>
+                    <br>
+                    <!-- The table listing the files available for upload/download -->
+                    <table role="presentation" class="table table-striped">
+                        <tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@{
+    string css = "~/" + Guid.NewGuid();
+    string js = "~/" + Guid.NewGuid();
+
+    StyleBundle styleBundle = new StyleBundle(css);
+    styleBundle.Include("~/Content/fileupload/css/jquery.fileupload-ui.css");
+    BundleTable.Bundles.Add(styleBundle);
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Atalho/Index.js");
+    scriptBundle.Include("~/Scripts/tmpl.js");
+    scriptBundle.Include("~/Scripts/fileupload/load-image.js");
+    scriptBundle.Include("~/Scripts/fileupload/canvas-to-blob.js");
+    scriptBundle.Include("~/Scripts/fileupload/vendor/jquery.ui.widget.js");
+    scriptBundle.Include("~/Scripts/fileupload/jquery.iframe-transport.js");
+    scriptBundle.Include("~/Scripts/fileupload/jquery.fileupload.js");
+    scriptBundle.Include("~/Scripts/fileupload/jquery.fileupload-fp.js");
+    scriptBundle.Include("~/Scripts/fileupload/jquery.fileupload-ui.js");
+    scriptBundle.Include("~/Scripts/fileupload/locale.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+
+@section styles{
+    @Styles.Render(css)
+    <style type="text/css">
+        .preview, .preview img {
+            width: 120px;
+        }
+
+        td.start, td.delete, td.cancel, td.image {
+            width: 120px;
+        }
+
+        td.files {
+            width: 20%;
+        }
+
+        .dl-horizontal {
+            margin: 0;
+        }
+
+            .dl-horizontal dt {
+                width: 65px;
+            }
+
+            .dl-horizontal dd {
+                margin-left: 80px;
+            }
+
+        #fileupload input[type="checkbox"] {
+            vertical-align: text-bottom;
+        }
+    </style>
+}
+
+@section scripts{
+    @Scripts.Render(js)
+    <script id="template-upload" type="text/x-tmpl">
+        {% for (var i=0, file; file=o.files[i]; i++) { %}
+            <tr class="template-upload fade">
+                <td class="preview">
+                    <span class="fade"></span>
+                    <div class="cancel" style="text-align:center">
+                        {% if (!i) { %}
+                        <button class="btn btn-warning">
+                            <i class="icon-ban-circle icon-white"></i>
+                            {%=locale.fileupload.cancel%}
+                        </button>
+                        {% } %}
+                    </div>
+                </td>
+                <td>
+                    <dl class="dl-horizontal">
+                        <dt>Nome</dt>
+                        <dd>{%=file.name%}</dd>
+                        <dt>Tamanho</dt>
+                        <dd>{%=o.formatFileSize(file.size)%}</dd>
+                    </dl>
+                </td>
+                {% if (file.error) { %}
+                    <td class="error">
+                        <span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}
+                    </td>
+                {% } 
+                else if (o.files.valid && !i) { %}
+                    <td>
+                        <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
+                    </td>
+                    <td class="start">
+                    {% if (!o.options.autoUpload) { %}
+                        <button class="btn btn-primary">
+                            <i class="icon-upload icon-white"></i>
+                            <span>{%=locale.fileupload.start%}</span>
+                        </button>
+                    {% } %}
+                    </td>
+                {% } 
+                else { %}
+                    <td colspan="2"></td>
+                {% } %}
+            </tr>
+        {% } %}
+    </script>
+    <!-- The template to display files available for download -->
+    <script id="template-download" type="text/x-tmpl">
+        {% for (var i=0, file; file=o.files[i]; i++) { %}
+            <tr class="template-download fade">
+                {% if (file.error) { %}
+                    <td>
+                        <div class="delete" style="margin-top:8px">
+                            <input type="checkbox" name="delete" value="1" title="Marcar para remoção">
+                            <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
+                                <i class="icon-trash icon-white"></i>
+                                <span>{%=locale.fileupload.destroy%}</span>
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        <dl class="dl-horizontal">
+                          <dt>Nome</dt>
+                          <dd>{%=file.name%}</dd>
+                          <dt>Tamanho</dt>
+                          <dd>{%=o.formatFileSize(file.size)%}</dd>
+                        </dl>
+                    </td>
+                    <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+                {% } else { %}
+                    <td class="preview">
+                        <div class="delete" style="margin-top:5px">
+                            <input type="checkbox" name="delete" value="1" title="Marcar para remoção">
+                            <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
+                                <i class="icon-trash icon-white"></i>
+                                <span>{%=locale.fileupload.destroy%}</span>
+                            </button>
+                        </div>
+                    </td>
+                    <td colspan="2">
+                        <dl class="dl-horizontal">
+                          <dt>Nome</dt>
+                          <dd><a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url &&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a></dd>
+                          <dt>Tamanho</dt>
+                          <dd>{%=o.formatFileSize(file.size)%}</dd>
+                        </dl>
+                    </td>
+                    <td class="image">    
+                        {% if (file.thumbnail_url) { %}
+                            <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}">
+                                <img style width="30px" class="img-polaroid img-rounded" src="{%=file.thumbnail_url%}">
+                            </a>
+                        {% } %}
+                    </td>
+                {% } %}
+            </tr>
+        {% } %}
+    </script>
+}
+
+@Html.AddScriptBlock(@<!--[if gte IE 8]><script src="/RP/Sistema/Content/fileupload/js/cors/jquery.xdr-transport.js"></script><![endif]-->)

@@ -1,0 +1,200 @@
+﻿@model RP.Sistema.Web.Models.Projeto.AprovarVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Orçamento";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Material = new RP.Sistema.Web.Models.Material.Consultar();
+}
+<div class="container-fluid">
+    <input type="hidden" id="url_get_itens" value="@Url.Action("JsGetItens", "ProdutoMaterial")"/>
+    <input type="hidden" id="url_create" value="@Url.Action("JsCreate", "ProdutoMaterial")"/>
+    <input type="hidden" id="url_delete" value="@Url.Action("JsDelete", "ProdutoMaterial")"/>
+    <input type="hidden" id="url_update" value="@Url.Action("JsUpdate", "ProdutoMaterial")"/>
+    <div class="msg-aviso msg-erro">
+        <button data-dismiss="alert" class="close btn-msg-aviso" type="button">×</button><div class="msg"></div>
+    </div>
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" id="teste" title="Salva registro"><i class="icon-ok-sign"></i>Salvar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                        <li class="divider"></li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.descricao, null, new { @class = "help-inline no-required" })</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Orçamento</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+                <div class="tabbable">
+                    <ul class="nav nav-tabs" id="tabContainer">
+                        <li class="projeto active"><a id="btn-projeto" href="#tab-projeto" data-toggle="tab">Projeto</a></li>
+                        <li class="produto"><a id="btn-produto" href="#tab-produto" data-toggle="tab">Produto</a></li>
+                    </ul>
+                    <div class="form-horizontal">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab-projeto">
+
+                                @Html.HiddenFor(model => model.idProjeto)
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.descricao, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextBoxFor(model => model.descricao, new { @class = "span6", @readonly = "readonly" })
+                                    </div>
+                                </div>
+
+                                @Html.EditorFor(model => model.Cliente, "Cliente/Consultar", new { desabilitar = true })
+                                @Html.EditorFor(model => model.Vendedor, "Funcionario/Consultar", new { label = "Vendedor", desabilitar = true })
+                                <h4 class="heading">Produtos</h4>
+                                <table id="tblProduto">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th style="width: 34%">Nome</th>
+                                            <th style="width: 33%">Projetista</th>
+                                            <th style="width: 33%">Marceneiro</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="message">
+                                            <td colspan="4">Nenhum produto</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <input type="hidden" id="tblProduto_count" name="tblProduto.count" />
+                                @if (Model != null && Model.Produtos != null)
+                                {
+                                    <input type="hidden" id="tblProduto_data" value="@Json.Encode(Model.Produtos.OrderBy(e => e.nome))"/>
+                                }
+                            </div>
+
+                            <div class="tab-pane" id="tab-produto">
+
+                                @Html.Hidden("Produto.idProduto")
+                                <div class="control-group">
+                                    @Html.Label("Produto.descricao", "Descrição", new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextArea("Produto.descricao", null, new { @class = "span6", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.Label("Produto.projetista", "Projetista", new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBox("Produto.projetista", null, new { @class = "span6", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.Label("Produto.marceneiro", "Marceneiro", new { @class = "control-label" })
+                                    <div class="controls  controls-row">
+                                        @Html.TextBox("Produto.marceneiro", null, new { @class = "span6", @readonly = "readonly" })
+                                    </div>
+                                </div>
+
+                                <h4 class="heading">Itens</h4>
+                                <div class="container-fluid">
+                                    <a id="open-item" href="#dlg-item" role="button" class="btn" data-toggle="modal"><i class="icon-plus-sign"></i>Adicionar</a>
+                                    <table id="tblItem">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th style="width: 28%">Item</th>
+                                                <th style="width: 12%; text-align: right">Margem de ganho (%)</th>
+                                                <th style="width: 12%; text-align: right">Quantidade</th>
+                                                <th style="width: 12%; text-align: right">Valor unit. (R$)</th>
+                                                <th style="width: 12%; text-align: right">Custo(R$)</th>
+                                                <th style="width: 12%; text-align: right">Ganho(R$)</th>
+                                                <th style="width: 12%; text-align: right">Liquido(R$)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="message">
+                                                <td colspan="8">Nenhum produto</td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="5">
+                                                    <span class="pull-right"><strong>Total Geral (R$):</strong></span>
+                                                </td>
+                                                <td>
+                                                    <span class="pull-right"><strong id="vl-total-custo">0,00</strong></span>
+                                                </td>
+                                                <td>
+                                                    <span class="pull-right"><strong id="vl-total-ganho">0,00</strong></span>
+                                                </td>
+                                                <td>
+                                                    <span class="pull-right"><strong id="vl-total-liquido">0,00</strong></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" id="tblItem_count" name="tblItem.count" />
+                                </div>
+                                <h4 class="heading">Legenda</h4>
+                                <span class="label" style="font-size: larger; color: rgb(129, 100, 100); background: #fff">* OBS. Os valores acima são calculados em cima do preço de custo do item.</span><br />
+
+                                <div id="dlg-item">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h3>Adicionar item</h3>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        @Html.EditorFor(model => Material, "Material/Consultar", new { obrigatorio = true })
+                                        <div class="control-group">
+                                            @Html.Label("quantidade", "Quantidade", new { @class = "control-label" })
+                                            <div class="controls  controls-row">
+                                                @Html.TextBox("quantidade", null, new { @class = "input-small", filter = "floatnumber", style = "text-align:right" })
+                                                <span id="quantidade-valid" class="field-validation-valid help-inline"></span>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            @Html.Label("margemGanho", "Margem de ganho (%)", new { @class = "control-label" })
+                                            <div class="controls  controls-row">
+                                                @Html.TextBox("margemGanho", null, new { @class = "input-small", filter = "numeric", style = "text-align:right" })
+                                                <span id="margemganho-valid" class="field-validation-valid help-inline"></span>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            @Html.Label("valor", "Valor (R$)", new { @class = "control-label" })
+                                            <div class="controls  controls-row">
+                                                @Html.TextBox("valor", null, new { @class = "input-small", filter = "floatnumber", style = "text-align:right" })
+                                                <span id="valor-valid" class="field-validation-valid help-inline"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="#" id="add-item" class="btn btn-primary">Adicionar</a>
+                                        <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Projeto/AddItem.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

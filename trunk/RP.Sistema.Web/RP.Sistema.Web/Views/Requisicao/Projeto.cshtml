@@ -1,0 +1,95 @@
+﻿@model List<RP.Sistema.Model.Entities.Projeto>
+@using RP.Util;
+@using RP.Util.Class;
+@using RP.Util.Class.Grid;
+@using RP.Sistema.Web.Helpers;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
+}
+<div class="container-fluid">
+    @Html.RenderFlashMessage()
+
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Requisicao")">Início</a> <span class="divider">/</span></li>
+        <li><a href="@Url.Action("Projeto", "Requisicao")">Projetos ativos</a> <span class="divider"></span></li>
+    </ul>
+
+    @if (Model != null)
+    {
+        IEnumerable<teGridColumn<RP.Sistema.Model.Entities.Projeto>> _g = new[] 
+        {
+            new teGridColumn<RP.Sistema.Model.Entities.Projeto>
+            {
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "actions b1"}
+                }, 
+                header = "", 
+                format = item =>  Html.CustomActionLink("Selecionar projeto", "create", "Requisicao", new { item.idProjeto }, new {@class = "btn btn-primary", @title = "Aprovar projeto" }, new { @left = "icon-thumbs-up icon-white"}, true).ToString()
+                    
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Projeto>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","15%"}
+                },
+                header = "Dt. início", 
+                format = item => item.dtInicio.Value.ToString("dd/MM/yyyy HH:mm")
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Projeto>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","30%"}
+                },
+                header = "Cliente", 
+                format = item => item.Cliente.nome
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Projeto>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","35%"}
+                },
+                header = "Descrição", 
+                format = item => item.descricao
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Projeto>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","10%"}
+                },
+                header = "Sitação", 
+                format = item => item.status 
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Projeto>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","10%"}
+                },
+                header = "Concluido", 
+                format = item => item.flConcluido 
+            }
+		};
+
+        var __grid = Html.tGrid<RP.Sistema.Model.Entities.Projeto>(
+            Model,
+            new Dictionary<string, string> { { "class", "table table-bordered table-condensed table-striped table-hover" } },
+            _g,
+            pager: new teGridPager
+            {
+                pagerAttributes = new Dictionary<string, string> { },
+                currentPage = int.Parse(Request["page"] ?? RP.Util.Resource.Message.DEFAULT_PAGE),
+                pageSize = int.Parse(Request["pagesize"] ?? RP.Util.Resource.Message.DEFAULT_PAGESIZE),
+                totalItemCount = Model.Count,
+                routeValues = new RouteValueDictionary(new { controller = "Projeto", action = _action })
+            }
+        );
+        @__grid
+    }
+</div>

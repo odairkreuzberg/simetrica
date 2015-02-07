@@ -1,0 +1,130 @@
+﻿@model RP.DataAccess.PaginatedList<RP.Sistema.Model.Entities.Usuario>
+@using RP.Util;
+@using RP.Util.Class;
+@using RP.Util.Class.Grid;
+@using RP.Sistema.Web.Helpers;
+@{
+    ViewBag.Title = "Query";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
+}
+<div class="container-fluid query-modal">
+	@Html.RenderFlashMessage()
+
+	@using (Html.BeginForm("Query", "Usuario", FormMethod.Get))
+ {
+        @Html.Hidden("searching", true)
+        <div class="well well-small form-horizontal">
+            <div class="control-group">
+                <label for="nmControle" class="control-label">Nome</label>
+                <div class="controls controls-row">
+                    @Html.TextBox("nome", null, new { @class = "input-xxlarge", maxlength = "100" })
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="nmControle" class="control-label">E-mail</label>
+                <div class="controls controls-row">
+                    @Html.TextBox("email", null, new { @class = "input-xxlarge", maxlength = "100" })
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="nmControle" class="control-label">Login</label>
+                <div class="controls controls-row">
+                    @Html.TextBox("login", null, new { @class = "input-xlarge", maxlength = "100" })
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="nmControle" class="control-label"></label>
+                <div class="controls controls-row">
+                    @Html.CustomButton("Localizar", "submit", new { @class = "btn" }, new { @left = "icon-search" })
+                </div>
+            </div>
+        </div>
+ }
+
+	@if (Convert.ToBoolean(Request["searching"]) == true)
+ {
+     IEnumerable<teGridColumn<RP.Sistema.Model.Entities.Usuario>> _g = new[] 
+        {
+            new teGridColumn<RP.Sistema.Model.Entities.Usuario>
+            {
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"class", "actions b1"}
+                }, 
+                header = "", 
+                format = item => (Html.CustomButton("Selecionar", new { @class = "btn btn-success", @title = "Selecionar registro" }, new { @left = "icon-ok icon-white" }, true))
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Usuario>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"style","display:none"}
+                },
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"value-name", "idUsuario"},
+                    {"style","display:none"}
+                },
+                header = "Id", 
+                format = item => item.idUsuario 
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Usuario>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","20%"}
+                },
+                header = "Login", 
+                format = item => item.dsLogin 
+            },
+            new teGridColumn<RP.Sistema.Model.Entities.Usuario>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","40%"}
+                },
+                columnAttributes = new Dictionary<string, string>
+                {
+                    {"value-name", "nmUsuario"},
+                },
+                header = "Nome", 
+                format = item => item.nmUsuario 
+            },            
+            new teGridColumn<RP.Sistema.Model.Entities.Usuario>
+            { 
+                headerAttributes = new Dictionary<string, string>
+                {
+                    {"width","40%"}
+                },
+                header = "E-Mail", 
+                format = item => item.dsEmail 
+            }
+		};
+
+     var __grid = Html.tGrid<RP.Sistema.Model.Entities.Usuario>(
+          Model,
+          new Dictionary<string, string> { { "id", "grid" }, { "class", "table table-bordered table-condensed table-striped table-hover" } },
+          _g,
+          pager: new teGridPager
+          {
+              pagerAttributes = new Dictionary<string, string> { },
+              currentPage = int.Parse(Request["page"] ?? RP.Util.Resource.Message.DEFAULT_PAGE),
+              pageSize = int.Parse(Request["pagesize"] ?? RP.Util.Resource.Message.DEFAULT_PAGESIZE),
+              totalItemCount = Model.TotalCount,
+              routeValues = new RouteValueDictionary(new { controller = "Area", action = _action })
+          }
+      );
+        @__grid
+ }
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Usuario/Query.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

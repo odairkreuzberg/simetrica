@@ -1,0 +1,521 @@
+﻿@model RP.Sistema.Web.Models.SistemaVM
+@using RP.Util;
+@using RP.Util.Class;
+@using RP.Sistema.Web.Helpers;
+@{
+    string nomeSistema = System.Configuration.ConfigurationManager.AppSettings["Sistema:nome"];
+    string versaoSistema = System.Configuration.ConfigurationManager.AppSettings["Sistema:versao"];
+    
+    StyleBundle styleBundle = new StyleBundle("~/Content/styles");
+    styleBundle.Include("~/Content/bootstrap.css");
+    styleBundle.Include("~/Content/bootstrap-overrides.css");
+    styleBundle.Include("~/Content/bootstrap-responsive.css");
+    styleBundle.Include("~/Content/jquery.pnotify.default.css");
+    styleBundle.Include("~/Content/jquery.pnotify.default.icons.css");
+    styleBundle.Include("~/Content/Sistema.css");
+    styleBundle.Include("~/Content/animate-custom.css");
+    styleBundle.Include("~/Content/sprites-atalho.css");
+    styleBundle.Include("~/Content/sprites-icone.css");
+    styleBundle.Include("~/Content/pt-sans.css");
+    styleBundle.Include("~/Content/font-awesome.css");
+    styleBundle.Include("~/Content/typeahead.js-bootstrap.css");
+    BundleTable.Bundles.Add(styleBundle);
+
+    ScriptBundle scriptBundle = new ScriptBundle("~/bundles/js");
+    scriptBundle.Include("~/Scripts/browser-detect.js");
+    scriptBundle.Include("~/Scripts/modernizr-{version}.js");
+    scriptBundle.Include("~/Scripts/jquery-{version}.js");
+    scriptBundle.Include("~/Scripts/jquery-ui-1.9.2.custom.js");
+    scriptBundle.Include("~/Scripts/bootstrap.js");
+    scriptBundle.Include("~/Scripts/typeahead.js");
+    scriptBundle.Include("~/Scripts/tmpl.js");
+    scriptBundle.Include("~/Scripts/jquery.placeholder.js");
+    scriptBundle.Include("~/Scripts/jquery.debouncedresize.js");
+    scriptBundle.Include("~/Scripts/jquery.slimscroll.js");
+    scriptBundle.Include("~/Scripts/jquery.textarea-expander.js");
+    scriptBundle.Include("~/Scripts/jquery.titlealert.js");
+    scriptBundle.Include("~/Scripts/jquery.actual.js");
+    scriptBundle.Include("~/Scripts/jquery.pnotify.js");
+    scriptBundle.Include("~/Scripts/jquery.highlight.js");
+    scriptBundle.Include("~/Scripts/date.js");
+    scriptBundle.Include("~/Scripts/Functions.js");
+    scriptBundle.Include("~/Scripts/RPChat.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=@Url.Action("JsDisabled", "Erro", new { @returnUrl = Request.Url })" />
+    </noscript>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de Gerenciamento</title>
+    <link href="~/Content/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    @Styles.Render("~/Content/styles")
+    <!--[if lt IE 8]>@Styles.Render("~/Content/ie-unsuported.css")<![endif]-->
+
+    <link href="http://fonts.googleapis.com/css?family=Copse" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        RPCHATH_SENDERID = '@((User as CustomPrincipal).Id)';
+        RPCHATH_SENDERNAME = '@((User as CustomPrincipal).Nome)';
+    </script>
+    @Scripts.Render("~/bundles/js")
+    <!--[if lt IE 9]>@Scripts.Render("~/Scripts/html5.js")<![endif]-->
+
+    @Scripts.Render("~/Scripts/jquery.signalR-1.1.2.js", "~/signalr/hubs")
+    <script src="~/Scripts/hogan-2.0.0.js"></script>
+
+    <style type="text/css">
+        .ui-pnotify-icon { color: #000 }
+        .ui-pnotify-title { font-size:15px }
+        .ui-pnotify-text { font-size:.9em }
+        #user-list mark{
+            background-color: #ffffff;
+            color: inherit;
+            font-weight: bold;
+        }
+    </style>
+
+    <script type="text/javascript">
+        // adiciona loading na pagina
+        Functions.bodyLoading(true);
+
+        var window_focus,
+            highlighter = null,
+            data_menu = [];
+
+        var Painel = new function () {
+            var alertTimeout = null;
+
+            this.tabs = null;
+
+            this.init = function () {
+                Painel.tabs = $('#header-tab');
+
+                Painel.tabs.on({
+                    click: function (e) {
+                        $($(this).parent().attr('href'), $('#content-tab')).remove();
+                        $(this).parents('li').remove();
+                        $('#header-tab a:last').tab('show');
+                    }
+                }, 'a .close');
+
+                Painel.tabs.on({
+                    shown: function (e) {
+                        // se for a aba principal do sistema
+                        if ($(e.target)[0].id == 'tab-dashboard') {
+                            $('#badge-alert').removeClass('animated bounce').addClass('hide');
+                            clearInterval(alertTimeout);
+                        }
+                        else {
+                            var t = RPChat.totalUnreadChats();
+                            if (t) {
+                                Painel.showBadgeAlert(RPChat.totalUnreadChats());
+                            }
+                        }
+                    },
+                    mouseup: function (e) {
+                        if (e.which == 2) {
+                            e.preventDefault();
+                            var $this = $(this);
+                            if ($this[0].id != 'tab-dashboard') {
+                                $($this.parent().attr('href'), $('#content-tab')).remove();
+                                $this.parents('li').remove();
+                                $('#header-tab a:last').tab('show');
+                            }
+                        }
+                    }
+                }, '[data-toggle="tab"]');
+            };
+
+            this.isDashboard = function () {
+                return $('#tab-dashboard').parent().hasClass('active');
+            };
+
+            this.showBadgeAlert = function (text) {
+                var badge = $('#badge-alert');
+                badge.text(text ? text : '0').removeClass('hide').addClass('animated bounce');
+
+                clearInterval(alertTimeout);
+                alertTimeout = setInterval(function () {
+                    badge.removeClass('animated bounce');
+                    setTimeout(function () {
+                        badge.addClass('animated bounce')
+                    }, 500);
+                }, 4000);
+            };
+        };
+
+        $(function () {
+            setInterval(function () {
+                $.ajax({
+                    url: '/License/KeepAlive',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    timeout: 10000,
+                    dataType: "text"
+                });
+            }, 60000);
+
+            Functions.detectIeVersion();
+
+            Functions.handlers.placeholder();
+
+            Functions.handlers.tooltip();
+
+            Functions.handlers.opentab();
+
+            Painel.init();
+
+            $.pnotify.defaults.history = false;
+
+            $('#container-flashmessage').find('.alert').each(function () {
+                $this = $(this);
+                $this.find('button').remove();
+                $text = $this.hasClass('alert-success') ? ['success', 'Sucesso'] :
+                    ($this.hasClass('alert-info') ? ['info', 'Informação'] :
+                    ($this.hasClass('alert-error') ? ['error', 'Erro']
+                    : ['notice', 'Atenção']));
+
+                $.pnotify({
+                    title: $text[1],
+                    text: $this.text(),
+                    type: $text[0],
+                    animate_speed: 'fast',
+                    sticker: false,
+                    delay: 5000
+                });
+            }).parent().remove();
+
+            $('#header-menu').on('shown hidden', function (e) {
+                if (e.type == 'shown') {
+                    $('body').css('overflow', 'auto');
+                    Painel.tabs.css('visibility', 'hidden');
+                    $('#content-tab').css('z-index', '-1');
+                }
+                else if (e.type == 'hidden') {
+                    $('body').css('overflow', 'hidden');
+                    Painel.tabs.css('visibility', 'visible');
+                    $('#content-tab').css('z-index', 'inherit');
+                }
+            })
+
+            $(".draggable").draggable({
+                helper: "clone",
+                opacity: 0.7,
+                addClasses: false,
+                delay: 500,
+                distance: 20,
+                start: function () {
+                    $('[data-toggle="dropdown"]').parent().fadeTo("fast", 0.3);
+                },
+                stop: function () {
+                    $('[data-toggle="dropdown"]').parent().fadeTo("slow", 1);
+                }
+            });
+
+            $("#sortable").droppable({
+                activeClass: "dashboard-icon-nav-hover",
+                hoverClass: "dashboard-icon-nav-hover",
+                accept: ".draggable",
+                drop: function (event, ui) {
+                    $('p.muted').remove();
+                    var atalho = ui.draggable.clone();
+                    var icone = atalho.attr('data-icon-class');
+                    var label = atalho.text();
+
+                    atalho
+                        .text('')
+                        .removeClass('draggable')
+                        .addClass('btn')
+                        .append('<span class="atalho ' + icone + '"/>')
+                        .append('<div class="label-text">' + label + '</div>')
+                        .appendTo(this);
+
+                    $('[data-toggle="dropdown"]').parent().removeClass('open');
+
+                    $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        url: '@Url.Action("JsAdicionarAtalho", "Usuario")',
+                        data: { nome: label, icone: icone, acao: atalho.attr('href') },
+                        success: function (data) {}
+                    });
+                }
+            }).sortable({
+                items: ".open-tab",
+                revert: true,
+                placeholder: "btn placeholder"
+            });
+
+            $("#link-trash").droppable({
+                activeClass: "link-trash-active",
+                hoverClass: "link-trash-hover",
+                accept: ".open-tab.btn",
+                drop: function (event, ui) {
+                    ui.draggable.hide(100, function () {
+                        setTimeout(function () {
+                            var atalho = ui.draggable;
+                            $.ajax({
+                                type: "GET",
+                                dataType: "json",
+                                url: '@Url.Action("JsRemoverAtalho", "Usuario")',
+                                data: { nome: atalho.text().trim(), icone: atalho.children('span').attr('data-icon-class'), acao: atalho.attr('href') },
+                                success: function (data) {
+                                    atalho.remove();
+                                }
+                            });
+                        }, 100);
+                    });
+                }
+            });
+
+            // percorre os menus e quebra em mais colunas
+            $('.wrap-splited').each(function () {
+                var wrap = $(this);
+                var size = 1;
+                wrap.find('.splited-dropdown').each(function () {
+                    size += $(this).actual('outerWidth', { includeMargin: true });
+                });
+                wrap.width(size);
+            });
+
+            // cria e popula estrutura de dados para a busca de menus
+            var source_menu = JSON.parse($('#source-menu').val());
+            var modulo_menu = '';
+
+            $(source_menu).each(function () {
+                var _this = this;
+                if (modulo_menu != _this.Modulo) {
+                    modulo_menu = _this.Modulo;
+                    var data_local = [];
+
+                    $(source_menu.filter(function (e) { return e.Modulo == modulo_menu })).each(function () {
+                        data_local.push({
+                            "name": this.Nome,
+                            "value": this.Nome,
+                            "description": this.Descricao ? this.Descricao : 'Sem descrição...',
+                            "group": this.Grupo,
+                            "href": this.Url,
+                            "tokens": this.Nome.split(' ').concat(this.Grupo.split(' '))
+                        });
+                        console.log(this.Url)
+                    });
+
+                    data_menu.push({
+                        limit: 8,
+                        name: $.format('menu-{0}', $.removeAccents(modulo_menu).fulltrim()),
+                        template: [
+                            '<p class="menu-group">{{group}}</p>',
+                            '<p class="menu-name">{{name}}</p>',
+                            '<p class="menu-description">{{description}}</p>'
+                        ].join(''),
+                        header: $.format('<h3 class="group-name">{0}</h3>', modulo_menu),
+                        engine: Hogan,
+                        local: data_local
+                    });
+                }
+            });
+
+            // busca os menus disponiveis
+            var qq = $('#search-menu').typeahead(data_menu)
+            .on('typeahead:selected', function (e, data) {
+                Functions.openTab(new Date().getTime(), data.name, data.href);
+            });
+
+            // Inicia Chat 
+            //TODO: colocar codigo abaixo no RPChat.js
+            RPChat.updateSize();
+            RPChat.userList = $('#user-list');
+            RPChat.Message(true, 'Carregando...');
+            if ($.connection) {
+                RPChat.attachEvents();
+            }
+            else {
+                RPChat.Message(true, 'Chat indisponível!');
+                $("#sidebar-overlay").addClass('controls');
+            }
+
+
+
+
+
+
+
+            //SistemaHub = $.connection.SistemaHub;
+
+            //setTimeout(function () {
+            //    SistemaHub.server.relatorio('chamado via javascript')
+            //    .done(function (text) {
+            //        console.log('done: chamada por js');
+            //    })
+            //    .fail(function () {
+            //        console.log('Falha relatorio()');
+            //    });
+            //}, 10000);
+
+            //setTimeout(function () {
+            //    SistemaHub.server.relatorio('chamado via javascript')
+            //    .done(function (text) {
+            //        console.log('done: chamada por js');
+            //    })
+            //    .fail(function () {
+            //        console.log('Falha relatorio()');
+            //    });
+            //}, 20000);
+
+            //SistemaHub.client.relatorioNotificacao = function (text) {
+            //    console.log(text);
+            //}
+
+
+
+
+
+
+
+            // remove loading da pagina
+            Functions.bodyLoading(false);
+        })
+        .focus(function () {
+            window_focus = true;
+        })
+        .blur(function () {
+            window_focus = false;
+        });
+    </script>
+</head>
+<body style="overflow:hidden">
+    <input type="hidden" id="_url_auth_login" value="@Url.Content("~/Auth/Login")"/>
+    <div id="loading-box-message" class="loading-box">
+        <img src="@Url.Content("~/Content/images/ajax-loader.gif")" alt="Carregando"/>
+        <span>Carregando…</span>
+    </div>
+    <audio id="chat-audio">
+        <source src="@Url.Content("~/Content/sound/pop.ogg")" type="audio/ogg" />
+        <source src="@Url.Content("~/Content/sound/pop.mp3")" type="audio/mpeg" />
+        <source src="@Url.Content("~/Content/sound/pop.wav")" type="audio/wav" />
+    </audio>
+    <script id="tmpl-header-tab" type="text/x-tmpl">
+        <li class="active"><a title="{%=o.text%}" href="#{%=o.id%}" data-toggle="tab"><i class="icon-check-empty"></i> {%=o.text%}<span title="Fechar aba" class="close">×</span></a></li>
+    </script>
+    <script id="tmpl-content-tab" type="text/x-tmpl">
+        <div class="tab-pane active" id="{%=o.id%}" style="width:100%; position:absolute; top:0px; bottom:0px">
+            <iframe frameborder="0" class="iframe-content" src="{%=o.src%}" style="width:100%; position:absolute; min-height:100%; height:auto; -webkit-overflow-scrolling:touch"/>
+        </div>
+    </script>
+    <script id="tmpl-user-item" type="text/x-tmpl">
+        <li>
+            <a href="#" data-userid="{%=o.id%}" class="{%=o.status%}">
+                <img src="@Url.Content("~/Files/Fotos/Usuarios/"){%=o.id%}_small.jpg" onerror="this.src='@Url.Content("~/Content/images/default_profile_mini.jpg")'; this.onerror='';" class="pull-left user-image">
+                <span class="user-status pull-right icone-sprite"></span>
+				<span class="user-name">{%=o.name%}</span>
+				<small>{%=o.email%}</small>
+            </a>
+		</li>
+    </script>
+    <script id="tmpl-chat-window" type="text/x-tmpl">
+        <div class="modal-chat" id="chat-{%=o.userId%}">
+            <div class="chat-label">
+                <button class="close pull-right" type="button">×</button>
+                <div><i class="icon-comments"></i> {%=o.name%}</div>
+            </div>
+            <div class="chat-actions">
+                <button type="button" class="close">&times;</button>
+                <div class="btn-group">            
+                    <button type="button" class="dropdown-toggle options" data-toggle="dropdown"><i class="icon-cog"></i></button>
+                    <ul class="dropdown-menu pull-right">
+                        <li><a href="#">Adicionar contatos a conversa</a></li>
+                        <li><a href="#">Ficar offline para este contato</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Visualizar histórico</a></li>
+                        <li><a href="#">Limpar a janela</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="chat-header">
+                <i class="icon-comments"></i> {%=o.name%}
+            </div>
+            <div class="chat-body">
+                <ul class="unstyled">
+                    <!--
+                    <li class="divider">09 Dezembro, 2012</li>
+                    <li class="divider">15 Janeiro</li>
+                    <li class="divider">Ontem</li>            
+                    <li class="divider">Hoje</li>
+                    -->
+                </ul>
+                <div class="chat-notification"></div>
+            </div>
+            <div class="chat-footer">
+                <textarea class="input-block-level expand30-100"></textarea>
+            </div>
+        </div>
+    </script>
+    <script id="tmpl-chat-item" type="text/x-tmpl">
+        <li class="clearfix" data-userid="{%=o.id%}" data-ticks="{%=o.ticks%}">
+            <img src="@Url.Content("~/Files/Fotos/Usuarios/"){%=o.id%}_small.jpg" onerror="this.src='@Url.Content("~/Content/images/{%=o.profile_image%}_profile_mini.jpg")'; this.onerror='';" class="chat-image" data-toggle="tooltip" data-placement="left" alt="{%=o.name%}" title="{%=o.name%}">
+            <div class="chat-info"></div>
+            <div class="chat-messages"></div>
+        </li>
+    </script>
+    <header class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="brand" href="@Url.Action("Index", "Home")">
+                    <span class="logo">@nomeSistema@*<small>@versaoSistema</small>*@</span>
+                </a>
+                <div id="header-menu" class="nav-collapse collapse">
+                    <input id="source-menu" type="hidden" value="@Newtonsoft.Json.JsonConvert.SerializeObject(Model.Menu)" />
+                    <ul class="nav" id="nav-menu" role="menu" aria-labelledby="dLabel">
+                        @Html.BuildMenu(Model.Menu, 20)
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li class="divider-vertical"></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-user"></i> @((User as CustomPrincipal).Login) <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                               @* <li><a href="@Url.Action("Index", "Ticket")" target="_blank" class=""><i class="icon-bug"></i> Reportar</a></li>*@
+                                <li><a href="@Url.Action("Perfil", "Usuario")" class="open-tab"><i class="icon-cog"></i> Perfil</a></li>
+                                <li><a href="@Url.Action("Logout", "Auth")"><i class="icon-signout"></i> Sair</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form class="navbar-form pull-right hidden-tablet" action="#">
+                        <input type="text" id="search-menu" placeholder="Pesquisar">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section>
+        <div id="container-flashmessage" class="hide">
+            @Html.RenderFlashMessage()
+        </div>
+        <div id="wrap-header-tab">
+            <ul class="nav nav-tabs container-fluid" id="header-tab">
+                <li class="active">
+                    <a href="#painel" data-toggle="tab" id="tab-dashboard"><i class="icon-th"></i> Painel <span id="badge-alert" class="badge badge-important hide">0</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content" id="content-tab">
+            <div class="tab-pane active" id="painel">
+                @{
+                    Html.RenderPartial("Painel", Model.Painel);
+                }
+            </div>
+        </div>
+    </section>
+    <footer></footer>
+</body>
+</html>

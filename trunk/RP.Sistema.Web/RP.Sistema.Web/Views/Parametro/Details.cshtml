@@ -1,0 +1,55 @@
+﻿@model RP.Sistema.Web.Models.Parametro.ParametroVM
+@using RP.Util;
+@using RP.Util.Class; 
+@{    
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <div class="container-nav-list well affix">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Ações</li>
+                    <li>@Html.CustomActionLink("Editar", "Edit", new { parametros = Model.nmParametro }, new { @title = "Editar registro" }, new { @left = "icon-edit" })</li>
+                    <li class="divider"></li>
+                    <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="span10">
+            <ul class="breadcrumb clearfix">
+                <li><a href="@Url.Action("Index")">Parametro</a> <span class="divider">/</span></li>
+                <li class="active">Detalhes do Parametro</li>
+            </ul>
+
+            @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+            <div class="form-horizontal">
+				@{
+					var editor = Html.Editor();
+					editor.Add(new Line()
+						.Add(
+							Html.LabelFor(model => model.nmParametro),
+							Html.TextBoxFor(model => model.nmParametro, new { @class = "span6", @readonly = "readonly" })
+						)
+					);
+                    editor.Add(new Line()
+                    .Add(
+                        Html.LabelFor(model => model.dsParametro),
+                        Html.TextAreaFor(model => model.dsParametro, new { @class = "span6", @readonly = "readonly" })
+                        )
+                    );
+					editor.Add(new Line()
+						.Add(
+							Html.LabelFor(model => model.dsValor),
+                            Html.TextAreaFor(model => model.dsValor, new { @class = "span6", @readonly = "readonly" })
+						)
+					);
+			    }
+				@editor.Render()
+            </div>
+        </div>
+    </div>
+</div>
+

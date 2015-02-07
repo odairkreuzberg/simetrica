@@ -1,0 +1,368 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{825EC00B-D573-4CE7-8BC3-9FE0292D7A7D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RP.Sistema.Report</RootNamespace>
+    <AssemblyName>RP.Sistema.Report</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files\Business Objects\Common\3.5\managed\dotnet2\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.Shared, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files\Business Objects\Common\3.5\managed\dotnet2\CrystalDecisions.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class\Controle.cs" />
+    <Compile Include="Class\Cidade.cs" />
+    <Compile Include="Class\Cliente.cs" />
+    <Compile Include="Class\Caixa.cs" />
+    <Compile Include="Class\ContaPagar.cs" />
+    <Compile Include="Class\ContaReceber.cs" />
+    <Compile Include="Class\Requisicao.cs" />
+    <Compile Include="Class\FolhaPagamento.cs" />
+    <Compile Include="Class\Recibo.cs" />
+    <Compile Include="Class\FolhaFrequencia.cs" />
+    <Compile Include="Class\hora.cs" />
+    <Compile Include="Class\HorasExtras.cs" />
+    <Compile Include="Class\RaioX.cs" />
+    <Compile Include="Class\OrcamentoCliente.cs" />
+    <Compile Include="Class\OrdemCompra.cs" />
+    <Compile Include="Class\Material.cs" />
+    <Compile Include="Class\UnidadeMedida.cs" />
+    <Compile Include="Class\Fabricante.cs" />
+    <Compile Include="Class\Funcionario.cs" />
+    <Compile Include="Class\Fornecedor.cs" />
+    <Compile Include="Class\Estado.cs" />
+    <Compile Include="Class\Pais.cs" />
+    <Compile Include="Perfil.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Report.cs" />
+    <Compile Include="ReportExcept.cs" />
+    <Compile Include="Result.cs" />
+    <Compile Include="RPT.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RP.Auth.Class\RP.Auth.Class.csproj">
+      <Project>{cae88d4a-de37-4210-8e34-063f52376e6d}</Project>
+      <Name>RP.Auth.Class</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RP.DataAccess\RP.DataAccess.csproj">
+      <Project>{2ceb0d44-823f-4c19-afbc-94aa2ac17fd6}</Project>
+      <Name>RP.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RP.Report\RP.Report.csproj">
+      <Project>{eb92e57e-331f-4c3f-9358-a0a523e6eef3}</Project>
+      <Name>RP.Report</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RP.Sistema.BLL\RP.Sistema.BLL.csproj">
+      <Project>{eb43c022-696e-440e-b077-0916577bceff}</Project>
+      <Name>RP.Sistema.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RP.Sistema.Model\RP.Sistema.Model.csproj">
+      <Project>{fa231e6c-2c02-424a-b5f5-0e3b1f6f4cbe}</Project>
+      <Name>RP.Sistema.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RP.Util.Class\RP.Util.csproj">
+      <Project>{cf7bc31f-bcf5-404d-aead-c1078690965c}</Project>
+      <Name>RP.Util</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Report\relControle.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Pais.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Estado.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Cidade.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Cliente.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Fornecedor.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Funcionario.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\UnidadeMedida.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Fabricante.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Material.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Caixa.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\ContaPagar.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\OrdemCompra.rpt">
+      <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Report\ContaReceber.rpt" />
+    <None Include="Report\Requisicao.rpt" />
+    <None Include="Report\FolhaFrequencia.rpt" />
+    <None Include="Report\FolhaPagamento.rpt" />
+    <None Include="Report\HorasExtras.rpt" />
+    <None Include="Report\RaioX.rpt" />
+    <None Include="Report\OrcamentoCliente.rpt" />
+    <None Include="Report\Recibo.rpt" />
+    <None Include="Report\relPerfilAcesso.rpt" />
+    <None Include="Report\relTemplate.rpt" />
+    <None Include="XSD\relRequisicao.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relRequisicao.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relFolhaPagamento.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relFolhaPagamento.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\Recibo.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Recibo.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relHorasExtraSub.xsd">
+      <LastGenOutput>relHorasExtraSub.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Include="XSD\relFolhaFrequencia.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relFolhaFrequencia.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relHorasExtras.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relHorasExtras.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\RaioXCustoSub.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>RaioXCustoSub.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\RaioXProdutoSub.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>RaioXProdutoSub.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relRaioX.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relRaioX.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\OrcamentoCliente.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>OrcamentoCliente.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relOrdemCompra.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relOrdemCompra.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relContaReceber.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relContaReceber.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relContaPagar.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relContaPagar.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relCaixa.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relCaixa.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relMaterial.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relMaterial.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relFabricante.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relFabricante.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relUnidadeMedida.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relUnidadeMedida.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relFornecedor.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relFornecedor.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relCliente.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relCliente.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relCidade.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relCidade.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relEstado.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relEstado.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relPais.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relPais.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relAcao.xsd" />
+    <None Include="XSD\relAcaoPorControle.xsd">
+      <LastGenOutput>relAcaoPorControle.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relAcaoPorPerfil.xsd">
+      <LastGenOutput>relAcaoPorPerfil.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relArea.xsd" />
+    <None Include="XSD\relEntidade.xsd" />
+    <None Include="XSD\relMenu.xsd">
+      <LastGenOutput>relMenu.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relModulo.xsd" />
+    <None Include="XSD\relPerfil.xsd">
+      <LastGenOutput>relPerfil.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relPerfilAcesso.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>relPerfilAcesso.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relPerfilPorUsuario.xsd">
+      <LastGenOutput>relPerfilPorUsuario.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relTemplate.xsd" />
+    <None Include="XSD\relUsuario.xsd">
+      <LastGenOutput>relUsuario.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\relUsuarioPorPerfil.xsd">
+      <LastGenOutput>relUsuarioPorPerfil.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XSD\subEntidade.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Report\relAcao.rpt">
+      <LastGenOutput>relAcao.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\relAcaoPorMenu.rpt">
+      <LastGenOutput>relAcaoPorMenu.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\relAcaoPorPerfil.rpt">
+      <LastGenOutput>relAcaoPorPerfil.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\relArea.rpt">
+      <LastGenOutput>relArea.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\relEntidade.rpt">
+      <LastGenOutput>relEntidade.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\relMenu.rpt">
+      <LastGenOutput>relMenu.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\relModulo.rpt">
+      <LastGenOutput>relModulo.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\relPerfil.rpt">
+      <LastGenOutput>relPerfil.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\relPerfilPorUsuario.rpt">
+      <LastGenOutput>relPerfilPorUsuario.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\relUsuario.rpt">
+      <LastGenOutput>relUsuario.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\relUsuarioPorPerfil.rpt">
+      <LastGenOutput>relUsuarioPorPerfil.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\subEntidade.rpt">
+      <LastGenOutput>subEntidade.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

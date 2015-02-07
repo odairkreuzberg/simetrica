@@ -1,0 +1,59 @@
+﻿@model RP.Sistema.Web.Models.Parametro.ParametroVM
+@using RP.Util;
+@using RP.Util.Class; 
+@{
+    ViewBag.Title = "Edit";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-ok-sign"></i> Salvar</a></li>
+                        <li><a href="#" data-form-type="reset" title="Limpar o formulário"><i class="icon-refresh"></i> Limpar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i> Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb clearfix">
+                    <li><a href="@Url.Action("Index")">Controles</a> <span class="divider">/</span></li>
+                    <li class="active">Editar Controle</li>
+                </ul>
+                
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+                    @Html.HiddenFor(model => model.nmParametro)
+				    @{
+					    Form editor = Html.Editor();
+                        editor.Add(new Line()
+                        .Add(
+                            Html.LabelFor(model => model.nmParametro),
+                            Html.TextBoxFor(model => model.nmParametro, new { @class = "span6", @readonly = "readonly" })
+                            )
+                        );
+                        editor.Add(new Line()
+                        .Add(
+                            Html.LabelFor(model => model.dsParametro),
+                            Html.TextAreaFor(model => model.dsParametro, new { @class = "span6", @readonly = "readonly" })
+                            )
+                        );
+                        editor.Add(new Line()
+                            .Add(
+                                Html.LabelFor(model => model.dsValor),
+                                Html.TextAreaFor(model => model.dsValor, new { @class = "span6"})
+                            )
+                        );
+				    }
+				    @editor.Render()
+                </div>
+            </div>
+        </div>
+    }
+</div>
