@@ -19,11 +19,18 @@ namespace RP.Sistema.BLL
 
         public RP.DataAccess.PaginatedList<ContaReceber> Search(string filter, DateTime? dtInicio, DateTime? dtFim, string situacao, int? page, int? pagesize)
         {
-            dtFim = dtFim.Value.AddDays(1);
             IQueryable<ContaReceber> query = preSearch(filter);
+            if (dtFim != null)
+            {
+                dtFim = dtFim.Value.AddDays(1);
+                query = query.Where(u => u.vencimento < dtFim);
+            }
+            if (dtInicio != null)
+            {
+                query = query.Where(u => u.vencimento >= dtInicio);
+            }
             if (situacao != "Todos")
                 query = query.Where(u => u.situacao == situacao);
-            query = query.Where(u => u.vencimento >= dtInicio && u.vencimento < dtFim);
 
             var result = new RP.DataAccess.PaginatedList<RP.Sistema.Model.Entities.ContaReceber>(query.OrderBy(o => new { o.vencimento, o.idContaReceber }), page ?? int.Parse(RP.Util.Resource.Message.DEFAULT_PAGE), pagesize ?? int.Parse(RP.Util.Resource.Message.DEFAULT_PAGESIZE));
 

@@ -73,7 +73,7 @@
                     @"<div class=""btn-group"" style=""margin-left:4px"">
                         <button class=""btn dropdown-toggle"" data-toggle=""dropdown"" title=""Mais ações""><i class=""icon-cog""></i></button>
                         <ul class=""dropdown-menu"">
-                            <li>" + Html.CustomActionLink("Orçamento", "OrcamentoCliente", "Projeto", new { item.idProjeto }, new { @title = "Imprimir orçamento" }, new { @left = "icon-print"}) + @"</li>
+                            <li>" + Html.CustomActionLink("Orçamento", "Orcamento", "Projeto", new { item.idProjeto }, new { @title = "Imprimir orçamento" }, new { @left = "icon-print"}) + @"</li>
                             <li>" + Html.CustomActionLink("Ordem de compra", "OrdemCompra", "Projeto", new { item.idProjeto }, new { @title = "Imprimir ordem de compra" }, new { @left = "icon-print"}) + @"</li>
                             <li>" + Html.CustomActionLink("Raio X", "RaioX", "Projeto", new { item.idProjeto }, new { @title = "Imprimir raio X" }, new { @left = "icon-print"}) + @"</li>
                         </ul>
@@ -85,7 +85,7 @@
                         <ul class=""dropdown-menu"">
                             <li>" + Html.CustomActionLink("Cotar material", "addItem", "Projeto", new { id = item.idProjeto }, new { @title = "Cotar material" }, new { @left = "icon-file"}) + @"</li>
                             <li>" + Html.CustomActionLink("Adicionar custos", "addCusto", "Projeto", new { id = item.idProjeto }, new { @title = "Adicionar custos" }, new { @left = "icon-download-alt"}) + @"</li>
-                            <li>" + Html.CustomActionLink("Orçamento", "OrcamentoCliente", "Projeto", new { item.idProjeto }, new { @title = "Imprimir orçamento" }, new { @left = "icon-print"}) + @"</li>
+                            <li>" + Html.CustomActionLink("Orçamento", "Orcamento", "Projeto", new { item.idProjeto }, new { @title = "Imprimir orçamento" }, new { @left = "icon-print"}) + @"</li>
                             <li>" + Html.CustomActionLink("Ordem de compra", "ordemcompra", "Projeto", new { item.idProjeto }, new { @title = "Imprimir ordem de compra" }, new { @left = "icon-print"}) + @"</li>
                             <li>" + Html.CustomActionLink("Raio X", "RaioX", "Projeto", new { item.idProjeto }, new { @title = "Imprimir raio X" }, new { @left = "icon-print"}) + @"</li>
                         </ul>

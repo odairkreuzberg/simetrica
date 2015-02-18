@@ -17,6 +17,8 @@ namespace RP.Sistema.BLL
             bean.situacao = Caixa.CORENTE;
             bean.saldoAnterior = this.GetSaldoAtual();
             bean.saldoAtual = this.GetSaldoAtual() + bean.valor;
+
+           // bean.dtLancamento = bean.dtLancamento.AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute);
         }
 
         private decimal GetSaldoAtual()
@@ -31,11 +33,19 @@ namespace RP.Sistema.BLL
 
         public RP.DataAccess.PaginatedList<Caixa> Search(string filter, DateTime? dtInicio, DateTime? dtFim, string situacao, int? page, int? pagesize)
         {
-            dtFim = dtFim.Value.AddDays(1);
             IQueryable<Caixa> query = preSearch(filter);
+            if (dtFim != null)
+            {
+                dtFim = dtFim.Value.AddDays(1);
+                query = query.Where(u => u.dtLancamento < dtFim);
+            }
+            if (dtInicio != null)
+            {
+                query = query.Where(u => u.dtLancamento >= dtInicio);
+            }
+
             if (situacao != "Todos")
                 query = query.Where(u => u.situacao == situacao);
-            query = query.Where(u => u.dtLancamento >= dtInicio && u.dtLancamento < dtFim);
 
             var result = new RP.DataAccess.PaginatedList<RP.Sistema.Model.Entities.Caixa>(query.OrderByDescending(o => new { o.dtLancamento, o.idCaixa }), page ?? int.Parse(RP.Util.Resource.Message.DEFAULT_PAGE), pagesize ?? int.Parse(RP.Util.Resource.Message.DEFAULT_PAGESIZE));
 

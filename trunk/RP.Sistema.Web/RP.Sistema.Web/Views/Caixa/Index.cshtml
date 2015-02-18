@@ -8,8 +8,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var _action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
     string situacao = ViewBag.situacao;
-    DateTime dtFim = ViewBag.dtFim ?? DateTime.Now;
-    DateTime dtInicio = ViewBag.dtInicio ?? dtFim.AddDays(-10);
+    DateTime? dtFim = ViewBag.dtFim;
+    DateTime? dtInicio = ViewBag.dtInicio;
    
 }
 <div class="container-fluid">
@@ -27,9 +27,9 @@
                 @Html.TextBox("dtInicio", dtInicio, new { @class = "input-small datepicker", @mask = "99/99/9999" })
                 @Html.TextBox("dtFim", dtFim, new { @class = "input-small datepicker", @mask = "99/99/9999" })
                 <select  name="situacao" id="situacao" class="input-large">
-                    <option value="Corrente" @((string.IsNullOrEmpty(situacao) || situacao == "Corrente") ? "selected" : string.Empty)>Corrente</option>
+                    <option value="Todos" @((string.IsNullOrEmpty(situacao) || situacao == "Todos") ? "selected" : string.Empty)>Todos</option>
                     <option value="Cancelado"@((situacao == "Cancelado") ? "selected" : string.Empty)>Cancelado</option>
-                    <option value="Todos"@((situacao == "Todos") ? "selected" : string.Empty)>Todos</option>
+                    <option value="Corrente"@((situacao == "Corrente") ? "selected" : string.Empty)>Corrente</option>
                 </select>
                 @Html.CustomButton("Localizar", "submit", new { @class = "btn" }, new { @left = "icon-search" }, false)
                <a href="@Url.Action("Report", new { clear = true})" class="btn" id="btn-report"><i class="icon-print"></i>Relatório</a>
@@ -55,16 +55,16 @@
             { 
                 headerAttributes = new Dictionary<string, string>
                 {
-                    {"width","14%"}
+                    {"width","15%"}
                 },
                 header = "Dt. de lançamento", 
-                format = item => item.dtLancamento.ToString("dd/MM/yyyy")
+                format = item => item.dtLancamento.ToString("dd/MM/yyyy HH:mm")
             },
             new teGridColumn<RP.Sistema.Model.Entities.Caixa>
             { 
                 headerAttributes = new Dictionary<string, string>
                 {
-                    {"width","30%"}
+                    {"width","40%"}
                 },
                 header = "Descrição", 
                 format = item => item.descricao
@@ -73,7 +73,7 @@
             { 
                 headerAttributes = new Dictionary<string, string>
                 {
-                    {"width","14%"}
+                    {"width","15%"}
                 },
                 header = "Situação", 
                 format = item => item.situacao
@@ -82,16 +82,7 @@
             { 
                 headerAttributes = new Dictionary<string, string>
                 {
-                    {"width","14%"}
-                },
-                header = "Saldo anterior R$", 
-                format = item => item.saldoAnterior
-            },
-            new teGridColumn<RP.Sistema.Model.Entities.Caixa>
-            { 
-                headerAttributes = new Dictionary<string, string>
-                {
-                    {"width","14%"}
+                    {"width","15%"}
                 },
                 header = "Valor de lançamento R$", 
                 format = item => "<strong style='color:" + (item.valor < 0 ? "red" :"green") + "'>"  + item.valor + "</strong>"
@@ -101,9 +92,9 @@
             { 
                 headerAttributes = new Dictionary<string, string>
                 {
-                    {"width","14%"}
+                    {"width","15%"}
                 },
-                header = "Saldo em caixa R$", 
+                header = "Saldo R$", 
                 format = item => "<strong style='color:" + (item.saldoAtual < 0 ? "red" :"green") + "'>"  + item.saldoAtual + "</strong>"
             }
 		};

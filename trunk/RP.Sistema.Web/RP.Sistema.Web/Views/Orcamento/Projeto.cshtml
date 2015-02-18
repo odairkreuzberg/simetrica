@@ -1,0 +1,64 @@
+﻿@model RP.Sistema.Web.Models.Orcamento.ProjetoVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Orçamento";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Material = new RP.Sistema.Web.Models.Material.Consultar();
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <ul class="breadcrumb">
+                <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                <li class="active">Projeto</li>
+            </ul>
+
+            @Html.RenderFlashMessage()
+            @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+            <div class="form-vertical">
+
+
+                @Html.HiddenFor(model => model.idProjeto)
+                <div class="well form-inline">
+                    <div class="container center">
+                        <div class="input-prepend span12">
+                            <span class="add-on">Projeto</span>
+                            @Html.TextBoxFor(model => model.descricao, new { @class = "span7", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+                
+                    <h4 class="heading">Produtos</h4>
+                <div class="datatable">
+                    <table class="table table-bordered table-condensed table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th width="30%">Nome</th>
+                                <th width="70%">Descrição</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            @if (Model.Produtos != null)
+                            {
+                                foreach (var item in Model.Produtos)
+                                {
+                                <tr>
+                                    <td class="actions b1">
+                                        <a class="btn" href="@Url.Action("Produto", new { item.idProduto })" title="Selecionar produto"><i class="icon-ok"></i></a>
+                                    </td>
+                                    <td>@item.nome</td>
+                                    <td>@item.descricao</td>
+                                </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

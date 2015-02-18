@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class\CaixaDetalhado.cs" />
     <Compile Include="Class\Controle.cs" />
     <Compile Include="Class\Cidade.cs" />
     <Compile Include="Class\Cliente.cs" />
@@ -156,6 +157,7 @@
     <EmbeddedResource Include="Report\OrdemCompra.rpt">
       <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Report\CaixaDetalhado.rpt" />
     <None Include="Report\ContaReceber.rpt" />
     <None Include="Report\Requisicao.rpt" />
     <None Include="Report\FolhaFrequencia.rpt" />

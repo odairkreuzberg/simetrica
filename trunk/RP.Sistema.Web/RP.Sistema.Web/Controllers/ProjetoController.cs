@@ -134,27 +134,6 @@ namespace RP.Sistema.Web.Controllers
                             _bll.Update(_projeto);
                             _bll.SaveChanges();
 
-                            //_projeto = _bll.FindSingle(e => e.idProjeto == model.idProjeto,
-                            //    u => u.Cliente, u => u.Vendedor, u => u.Produtos, u => u.ProjetoCustos,
-                            //    u => u.Produtos.Select(l => l.ProdutoMateriais),
-                            //    u => u.Produtos.Select(k => k.Marceneiro), u => u.Produtos.Select(k => k.Projetista));
-
-                            //model = AprovarVM.GetProjeto(_projeto);
-
-                            //_projeto.vlProjeto = model.Produtos.Sum(u => u.vlProduto);
-                            //_projeto.vlVenda = model.Produtos.Sum(u => u.vlVenda);
-                            //_projeto.vlDesconto = model.Produtos.Sum(u => u.vlDesconto);
-
-                            //foreach (var item in _projeto.Produtos)
-                            //{
-                            //    item.vlVenda = model.Produtos.First(u => u.idProduto == item.idProduto).vlVenda;
-                            //    item.vlProduto = model.Produtos.First(u => u.idProduto == item.idProduto).vlProduto;
-                            //    item.vlDesconto = model.Produtos.First(u => u.idProduto == item.idProduto).vlDesconto;
-                            //}
-
-                            //_bll.Aprovar(_projeto);
-                            _bll.SaveChanges();
-
                             trans.Complete();
 
                             this.AddFlashMessage(RP.Util.Resource.Message.EDIT_SUCCESS, FlashMessage.SUCCESS);
@@ -192,7 +171,7 @@ namespace RP.Sistema.Web.Controllers
                             u => u.Cliente, u => u.Vendedor, u => u.Produtos, u => u.ProjetoCustos,
                             u => u.Produtos.Select(l => l.ProdutoMateriais),
                             u => u.Produtos.Select(k => k.Marceneiro), u => u.Produtos.Select(k => k.Projetista));
-                        
+
                         model = AprovarVM.GetProjeto(_projeto);
 
                         _projeto.vlProjeto = model.Produtos.Sum(u => u.vlProduto);
@@ -267,8 +246,6 @@ namespace RP.Sistema.Web.Controllers
                 return RedirectToAction("Index", "Erro", new { area = string.Empty });
             }
         }
-
-
 
         [HttpPost]
         [Auth.Class.Auth("sistema", "padrao")]
@@ -369,8 +346,8 @@ namespace RP.Sistema.Web.Controllers
                                             ContaReceber = _conta,
                                             situacao = Caixa.CORENTE,
                                             valor = item.vlParcela,
-                                            descricao = "Conta a recebida de " + model.Cliente.nome + " " + item.dsObservacao,
-                                            dtLancamento = item.dtVencimento
+                                            descricao = _conta.descricao + " [" +model.Cliente.nome + "] " + item.dsObservacao,
+                                            dtLancamento = dtPagamento.Value
                                         });
                                     }
                                 }
@@ -542,21 +519,28 @@ namespace RP.Sistema.Web.Controllers
                 return RedirectToAction("Index", "Erro", new { area = string.Empty });
             }
         }
-
         [Auth.Class.Auth("sistema", "padrao", "index")]
-        public ActionResult OrcamentoCliente(int idProjeto)
+        public ActionResult Orcamento(int idProjeto)
+        {
+            return View(idProjeto);
+        }
+
+
+
+        [HttpPost]
+        [Auth.Class.Auth("sistema", "padrao", "index")]
+        public ActionResult Orcamento(int idProjeto, string dsObservacao, string dsGarantia, string dsPrevisao, string dsIncluso, string dsValidade)
         {
             try
             {
                 using (var db = new Context())
                 {
-                    return new Report.Class.OrcamentoCliente().GetReport(db, idProjeto, _idUsuario);
+                    return new Report.Class.OrcamentoCliente().GetReport(db, idProjeto, dsObservacao, dsGarantia, dsPrevisao, dsIncluso, dsValidade, _idUsuario);
                 }
-
             }
             catch (Exception ex)
             {
-                Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
+                RP.Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
                 return RedirectToAction("Index", "Erro", new { area = string.Empty });
             }
         }

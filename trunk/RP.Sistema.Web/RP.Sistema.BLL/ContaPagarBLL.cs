@@ -15,16 +15,24 @@ namespace RP.Sistema.BLL
         protected override void BeforeInsert(ContaPagar bean)
         {
             bean.idUsuario = this._idUsuario;
+
         }
 
 
         public RP.DataAccess.PaginatedList<ContaPagar> Search(string filter, DateTime? dtInicio, DateTime? dtFim, string situacao, int? page, int? pagesize)
         {
-            dtFim = dtFim.Value.AddDays(1);
             IQueryable<ContaPagar> query = preSearch(filter);
+            if (dtFim != null)
+            {
+                dtFim = dtFim.Value.AddDays(1);
+                query = query.Where(u => u.vencimento < dtFim);
+            }
+            if (dtInicio != null)
+            {
+                query = query.Where(u => u.vencimento >= dtInicio);
+            }
             if (situacao != "Todos")
                 query = query.Where(u => u.situacao == situacao);
-            query = query.Where(u => u.vencimento >= dtInicio && u.vencimento < dtFim);
 
             var result = new RP.DataAccess.PaginatedList<RP.Sistema.Model.Entities.ContaPagar>(query.OrderBy(o => new { o.vencimento, o.idContaPagar }), page ?? int.Parse(RP.Util.Resource.Message.DEFAULT_PAGE), pagesize ?? int.Parse(RP.Util.Resource.Message.DEFAULT_PAGESIZE));
 

@@ -28,6 +28,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            ViewBag.dtFim = DateTime.Now;
             return View();
         }
 
@@ -37,8 +38,6 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
-                dtInicio = dtInicio ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-                dtFim = dtFim ?? DateTime.Now;
                 using (var db = new Context())
                 {
                     var _bll = new BLL.ContaPagarBLL(db, _idUsuario);
@@ -238,8 +237,8 @@ namespace RP.Sistema.Web.Controllers
                                 ContaPagar = _contaPagar,
                                 situacao = Caixa.CORENTE,
                                 valor = (_contaPagar.valorPago.Value * -1),
-                                descricao = "Conta paga para " + model.Fornecedor.nome + " " + (model.Projeto != null ? model.Projeto.descricao : ""),
-                                dtLancamento = DateTime.Now
+                                descricao =  _contaPagar.descricao + " [" + model.Fornecedor.nome + "] " + (model.Projeto != null ? model.Projeto.descricao : ""),
+                                dtLancamento = _contaPagar.pagamento.Value
                             });
                             _bll.SaveChanges();
 

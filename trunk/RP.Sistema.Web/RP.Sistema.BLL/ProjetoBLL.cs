@@ -18,6 +18,7 @@ namespace RP.Sistema.BLL
             bean.idUsuario = this._idUsuario;
             bean.status = Projeto.ORCAMENTO;
             bean.flConcluido = "Não";
+            bean.dtInicio = bean.dtInicio.Value.AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute);
         }
 
         public override void Update(Projeto bean)
@@ -37,12 +38,12 @@ namespace RP.Sistema.BLL
 
             foreach (var item in produtosDB.Where(u => produtos.All(k => k.idProduto != u)))
             {
-                bll.Delete(u => u.idProduto == item); 
+                bll.Delete(u => u.idProduto == item);
             }
             foreach (var item in produtos.Where(u => u.idProduto == 0))
             {
                 item.idProjeto = bean.idProjeto;
-                bll.Insert(item); 
+                bll.Insert(item);
             }
             foreach (var item in produtos.Where(u => produtosDB.Any(k => u.idProduto == k)))
             {
@@ -58,7 +59,8 @@ namespace RP.Sistema.BLL
                 ((Model.Context)db).Entry(item).Property(e => e.idMarceneiro).IsModified = true;
             }
 
-               //AfterUpdate(bean);
+            db.SaveChanges(_idUsuario);
+            this.Atualizar(bean.idProjeto);
         }
 
         public void Aprovar(Projeto bean)
@@ -157,7 +159,7 @@ namespace RP.Sistema.BLL
                 foreach (string word in filter.NSplit(' '))
                 {
                     string temp = word.ToLower();
-                    query = query.Where(p => p.descricao.ToLower().Contains(temp));
+                    query = query.Where(p => p.descricao.ToLower().Contains(temp) || p.Cliente.nome.Contains(temp));
                 }
             }
             return query;
@@ -237,6 +239,34 @@ namespace RP.Sistema.BLL
             _projeto.flConcluido = "Sim";
             ((Model.Context)db).Projetos.Attach(_projeto);
             ((Model.Context)db).Entry(_projeto).Property(e => e.flConcluido).IsModified = true;
+        }
+
+        public void Atualizar(int? idprojeto)
+        {
+            var _produtoBLL = new ProdutoBLL(db, _idUsuario);
+            var _projeto = this.FindSingle(u => u.idProjeto == idprojeto);
+
+            _projeto.vlProjeto = 0;
+            _projeto.vlVenda = 0;
+
+            var _produtos = _produtoBLL.Find(u => u.idProjeto == idprojeto).ToList();
+            var _produtoMaterialBLL = new ProdutoMaterialBLL(db, _idUsuario);
+            foreach (var item in _produtos)
+            {
+                var materiais = _produtoMaterialBLL.Find(u => u.idProduto == item.idProduto)
+                    .Select(u => new 
+                    {
+                        u.idProdutoMaterial,
+                        vlProduto = u.quantidade * u.valor,
+                        vlVenda = ((u.margemGanho / 100) * (u.quantidade * u.valor)) + (u.quantidade * u.valor)
+                    }).ToList();
+                item.vlProduto = ((item.margemGanho / 100) * materiais.Sum(u => u.vlVenda)) + materiais.Sum(u => u.vlVenda);
+                item.vlVenda = item.vlProduto  - item.vlDesconto;
+
+                _projeto.vlProjeto += item.vlProduto;
+                _projeto.vlVenda += (item.vlVenda - _projeto.vlDesconto);
+
+            }
         }
     }
 }

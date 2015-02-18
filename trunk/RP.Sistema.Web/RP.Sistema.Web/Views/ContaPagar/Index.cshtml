@@ -8,8 +8,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var _action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
     string situacao = ViewBag.situacao;
-    DateTime dtFim = ViewBag.dtFim ?? DateTime.Now;
-    DateTime dtInicio = ViewBag.dtInicio ?? dtFim.AddDays(-10);
+    DateTime? dtFim = ViewBag.dtFim;
+    DateTime? dtInicio = ViewBag.dtInicio;
 }
 <div class="container-fluid">
     @Html.RenderFlashMessage()

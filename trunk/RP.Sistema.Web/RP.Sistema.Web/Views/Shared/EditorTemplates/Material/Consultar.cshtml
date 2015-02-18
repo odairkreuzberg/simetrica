@@ -172,9 +172,7 @@
      });
      $('#@Html.ClientIdFor(e => e.nome)').iNavigate({
          columns: [
-             { name: 'Nome', bind: 'nome', width: '60%' },
-             { name: 'Margem (%)', bind: 'margemGanho', width: '20%' },
-             { name: 'Preço (R$)', bind: 'preco', width: '20%' }
+             { name: 'Nome', bind: 'nome', width: '100%' }
          ],
          width: 500,
          source: '@Url.Action("JsSearch", "Material")',

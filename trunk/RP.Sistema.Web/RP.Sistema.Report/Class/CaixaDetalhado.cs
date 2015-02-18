@@ -2,20 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 
 namespace RP.Sistema.Report.Class
 {
-    public class Caixa
+    public class CaixaDetalhado
     {
         public System.Web.Mvc.ActionResult GetReport(Model.Context db, int _idUsuario)
         {
-            String titulo = "<center>GRÁFICO RESUMIDO REFERENTE A TODAS AS CONTAS A PAGAR E RECEBER<center>";
+            String titulo = "<center>GRÁFICO DETALHADO REFERENTE AS CONTAS A PAGAR E RECEBER EM " + DateTime.Now.Year + "<center>";
             return Report.genericReport(
                 new Report.genericReportData
                 {
                     exportTO = Report.stringTOExportFormatType("PDF"),
-                    fileRPT = "Caixa.rpt",
+                    fileRPT = "CaixaDetalhado.rpt",
                     listData = this.GetReportData(db, _idUsuario),
                     parameters = new Dictionary<string, object> { { "titulo", titulo } }
                 }
@@ -56,7 +57,6 @@ namespace RP.Sistema.Report.Class
 
             internal static DataTable GetDataTable(Model.Context db, int _idUsuario)
             {
-                var hoje = DateTime.Now.Date;
                 var _result = new DataTable("table");
 
                 _result.Columns.Add("idcaixa", Type.GetType("System.Int32"));
@@ -79,7 +79,7 @@ namespace RP.Sistema.Report.Class
                     }).ToList();
 
                 var contaReceberBLL = new ContaReceberBLL(db, _idUsuario);
-                var contasReceber= contaReceberBLL.Find(u => u.situacao != "Cancelado")
+                var contasReceber = contaReceberBLL.Find(u => u.situacao != "Cancelado")
                     .Select(u => new
                     {
                         u.situacao,
@@ -88,39 +88,30 @@ namespace RP.Sistema.Report.Class
                         u.vencimento,
                     }).ToList();
 
-                var row = _result.NewRow();
-                row["valor"] = contasPagar.Where(u => u.situacao == "Aguardando pagamento" && u.vencimento < hoje).Sum(u => u.valorConta);
-                row["descricao"] = "Contas a pagar [VENCIDA]";
-                _result.Rows.Add(row);
+                var inicio = new DateTime(DateTime.Now.Year, 1, 1);
+                var fim = inicio.AddMonths(1);
+                CultureInfo culture = new CultureInfo("pt-BR");
+                DateTimeFormatInfo dtfi = culture.DateTimeFormat;
 
-                row = _result.NewRow();
-                row["valor"] = contasPagar.Where(u => u.situacao == "Aguardando pagamento" && u.vencimento >= hoje).Sum(u => u.valorConta);
-                row["descricao"] = "Contas a pagar [A VENCER]";
-                _result.Rows.Add(row);
+                for (int i = 1; i <= 12; i++)
+                {
+                    var row = _result.NewRow();
+                    row["idcaixa"] = i;
+                    row["situacao"] = culture.TextInfo.ToTitleCase(dtfi.GetMonthName(inicio.Month));
+                    row["descricao"] = "CONTA A PAGAR";
+                    row["valor"] = contasPagar.Where(u => u.situacao == "Aguardando pagamento" && u.vencimento >= inicio && u.vencimento < fim).Sum(u => u.valorConta);
+                    _result.Rows.Add(row);
 
-                row = _result.NewRow();
-                row["valor"] = contasReceber.Where(u => u.situacao == "Aguardando pagamento" && u.vencimento < hoje).Sum(u => u.valorConta);
-                row["descricao"] = "Contas a receber [VENCIDA]";
-                _result.Rows.Add(row);
+                    row = _result.NewRow();
+                    row["situacao"] = culture.TextInfo.ToTitleCase(dtfi.GetMonthName(inicio.Month));
+                    row["descricao"] = "CONTA A RECEBER";
+                    row["valor"] = contasReceber.Where(u => u.situacao == "Aguardando pagamento" && u.vencimento >= inicio && u.vencimento < fim).Sum(u => u.valorConta);
+                    _result.Rows.Add(row);
 
-                row = _result.NewRow();
-                row["valor"] = contasReceber.Where(u => u.situacao == "Aguardando pagamento" && u.vencimento >= hoje).Sum(u => u.valorConta);
-                row["descricao"] = "Contas a receber [A VENCER]";
-                _result.Rows.Add(row);
+                    fim = fim.AddMonths(1);
+                    inicio = inicio.AddMonths(1);
 
-                //foreach (var item in items)
-                //{
-                //    var row = _result.NewRow();
-                //    row["idcaixa"] = item.idcaixa;
-                //    row["situacao"] = item.situacao;
-                //    row["saldoatual"] = item.saldoatual;
-                //    row["saldoanterior"] = item.saldoanterior;
-                //    row["valor"] = item.valor;
-                //    row["dtlancamento"] = item.dtlancamento;
-                //    row["nmusuario"] = item.nmusuario;
-                //    row["descricao"] = item.descricao;
-                //    _result.Rows.Add(row);
-                //}
+                }
                 return _result;
             }
         }

@@ -187,7 +187,7 @@ namespace RP.Sistema.Web.Controllers
                                         ContaPagar = _conta,
                                         situacao = Caixa.CORENTE,
                                         valor = (item.vlParcela * -1),
-                                        descricao = "Conta paga para " + model.Fornecedor.nome + " " + item.dsObservacao,
+                                        descricao = _compra.descricao + " [" + model.Fornecedor.nome + "] " + item.dsObservacao,
                                         dtLancamento = item.dtVencimento
                                     });
                                 }
@@ -282,7 +282,7 @@ namespace RP.Sistema.Web.Controllers
                                             ContaPagar = _conta,
                                             situacao = Caixa.CORENTE,
                                             valor = (item.vlParcela * -1),
-                                            descricao = "Conta paga para " + model.Fornecedor.nome + " " + item.dsObservacao,
+                                            descricao = _compra.descricao + " [" + model.Fornecedor.nome + "] " + item.dsObservacao,
                                             dtLancamento = item.dtVencimento
                                         });
                                     }
@@ -309,7 +309,7 @@ namespace RP.Sistema.Web.Controllers
                                     ContaPagar = _conta,
                                     situacao = Caixa.CORENTE,
                                     valor = (model.total * -1),
-                                    descricao = "Conta paga para " + model.Fornecedor.nome + " " + model.descricao,
+                                    descricao = model.descricao + " [" + model.Fornecedor.nome + "] " + model.descricao,
                                     dtLancamento = DateTime.Now
                                 });
                             }
