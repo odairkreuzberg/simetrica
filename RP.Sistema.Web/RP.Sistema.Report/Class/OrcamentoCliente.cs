@@ -8,7 +8,7 @@ namespace RP.Sistema.Report.Class
 {
     public class OrcamentoCliente
     {
-        public System.Web.Mvc.ActionResult GetReport(Model.Context db, int idProjeto, int _idUsuario)
+        public System.Web.Mvc.ActionResult GetReport(Model.Context db, int idProjeto, string dsObservacao, string dsGarantia, string dsPrevisao, string dsIncluso, string dsValidade, int _idUsuario)
         {
             String titulo = "<center>Orçamento para Confecção dos Móveis na Linha MDF Masisa<center>";
             return Report.genericReport(
@@ -17,7 +17,15 @@ namespace RP.Sistema.Report.Class
                     exportTO = Report.stringTOExportFormatType("PDF"),
                     fileRPT = "OrcamentoCliente.rpt",
                     listData = this.GetReportData(db, idProjeto, _idUsuario),
-                    parameters = new Dictionary<string, object> { { "titulo", titulo } }
+                    parameters = new Dictionary<string, object> 
+                    { 
+                    { "titulo", titulo },
+                    { "dsObservacao", dsObservacao },
+                    { "dsGarantia", dsGarantia },
+                    { "dsPrevisao", dsPrevisao },
+                    { "dsIncluso", dsIncluso },
+                    { "dsValidade", dsValidade },
+                    }
                 }
             );
         }
@@ -35,8 +43,8 @@ namespace RP.Sistema.Report.Class
 
         private DataSet GetDataSet(Model.Context db, int idProjeto, int _idUsuario)
         {
-            var _bll = new RP.Sistema.BLL.ProjetoBLL(db,_idUsuario);
-            var _projeto = _bll.FindSingle(u => u.idProjeto == idProjeto, u => u.Cliente, u => u.Produtos);
+            var _bll = new RP.Sistema.BLL.ProjetoBLL(db, _idUsuario);
+            var _projeto = _bll.FindSingle(u => u.idProjeto == idProjeto, u => u.Cliente, u => u.Vendedor, u => u.Produtos);
 
             var dataTable = Relatorio.GetDataTable(_projeto);
 
@@ -73,8 +81,8 @@ namespace RP.Sistema.Report.Class
                 _result.Columns.Add("vlDesconto", Type.GetType("System.Decimal"));
                 _result.Columns.Add("vlProduto", Type.GetType("System.Decimal"));
                 _result.Columns.Add("vlVenda", Type.GetType("System.Decimal"));
-                
-                    var dias = _projeto.dtFim.Value.Date.Subtract(_projeto.dtInicio.Value.Date);
+
+                var dias = _projeto.dtFim.Value.Date.Subtract(_projeto.dtInicio.Value.Date);
                 foreach (var produto in _projeto.Produtos.ToList())
                 {
                     var row = _result.NewRow();

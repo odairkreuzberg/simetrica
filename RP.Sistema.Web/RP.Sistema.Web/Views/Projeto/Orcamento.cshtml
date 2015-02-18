@@ -1,0 +1,72 @@
+﻿@model int
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Orçamento";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Projetista = new RP.Sistema.Web.Models.Funcionario.Consultar();
+    var Marceneiro = new RP.Sistema.Web.Models.Funcionario.Consultar();
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-print"></i>Gerar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Orçamento do cliente</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, false, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+
+                    <div class="control-group">
+                        @Html.Label("Observação", new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBox("dsObservacao","Todos os móveis acima relacionados, serão confeccionados em mdf masisa.", new { @class = "span10", maxlength = "50" })
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.Label("Garantia", new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBox("dsGarantia","2 (dois) anos, para defeitos de fabricação.", new { @class = "span10", maxlength = "50" })
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.Label("Previsão", new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBox("dsPrevisao","A previsão para confecção é de 30 dias, mais a montagen.", new { @class = "span10", maxlength = "50" })
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        @Html.Label("Não incluso", new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextArea("dsIncluso","parte elétrica, fachada, gesso, banquetas, adesivos, artigos de decoração, letras (caixa), acabamentos de alvenaria, mármores, granitos e fotos dos eletros domésticos são apenas ilustrativas", new { @class = "span10", maxlength = "255", rows="4" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.Label("Validade", new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBox("dsValidade","Validade deste orçamento é de 30 (trinta) dias", new { @class = "span10", maxlength = "50" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

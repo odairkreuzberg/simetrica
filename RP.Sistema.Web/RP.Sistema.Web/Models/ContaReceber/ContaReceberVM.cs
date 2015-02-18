@@ -11,6 +11,7 @@ namespace RP.Sistema.Web.Models.ContaReceber
     {
         public Sistema.Model.Entities.ContaReceber GetContaReceber()
         {
+            var data = DateTime.Now;
             var _result = new Sistema.Model.Entities.ContaReceber
             {
                 idOrigem = this.idOrigem,
@@ -19,8 +20,8 @@ namespace RP.Sistema.Web.Models.ContaReceber
                 idCliente = this.Cliente.idCliente ?? 0,
                 descricao = this.descricao,
                 flFormaPagamento = this.flFormaPagamento,
-                vencimento = (DateTime)this.vencimento,
-                pagamento = this.pagamento,
+                pagamento = this.pagamento == null ? null : (DateTime?)this.pagamento.Value.AddHours(data.Hour).AddMinutes(data.Minute),
+                vencimento = this.vencimento.Value,
                 valorConta = this.valorConta ?? 0,
                 valorPago = this.valorPago,
             };

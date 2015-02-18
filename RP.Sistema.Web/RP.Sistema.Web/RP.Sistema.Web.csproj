@@ -214,6 +214,7 @@
     <Compile Include="Controllers\ContaPagarController.cs" />
     <Compile Include="Controllers\ContaReceberController.cs" />
     <Compile Include="Controllers\CaixaController.cs" />
+    <Compile Include="Controllers\OrcamentoController.cs" />
     <Compile Include="Controllers\RequisicaoController.cs" />
     <Compile Include="Controllers\FolhaPagamentoController.cs" />
     <Compile Include="Controllers\ProdutoMaterialController.cs" />
@@ -263,6 +264,8 @@
     <Compile Include="Models\ContaPagar\ContaPagarVM.cs" />
     <Compile Include="Models\ContaReceber\ContaReceberVM.cs" />
     <Compile Include="Models\Caixa\CaixaVM.cs" />
+    <Compile Include="Models\Orcamento\ProdutoVM.cs" />
+    <Compile Include="Models\Orcamento\ProjetoVM.cs" />
     <Compile Include="Models\Requisicao\RequisicaoVM.cs" />
     <Compile Include="Models\FolhaPagamento\PagarVM.cs" />
     <Compile Include="Models\FolhaPagamento\FolhaVM.cs" />
@@ -518,6 +521,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\browser-detect.js" />
     <Content Include="Scripts\Atalho\Index.js" />
+    <Content Include="Scripts\Caixa\Extrato.js" />
     <Content Include="Scripts\Caixa\Vale.js" />
     <Content Include="Scripts\captcha.js" />
     <Content Include="Scripts\Agenda\Index.js" />
@@ -538,6 +542,7 @@
     <Content Include="Scripts\ContaReceber\Receber.js" />
     <Content Include="Scripts\Caixa\Create.js" />
     <Content Include="Scripts\Caixa\Index.js" />
+    <Content Include="Scripts\Orcamento\Produto.js" />
     <Content Include="Scripts\Requisicao\Create.js" />
     <Content Include="Scripts\Requisicao\Details.js" />
     <Content Include="Scripts\Requisicao\Index.js" />
@@ -826,6 +831,11 @@
     <Content Include="Views\Requisicao\Edit.cshtml" />
     <Content Include="Views\Requisicao\Index.cshtml" />
     <Content Include="Views\Requisicao\Projeto.cshtml" />
+    <Content Include="Views\Orcamento\Index.cshtml" />
+    <Content Include="Views\Orcamento\Projeto.cshtml" />
+    <Content Include="Views\Orcamento\Produto.cshtml" />
+    <Content Include="Views\Projeto\Orcamento.cshtml" />
+    <Content Include="Views\Caixa\Extrato.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

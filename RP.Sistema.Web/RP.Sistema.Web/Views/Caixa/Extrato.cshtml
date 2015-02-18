@@ -1,0 +1,70 @@
+﻿@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Extrato";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+
+            @Html.RenderFlashMessage()
+            @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+
+
+
+
+            <div class="form-horizontal">
+                <input type="hidden" id="getExtrato" value="@Url.Action("JsGetExtrato", "Caixa")"/>
+                <div class="center well">
+
+                    <div class="control-group">
+                        <span>Período</span>
+                        <select name="dia" id="dia" class="span6">
+                            <option value="7" selected="">7 Dias</option>
+                            <option value="15" selected="">15 Dias</option>
+                            <option value="30">30 Dias</option>
+                            <option value="45">45 Dias</option>
+                            <option value="60">60 Dias</option>
+                        </select>
+                        <button class="btn" id="btnLocalizar"><i class="icon-search"></i>Localizar</button>
+                        <div class="btn-group">
+                            <a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#" title="Mais ações"><i class="icon-cog icon-white"></i>Relatório <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("Report", "Caixa", new { clear = true })" id="btn-report"><i class="icon-print"></i>Resumido </a></li>
+                                <li><a href="@Url.Action("ReportDetalhado", "Caixa", new { clear = true })"><i class="icon-print"></i>Detalhado </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <table id="tblItem">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%">Data</th>
+                            <th style="width: 15%">Tipo</th>
+                            <th style="width: 40%">Descrição</th>
+                            <th style="width: 15%; text-align: right">Valor (R$)</th>
+                            <th style="width: 15%; text-align: right">Saldo (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="message">
+                            <td colspan="6">Nenhum item</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    string js = "~/" + Guid.NewGuid();
+
+    ScriptBundle scriptBundle = new ScriptBundle(js);
+    scriptBundle.Include("~/Scripts/Caixa/Extrato.js");
+    BundleTable.Bundles.Add(scriptBundle);
+}
+@section scripts{
+    @Scripts.Render(js)
+}

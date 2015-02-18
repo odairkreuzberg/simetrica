@@ -148,6 +148,8 @@ var Produto = {
                     tbl.updateRow(rowEdit, Produto.estrutura, Produto.formpatData(data));
                     ShowMessage("Produto alterado com sucesso", "sucesso");
                     rowEdit = null;
+                    tbl.updateIndex();
+                    tbl.paginate();
                 } else {
                     tbl.addRow(Produto.estrutura, data);
                     tbl.updateIndex();

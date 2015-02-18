@@ -39,7 +39,7 @@ namespace RP.Sistema.BLL
                     descricao = bean.descricao,
                     valor = (bean.valor* (-1)),
                     situacao = Caixa.CORENTE,
-                    dtLancamento = DateTime.Now,
+                    dtLancamento = _contaPagar.pagamento.Value,
                     idUsuario = this._idUsuario                    
                 };
                 _caixaBLL.Insert(_caixa);

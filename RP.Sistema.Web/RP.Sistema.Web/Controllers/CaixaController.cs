@@ -15,6 +15,16 @@ namespace RP.Sistema.Web.Controllers
 {
     public class CaixaController : Controller
     {
+
+        public class Teste
+        {
+            public int id { get; set; }
+            public string tipo { get; set; }
+            public decimal saldo { get; set; }
+            public decimal? valorpago { get; set; }
+            public string descricao { get; set; }
+            public DateTime? dtlancamento { get; set; }
+        }
         private int _idUsuario;
 
         public CaixaController()
@@ -24,21 +34,24 @@ namespace RP.Sistema.Web.Controllers
 
         #region ActionResult
 
-        [PersistDataSearch("Search")]
         [Auth.Class.Auth("sistema", "padrao")]
-        public ActionResult Index()
+        public ActionResult Extrato()
         {
             return View();
         }
 
+        [PersistDataSearch("Search")]
+        public ActionResult Index()
+        {
+            ViewBag.dtFim = DateTime.Now;
+            return View();
+        }
+
         [PersistDataSearch]
-        [Auth.Class.Auth("sistema", "padrao", "index")]
         public ActionResult Search(string filter, DateTime? dtInicio, DateTime? dtFim, string situacao, int? page, int? pagesize)
         {
             try
             {
-                dtFim = dtFim ?? DateTime.Now;
-                dtInicio = dtInicio ?? dtFim.Value.AddDays(-10);
                 using (var db = new Context())
                 {
                     var _bll = new BLL.CaixaBLL(db, _idUsuario);
@@ -150,14 +163,14 @@ namespace RP.Sistema.Web.Controllers
             return View(model);
         }
 
-        [Auth.Class.Auth("sistema", "padrao", "index")]
-        public ActionResult Report(string filter, DateTime? dtInicio, DateTime? dtFim, string situacao)
+        [Auth.Class.Auth("sistema", "padrao", "extrato")]
+        public ActionResult Report()
         {
             try
             {
                 using (var db = new Context())
                 {
-                    return new Report.Class.Caixa().GetReport(db, filter, dtInicio, dtFim, situacao, _idUsuario);
+                    return new Report.Class.Caixa().GetReport(db, _idUsuario);
                 }
 
             }
@@ -165,6 +178,86 @@ namespace RP.Sistema.Web.Controllers
             {
                 Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
                 return RedirectToAction("Index", "Erro", new { area = string.Empty });
+            }
+        }
+
+
+        [Auth.Class.Auth("sistema", "padrao", "extrato")]
+        public ActionResult ReportDetalhado()
+        {
+            try
+            {
+                using (var db = new Context())
+                {
+                    return new Report.Class.CaixaDetalhado().GetReport(db, _idUsuario);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
+                return RedirectToAction("Index", "Erro", new { area = string.Empty });
+            }
+        }
+
+        [Auth.Class.Auth(true)]
+        public JsonResult JsGetExtrato(int dia)
+        {
+            try
+            {
+                using (Context db = new Context())
+                {
+                    var fim = DateTime.Now;
+                    var inicio = fim.AddDays(-dia);
+
+                    string sql = @"create table #temp_caixa
+                                    (
+                                    id int,
+                                    tipo nvarchar(15),
+                                    saldo decimal,
+                                    valorpago decimal,
+                                    descricao nvarchar(255),
+                                    dtlancamento datetime
+                                    )
+
+                                    insert into #temp_caixa VALUES(0,'', 
+                                        (isnull((select SUM(valorpago) from contareceber where pagamento <= '" + inicio.ToString("yyyy-MM-dd") + @"'),0) -
+                                         isnull((select SUM(valorpago) from contapagar where pagamento <= '" + inicio.ToString("yyyy-MM-dd") + @"'),0)),null,'', '" + inicio.ToString("yyyy-MM-dd") + @"')
+                                    insert into #temp_caixa select 
+                                        contapagar.idcontapagar,'Retirada', 0, (contapagar.valorpago* -1), 
+                                        contapagar.descricao, contapagar.pagamento  from contapagar 
+                                    where situacao = 'Pago' and (pagamento > '" + inicio.ToString("yyyy-MM-dd") + @"' and pagamento <= '"+fim.ToString("yyyy-MM-dd HH:mm")+ @"')
+                                    insert into #temp_caixa select 
+                                        contareceber.idcontareceber,'Entrada', 0, (contareceber.valorpago), 
+                                        contareceber.descricao, contareceber.pagamento  from contareceber 
+                                    where situacao = 'Pago' and (pagamento > '" + inicio.ToString("yyyy-MM-dd") + @"' and pagamento <= '" + fim.ToString("yyyy-MM-dd HH:mm") + @"')
+
+                                    select * from #temp_caixa order by dtlancamento";
+
+                    var list = db.Database.SqlQuery<Teste>(sql).ToList();
+                        decimal aux = 0;
+                        var result = new List<dynamic>();
+                        foreach (var item in list.OrderBy(u => u.dtlancamento))
+                        {
+                            aux += (item.valorpago ?? 0) + item.saldo;
+                            result.Add(new 
+                            {
+                                saldo = aux,
+                                item.descricao,
+                                dtlancamento = item.dtlancamento != null ? item.dtlancamento.Value.ToString("dd/MM/yyyy"):"",
+                                item.id,
+                                item.tipo,
+                                item.valorpago
+                            });
+                        }
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return Json(RP.Util.Exception.Message.Get(ex), JsonRequestBehavior.AllowGet);
             }
         }
 

@@ -512,20 +512,19 @@ namespace RP.Sistema.Web.Controllers
 
                     var result =
                         bll.Find(e =>
-                            e.idControle == idControle,
-                            i => i.Controle, i => i.Menu, i => i.Perfis
-                        ).OrderByDescending(o => o.idAcao).AsNoTracking().ToList();
+                            e.idControle == idControle
+                        ).OrderByDescending(o => o.idAcao);
 
                     var list = result.Select(s => new
                     {
                         idAcao = s.idAcao,
                         dsAcao = s.dsAcao,
                         nmAcao = s.nmAcao,
-                        nmControle = s.Controle.nmControle.ToString(),
+                        s.Controle.nmControle,
                         nmMenu = s.nmMenu
-                    });
+                    }).ToList();
 
-                    return Json(new Util.Class.JsonCollection { result = list, count = result.Count }, JsonRequestBehavior.AllowGet);
+                    return Json(new Util.Class.JsonCollection { result = list, count = result.Count() }, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)
