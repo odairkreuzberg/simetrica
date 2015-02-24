@@ -11,7 +11,7 @@ namespace RP.Sistema.Report.Class
     {
         public System.Web.Mvc.ActionResult GetReport(Model.Context db, int _idUsuario)
         {
-            String titulo = "<center>GRÁFICO DETALHADO REFERENTE AS CONTAS A PAGAR E RECEBER EM " + DateTime.Now.Year + "<center>";
+            String titulo = "<center>GRÁFICO DETALHADO REFERENTE AS CONTAS A PAGAR E RECEBER<center>";
             return Report.genericReport(
                 new Report.genericReportData
                 {
@@ -88,25 +88,41 @@ namespace RP.Sistema.Report.Class
                         u.vencimento,
                     }).ToList();
 
-                var inicio = new DateTime(DateTime.Now.Year, 1, 1);
+                var inicio = new DateTime((DateTime.Now.Year-1), 1, 1);
                 var fim = inicio.AddMonths(1);
                 CultureInfo culture = new CultureInfo("pt-BR");
                 DateTimeFormatInfo dtfi = culture.DateTimeFormat;
 
-                for (int i = 1; i <= 12; i++)
+                for (int i = 1; i <= 48; i++)
                 {
-                    var row = _result.NewRow();
-                    row["idcaixa"] = i;
-                    row["situacao"] = culture.TextInfo.ToTitleCase(dtfi.GetMonthName(inicio.Month));
-                    row["descricao"] = "CONTA A PAGAR";
-                    row["valor"] = contasPagar.Where(u => u.situacao == "Aguardando pagamento" && u.vencimento >= inicio && u.vencimento < fim).Sum(u => u.valorConta);
-                    _result.Rows.Add(row);
+                    var pagamento = contasPagar.Any(u => u.situacao == "Aguardando pagamento" && u.vencimento >= inicio && u.vencimento < fim);
+                    var recebimento = contasReceber.Any(u => u.situacao == "Aguardando pagamento" && u.vencimento >= inicio && u.vencimento < fim);
+                    if (pagamento || recebimento)
+                    {
+                        var valorPagar = contasPagar.Where(u => u.situacao == "Aguardando pagamento" && u.vencimento >= inicio && u.vencimento < fim).Sum(u => u.valorConta);
+                        var valorReceber= contasReceber.Where(u => u.situacao == "Aguardando pagamento" && u.vencimento >= inicio && u.vencimento < fim).Sum(u => u.valorConta);
+                        var row = _result.NewRow();
+                        row["idcaixa"] = i;
+                        row["dtlancamento"] = inicio;
+                        row["situacao"] = culture.TextInfo.ToTitleCase(dtfi.GetMonthName(inicio.Month));
+                        row["descricao"] = "CONTA A PAGAR";
+                        row["valor"] = valorPagar;
+                        _result.Rows.Add(row);
 
-                    row = _result.NewRow();
-                    row["situacao"] = culture.TextInfo.ToTitleCase(dtfi.GetMonthName(inicio.Month));
-                    row["descricao"] = "CONTA A RECEBER";
-                    row["valor"] = contasReceber.Where(u => u.situacao == "Aguardando pagamento" && u.vencimento >= inicio && u.vencimento < fim).Sum(u => u.valorConta);
-                    _result.Rows.Add(row);
+                        row = _result.NewRow();
+                        row["dtlancamento"] = inicio;
+                        row["situacao"] = culture.TextInfo.ToTitleCase(dtfi.GetMonthName(inicio.Month));
+                        row["descricao"] = "CONTA A RECEBER";
+                        row["valor"] = valorReceber;
+                        _result.Rows.Add(row);
+
+                        row = _result.NewRow();
+                        row["dtlancamento"] = inicio;
+                        row["situacao"] = culture.TextInfo.ToTitleCase(dtfi.GetMonthName(inicio.Month));
+                        row["descricao"] = "PREVISÃO";
+                        row["valor"] = valorReceber - valorPagar;
+                        _result.Rows.Add(row);
+                    }
 
                     fim = fim.AddMonths(1);
                     inicio = inicio.AddMonths(1);

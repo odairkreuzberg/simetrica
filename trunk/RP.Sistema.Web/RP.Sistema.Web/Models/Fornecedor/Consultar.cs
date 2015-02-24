@@ -9,6 +9,7 @@ namespace RP.Sistema.Web.Models.Fornecedor
     {
         public int? idFornecedor { get; set; }
         public string nome { get; set; }
+        public string flCheck { get; set; }
 
         internal static Consultar GetModel(Model.Entities.Fornecedor Fornecedor)
         {

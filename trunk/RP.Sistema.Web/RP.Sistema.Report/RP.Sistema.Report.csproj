@@ -158,6 +158,7 @@
       <LastGenOutput>relAcaoPorControle.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Report\CaixaDetalhado.rpt" />
+    <None Include="Report\ContaPagarResumido.rpt" />
     <None Include="Report\ContaReceber.rpt" />
     <None Include="Report\Requisicao.rpt" />
     <None Include="Report\FolhaFrequencia.rpt" />
@@ -168,6 +169,12 @@
     <None Include="Report\Recibo.rpt" />
     <None Include="Report\relPerfilAcesso.rpt" />
     <None Include="Report\relTemplate.rpt" />
+    <None Include="XSD\relContaPagar.xsc">
+      <DependentUpon>relContaPagar.xsd</DependentUpon>
+    </None>
+    <None Include="XSD\relContaPagar.xss">
+      <DependentUpon>relContaPagar.xsd</DependentUpon>
+    </None>
     <None Include="XSD\relRequisicao.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>relRequisicao.Designer.cs</LastGenOutput>

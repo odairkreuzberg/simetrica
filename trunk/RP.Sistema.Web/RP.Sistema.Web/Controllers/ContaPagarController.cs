@@ -88,7 +88,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Create(ContaPagarVM model)
         {
-            if (string.IsNullOrEmpty(model.Fornecedor.nome))
+            if (string.IsNullOrEmpty(model.Fornecedor.nome) || model.Fornecedor.idFornecedor == 0 || model.Fornecedor.idFornecedor == null)
             {
                 ModelState.AddModelError("Fornecedor.nome", "Informe o fornecedor");
             }
@@ -134,6 +134,52 @@ namespace RP.Sistema.Web.Controllers
                 }
             }
             return View(model);
+        }
+
+
+        [Auth.Class.Auth("sistema", "padrao", "index")]
+        public ActionResult Report()
+        {
+            try
+            {
+                using (var db = new Context())
+                {
+                    var _bll = new BLL.FornecedorBLL(db, _idUsuario);
+
+                    var _contaPagar = _bll.Find().Select(u => new Models.Fornecedor.Consultar{idFornecedor = u.idFornecedor, nome = u.nome, flCheck = ""}).ToList();
+
+                    return View(new ReportVM { Fornecedores = _contaPagar});
+                }
+            }
+            catch (Exception ex)
+            {
+                RP.Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
+                return RedirectToAction("Index", "Erro", new { area = string.Empty });
+            }
+        }
+
+        [HttpPost]
+        [Auth.Class.Auth("sistema", "padrao", "index")]
+        public ActionResult Report(ReportVM model)
+        {
+            try
+            {
+                using (var db = new Context())
+                {
+                    var list = new List<int?>();
+                    if (model.Fornecedores != null)
+                    {
+                        list = model.Fornecedores.Where(u => u.flCheck == "on").Select(u => u.idFornecedor).ToList();
+                    }
+                    return new Report.Class.ContaPagar().GetReport(db, list, model.dtInicio, model.dtFim, _idUsuario, model.tipo);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
+                return RedirectToAction("Index", "Erro", new { area = string.Empty });
+            }
         }
 
         [Auth.Class.Auth("sistema", "padrao")]
@@ -258,23 +304,23 @@ namespace RP.Sistema.Web.Controllers
             return View(model);
         }
 
-        [Auth.Class.Auth("sistema", "padrao", "index")]
-        public ActionResult Report(string filter, DateTime? dtInicio, DateTime? dtFim, string situacao)
-        {
-            try
-            {
-                using (var db = new Context())
-                {
-                    return new Report.Class.ContaPagar().GetReport(db, filter, dtInicio, dtFim, situacao, _idUsuario);
-                }
+        //[Auth.Class.Auth("sistema", "padrao", "index")]
+        //public ActionResult Report(string filter, DateTime? dtInicio, DateTime? dtFim, string situacao)
+        //{
+        //    try
+        //    {
+        //        using (var db = new Context())
+        //        {
+        //            return new Report.Class.ContaPagar().GetReport(db, filter, dtInicio, dtFim, situacao, _idUsuario);
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
-                return RedirectToAction("Index", "Erro", new { area = string.Empty });
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
+        //        return RedirectToAction("Index", "Erro", new { area = string.Empty });
+        //    }
+        //}
 
         #endregion
     }
