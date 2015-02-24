@@ -221,8 +221,8 @@ namespace RP.Sistema.Web.Controllers
                                     )
 
                                     insert into #temp_caixa VALUES(0,'', 
-                                        (isnull((select SUM(valorpago) from contareceber where pagamento <= '" + inicio.ToString("yyyy-MM-dd") + @"'),0) -
-                                         isnull((select SUM(valorpago) from contapagar where pagamento <= '" + inicio.ToString("yyyy-MM-dd") + @"'),0)),null,'', '" + inicio.ToString("yyyy-MM-dd") + @"')
+                                        (isnull((select SUM(valorpago) from contareceber where situacao = 'Pago' AND pagamento <= '" + inicio.ToString("yyyy-MM-dd") + @"'),0) -
+                                         isnull((select SUM(valorpago) from contapagar where situacao = 'Pago' AND pagamento <= '" + inicio.ToString("yyyy-MM-dd") + @"'),0)),null,'', '" + inicio.ToString("yyyy-MM-dd") + @"')
                                     insert into #temp_caixa select 
                                         contapagar.idcontapagar,'Retirada', 0, (contapagar.valorpago* -1), 
                                         contapagar.descricao, contapagar.pagamento  from contapagar 

@@ -252,6 +252,7 @@
     <Compile Include="Models\Area\AreaVM.cs" />
     <Compile Include="Models\Area\Consultar.cs" />
     <Compile Include="Models\Caixa\ValeVM.cs" />
+    <Compile Include="Models\ContaPagar\ReportVM.cs" />
     <Compile Include="Models\Controle\Consultar.cs" />
     <Compile Include="Models\Controle\ControleVM.cs" />
     <Compile Include="Models\Agenda\AgendaVM.cs" />
@@ -836,6 +837,7 @@
     <Content Include="Views\Orcamento\Produto.cshtml" />
     <Content Include="Views\Projeto\Orcamento.cshtml" />
     <Content Include="Views\Caixa\Extrato.cshtml" />
+    <Content Include="Views\ContaPagar\Report.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

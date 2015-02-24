@@ -1,0 +1,93 @@
+﻿@model RP.Sistema.Web.Models.ContaPagar.ReportVM
+@using RP.Util;
+@using RP.Util.Class;
+@{
+    ViewBag.Title = "Relatório";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Material = new RP.Sistema.Web.Models.Material.Consultar();
+}
+<div class="container-fluid">
+    @using (Html.BeginForm())
+    {
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="container-nav-list well affix">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Ações</li>
+                        <li><a href="#" data-form-type="submit" title="Salva registro"><i class="icon-print"></i>Gerar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Index", "ContaPagar")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="span10">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index", "ContaPagar")">Início</a> <span class="divider">/</span></li>
+                    <li class="active">Relatório conta a pagar</li>
+                </ul>
+
+                @Html.RenderFlashMessage()
+                @Html.CustomValidationSummary(true, true, RP.Util.Resource.Message.SUMMARY_MESSAGE, new { @class = "alert alert-error" })
+
+                <div class="form-horizontal">
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.dtInicio, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.dtInicio, new { @class = "input-small datepicker", @mask = "99/99/9999" })
+                            @Html.TextBoxFor(model => model.dtFim, new { @class = "input-small datepicker", @mask = "99/99/9999" })
+                            <select name="tipo" id="tipo" class="input-large">
+                                <option value="Detalhado">Detalhado</option>
+                                <option value="Resumido">Resumido</option>
+                            </select>
+                        </div>
+                    </div>
+                    <h4 class="heading">Fornecedores</h4>
+                    <table class="table table-bordered table-condensed table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input id="all" type="checkbox" onclick="ChecarTodos(this)"></th>
+                                <th style="width: 100%">Nome</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Fornecedores != null)
+                            {
+                                int id = -1;
+                                foreach (var item in Model.Fornecedores.OrderBy(u => u.nome))
+                                {
+                                    id++;
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" class="check" id="@id" name="Fornecedores[@id].flCheck" onclick="Checar(this)">
+                                        <input type="hidden" name="Fornecedores[@id].idFornecedor" value="@item.idFornecedor">
+                                    </th>
+                                    <th style="width: 100%">@item.nome</th>
+                                </tr>
+                                }
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section scripts{
+
+    <script>
+        function Checar(el) {
+            if ($(el).is(':checked')) {
+                $(el).attr('checked', true);
+            } else {
+                $(el).attr('checked', false);
+            }
+        }
+
+        function ChecarTodos(el) {
+            $('.check').prop('checked', $(el).is(':checked'));
+        }
+    </script>
+
+}
