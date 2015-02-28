@@ -14,6 +14,7 @@ namespace RP.Sistema.Report.Class
             public string nmFuncionario { get; set; }
             public decimal? salario { get; set; }
             public decimal porcentagem { get; set; }
+            public int caragaHoraria { get; set; }
             public string flTipo { get; set; }
             public TimeSpan hora { get; set; }
             public decimal valor { get; set; }
@@ -103,7 +104,7 @@ namespace RP.Sistema.Report.Class
             decimal? total = 0;
             foreach (var item in list.OrderByDescending(u => u.nmFuncionario))
             {
-                decimal? valor = (((item.salario / 220) * ((decimal)item.hora.TotalHours) * item.porcentagem) / 100);
+                decimal? valor = (((item.salario / item.caragaHoraria) * ((decimal)item.hora.TotalHours) * item.porcentagem) / 100);
                 row = table.NewRow();
                 row["nmFuncionario"] = item.nmFuncionario;
                 row["flTipo"] = item.flTipo;
@@ -143,7 +144,13 @@ namespace RP.Sistema.Report.Class
                 row["flTipo"] = "Total";
                 row["valor"] = valor;
                 table.Rows.Add(row);
-                this.Horas.Add(new CalculoHora { nmFuncionario = fun.nmFuncionario, porcentagem = fun.porcentagem, valor  = valor.Value, flTipo = "Valor das Horas Extras" });
+                this.Horas.Add(new CalculoHora 
+                {
+                    nmFuncionario = fun.nmFuncionario,
+                    caragaHoraria = fun.caragaHoraria,
+                    porcentagem = fun.porcentagem, 
+                    valor  = valor.Value, 
+                    flTipo = "Valor das Horas Extras" });
             }
 
             row = table.NewRow();
@@ -240,7 +247,15 @@ namespace RP.Sistema.Report.Class
                         _result.Rows.Add(row);
                         entrou = true;
                         totalFuncionario += dia;
-                        this.Horas.Add(new CalculoHora { flTipo = hora.flTipo, hora = dia, nmFuncionario = item.nome, porcentagem = hora.porcentagem, salario = item.salario });
+                        this.Horas.Add(new CalculoHora 
+                        { 
+                            flTipo = hora.flTipo, 
+                            hora = dia,
+                            nmFuncionario = item.nome,
+                            porcentagem = hora.porcentagem,
+                            salario = item.salario,
+                            caragaHoraria = item.nrCargaHoraria ?? 0
+                        });
                     }
 
                     if (entrou)
@@ -254,7 +269,7 @@ namespace RP.Sistema.Report.Class
                     dia = new TimeSpan();
                 }
                 //horas extras
-                foreach (var hora in horas)
+                foreach (var hora in horas.Where(u => u.flTipo != "Sab / Dom e Feriados"))
                 {
                     // (u.entradaExtra <= hora.inicioHora && hora.fimHora == null) || 
                     foreach (var h in item.CartaoPontos.Where(u => u.flSituacao.ToLower().Contains("dia útil") && u.saidaExtra >= hora.inicioHora))
@@ -326,7 +341,15 @@ namespace RP.Sistema.Report.Class
                         _result.Rows.Add(row);
                         entrou = true;
                         totalFuncionario += dia;
-                        this.Horas.Add(new CalculoHora { flTipo = hora.flTipo, hora = dia, nmFuncionario = item.nome, porcentagem = hora.porcentagem, salario = item.salario });
+                        this.Horas.Add(new CalculoHora 
+                        { 
+                            flTipo = hora.flTipo, 
+                            hora = dia, 
+                            nmFuncionario = item.nome,
+                            porcentagem = hora.porcentagem,
+                            salario = item.salario,
+                            caragaHoraria = item.nrCargaHoraria ?? 0
+                        });
                     }
 
                     if (entrou)

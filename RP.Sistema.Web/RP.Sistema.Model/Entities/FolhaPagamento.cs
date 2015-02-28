@@ -19,10 +19,13 @@ namespace RP.Sistema.Model.Entities
         public decimal outrosDescontos { get; set; }
         public decimal? horaExtra { get; set; }
         public decimal inss { get; set; }
+        public decimal FGTS { get; set; }
         public decimal vale { get; set; }
         public System.DateTime dtPagamento { get; set; }
         public int nrAno { get; set; }
         public int nrMes { get; set; }
+        public string dsBonificacao { get; set; }
+        public string dsOutrosDescontos { get; set; }
         public string situacao { get; set; }
         public int idUsuario { get; set; }
         public Funcionario Funcionario { get; set; }

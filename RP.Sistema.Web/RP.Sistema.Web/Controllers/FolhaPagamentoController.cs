@@ -66,8 +66,8 @@ namespace RP.Sistema.Web.Controllers
             }
             catch (Exception ex)
             {
-                RP.Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
-                return RedirectToAction("Index");
+                Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
+                return RedirectToAction("Index", "Erro", new { area = string.Empty });
             }
         }
 
@@ -83,7 +83,7 @@ namespace RP.Sistema.Web.Controllers
                     var _feriadoBLL = new BLL.FeriadoBLL(db, _idUsuario);
                     var _bll = new BLL.FuncionarioBLL(db, _idUsuario);
                     var _movimentoBLL = new BLL.MovimentoProfissionalBLL(db, _idUsuario);
-
+                    var empresa = db.Entidades.FirstOrDefault();
                     var data = new DateTime(ano, mes, 1).AddMonths(1).AddDays(-1);
                     var feriados = _feriadoBLL.Find(u => u.nrMes == mes);
                     var _funcionario = _bll.FindSingle(e => e.idFuncionario == idFuncionario);
@@ -91,7 +91,7 @@ namespace RP.Sistema.Web.Controllers
                     var _result = new FolhaVM
                     {
                         Funcionario = Models.Funcionario.Consultar.GetModel(_funcionario),
-                        Pontos = FolhaVM.Ponto.GetPontos(ano, mes, idFuncionario, feriados.ToList()),
+                        Pontos = FolhaVM.Ponto.GetPontos(ano, mes, idFuncionario, feriados.ToList(), empresa),
                         Proximos = FolhaVM.Comissao.GetComicoes(_movimentos.Where(u => u.dtVencimento > data).ToList()),
                         Comissoes = FolhaVM.Comissao.GetComicoes(_movimentos.Where(u => u.dtVencimento <= data).ToList()),
                         nrAno = ano,
@@ -236,7 +236,10 @@ namespace RP.Sistema.Web.Controllers
                             _folha.salario = model.salario ?? 0;
                             _folha.bonificacao = model.bonificacao ?? 0;
                             _folha.outrosDescontos = model.outrosDescontos ?? 0;
+                            _folha.dsBonificacao = string.IsNullOrEmpty(model.dsBonificacao) ? "Bonificação referente ao mês de " + model.dsMes : model.dsBonificacao;
+                            _folha.dsOutrosDescontos = string.IsNullOrEmpty(model.dsOutrosDescontos) ? "Descontos adicionais referente ao mês de " + model.dsMes : model.dsOutrosDescontos;
                             _folha.inss = model.inss ?? 0;
+                            _folha.FGTS = model.FGTS ?? 0;
                             _folha.horaExtra = model.horaExtra ?? 0;
 
                             _bll.Update(_folha);

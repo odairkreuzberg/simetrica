@@ -54,8 +54,8 @@
                     <table id="tblMovimento">
                         <thead>
                             <tr>
-                                <th style="width: 55%">Descrição</th>
-                                <th style="width: 15%">Tipo</th>
+                                <th style="width: 40%">Descrição</th>
+                                <th style="width: 30%">Tipo</th>
                                 <th style="width: 15%">Vencimentos</th>
                                 <th style="width: 15%">Descontos</th>
                             </tr>
@@ -78,19 +78,25 @@
                             </tr>
                             <tr>
                                 <td> Bonificação referente ao mês de @Model.dsMes </td>
-                                <td> Bonificação </td>
+                                <td> @Html.TextBoxFor(model => model.dsBonificacao, new { @class = "span12 data-movimento",placeholder="Informe o tipo da bonificação" })</td>
                                 <td> @Html.TextBoxFor(model => model.bonificacao, new { @class = "span12 data-movimento",style="text-align: right" }) </td>
                                 <td><input type="text" readonly="readonly" class="span12" tabindex="-1"></td>
                             </tr>
                             <tr>
                                 <td> Descontos adicionais referente @Model.dsMes </td>
-                                <td> Ourtos descontos </td>
+                                <td>  @Html.TextBoxFor(model => model.dsOutrosDescontos, new { @class = "span12 data-movimento",placeholder="Informe o tipo de desconto" })</td>
                                 <td><input type="text" readonly="readonly" class="span12" tabindex="-1"></td>
                                 <td> @Html.TextBoxFor(model => model.outrosDescontos, new { @class = "span12 data-movimento",style="text-align: right" }) </td>
                             </tr>
                             <tr>
                                 <td> INSS referente ao mês de @Model.dsMes </td>
                                 <td> INSS </td>
+                                <td><input type="text" readonly="readonly" class="span12" tabindex="-1"></td>
+                                <td> @Html.TextBoxFor(model => model.FGTS, new { @class = "span12 data-movimento",style="text-align: right" }) </td>
+                            </tr>
+                            <tr>
+                                <td> FGTS referente ao mês de @Model.dsMes </td>
+                                <td> FGTS </td>
                                 <td><input type="text" readonly="readonly" class="span12" tabindex="-1"></td>
                                 <td> @Html.TextBoxFor(model => model.inss, new { @class = "span12 data-movimento",style="text-align: right" }) </td>
                             </tr>

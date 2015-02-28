@@ -210,7 +210,7 @@ namespace RP.Sistema.Report.Class
 
 
                     row["vale"] = _folha.outrosDescontos;
-                    row["descricaoMovimento"] = "Descontos adicionais";
+                    row["descricaoMovimento"] = _folha.dsOutrosDescontos;
                     row["tipoMovimento"] = "Vale";
                     row["total"] = _folha.total;
                     _result.Rows.Add(row);
@@ -248,6 +248,38 @@ namespace RP.Sistema.Report.Class
                     _result.Rows.Add(row);
                 }
 
+
+                if (_folha.inss > 0)
+                {
+                    row = _result.NewRow();
+                    row["idfuncionario"] = funcionario.idFuncionario;
+                    row["nome"] = funcionario.nome;
+                    row["tipo"] = funcionario.tipo;
+                    row["rg"] = funcionario.rg;
+                    row["cpf"] = funcionario.cpf;
+                    row["email"] = funcionario.email;
+                    row["observacao"] = funcionario.observacao;
+                    row["numero"] = funcionario.numero;
+                    row["cep"] = funcionario.cep;
+                    row["logradouro"] = funcionario.logradouro;
+                    row["bairro"] = funcionario.bairro;
+                    row["fone"] = funcionario.fone;
+                    row["celular"] = funcionario.celular;
+                    row["dtnascimento"] = funcionario.dtNascimento;
+                    row["dtentrada"] = funcionario.dtEntrada;
+                    row["ctps"] = funcionario.ctps;
+                    row["valorExtenco"] = RP.Util.Class.Converter.toExtenso(_folha.total);
+                    row["dataExtenco"] = dsMes + " de " + _folha.nrAno;
+                    row["nrAno"] = _folha.nrAno;
+                    row["nrMes"] = _folha.nrMes;
+                    row["total"] = _folha.total;
+
+
+                    row["vale"] = _folha.FGTS;
+                    row["descricaoMovimento"] = "FGTS";
+                    row["tipoMovimento"] = "Vale";
+                    _result.Rows.Add(row);
+                }
                 if (_folha.bonificacao > 0)
                 {
                     row = _result.NewRow();
@@ -275,7 +307,7 @@ namespace RP.Sistema.Report.Class
 
 
                     row["valorMovimento"] = _folha.bonificacao;
-                    row["descricaoMovimento"] = "Bonificações extras";
+                    row["descricaoMovimento"] = _folha.dsBonificacao;
                     row["tipoMovimento"] = "Comissão";
                     _result.Rows.Add(row);
                 }

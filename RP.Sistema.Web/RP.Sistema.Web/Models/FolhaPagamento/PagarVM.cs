@@ -48,11 +48,14 @@ namespace RP.Sistema.Web.Models.FolhaPagamento
         public string dsMes { get; set; }
         [Display(Name = "Mensalista")]
         public string mensalista { get; set; }
+        public string dsBonificacao { get; set; }
+        public string dsOutrosDescontos { get; set; }
         public decimal? salario { get; set; }
         public decimal? bonificacao { get; set; }
         public decimal? horaExtra { get; set; }
         public decimal? outrosDescontos { get; set; }
         public decimal? inss { get; set; }
+        public decimal? FGTS { get; set; }
         public decimal? totalReceber { get; set; }
         public decimal? totalVencimento { get; set; }
         public decimal? totalDesconto { get; set; }

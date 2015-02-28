@@ -15,6 +15,12 @@ namespace RP.Sistema.Model.Mapping
             this.Property(t => t.situacao)
                 .IsRequired()
                 .HasMaxLength(20);
+            this.Property(t => t.dsBonificacao)
+                .IsOptional()
+                .HasMaxLength(100);
+            this.Property(t => t.dsOutrosDescontos)
+                .IsOptional()
+                .HasMaxLength(100);
 
             // Table & Column Mappings
             this.ToTable("folhapagamento");
@@ -29,6 +35,8 @@ namespace RP.Sistema.Model.Mapping
             this.Property(t => t.vale).HasColumnName("vale");
             this.Property(t => t.dtPagamento).HasColumnName("dtpagamento");
             this.Property(t => t.situacao).HasColumnName("situacao");
+            this.Property(t => t.dsBonificacao).HasColumnName("dsbonificacao");
+            this.Property(t => t.dsOutrosDescontos).HasColumnName("dsoutrosdescontos");
             this.Property(t => t.idUsuario).HasColumnName("idusuario");
             this.Property(t => t.nrAno).HasColumnName("nrano");
             this.Property(t => t.nrMes).HasColumnName("nrmes");

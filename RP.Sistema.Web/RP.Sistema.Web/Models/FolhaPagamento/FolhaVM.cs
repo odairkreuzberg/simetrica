@@ -25,7 +25,7 @@ namespace RP.Sistema.Web.Models.FolhaPagamento
             public string flSituacao { get; set; }
             public string dsObservacao { get; set; }
 
-            internal static List<Ponto> GetPontos(int ano, int mes, int idFuncionario, List<Feriado> list)
+            internal static List<Ponto> GetPontos(int ano, int mes, int idFuncionario, List<Feriado> list, Model.Entities.Entidade empresa)
             {
                 var competenia = new DateTime(ano, mes, 1);
                 int dias = competenia.AddMonths(1).AddDays(-1).Day;
@@ -35,10 +35,10 @@ namespace RP.Sistema.Web.Models.FolhaPagamento
                     string diaExtenco = new CultureInfo("pt-BR").DateTimeFormat.GetDayName(competenia.DayOfWeek);
                     _result.Add(new Ponto
                     {
-                        entradaManha = (diaExtenco.Contains("domingo") || diaExtenco.Contains("sábado") || list.Any(u => u.nrDia == i)) ? "" : "08:00",
-                        saidaManha = (diaExtenco.Contains("domingo") || diaExtenco.Contains("sábado") || list.Any(u => u.nrDia == i)) ? "" : "12:00",
-                        entraTarde = (diaExtenco.Contains("domingo") || diaExtenco.Contains("sábado") || list.Any(u => u.nrDia == i)) ? "" : "14:00",
-                        saidaTarde = (diaExtenco.Contains("domingo") || diaExtenco.Contains("sábado") || list.Any(u => u.nrDia == i)) ? "" : "18:00",
+                        entradaManha = (diaExtenco.Contains("domingo") || diaExtenco.Contains("sábado") || list.Any(u => u.nrDia == i)) ? "" : empresa.hrInicioManha,
+                        saidaManha = (diaExtenco.Contains("domingo") || diaExtenco.Contains("sábado") || list.Any(u => u.nrDia == i)) ? "" : empresa.hrFimManha,
+                        entraTarde = (diaExtenco.Contains("domingo") || diaExtenco.Contains("sábado") || list.Any(u => u.nrDia == i)) ? "" : empresa.hrInicioTarde,
+                        saidaTarde = (diaExtenco.Contains("domingo") || diaExtenco.Contains("sábado") || list.Any(u => u.nrDia == i)) ? "" : empresa.hrFimTarde,
                         nrDia = competenia.Day,
                         dsDia = diaExtenco,
                         flSituacao = (diaExtenco.Contains("domingo") || diaExtenco.Contains("sábado")) ? diaExtenco : list.Any(u => u.nrDia == i) ? "Feriado" : "Dia útil", //(diaExtenco.Contains("domingo") || diaExtenco.Contains("sábado") || list.Any(u => u.nrDia == i)) ? "" : CartaoPonto.TRABALHOU,
