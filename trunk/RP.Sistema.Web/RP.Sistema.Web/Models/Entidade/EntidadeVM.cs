@@ -23,7 +23,11 @@ namespace RP.Sistema.Web.Models.Entidade
                 nrCEP = this.nrCEP,
                 nrTelefone = this.nrTelefone,
                 dsWebSite = this.dsWebSite,
-                dsEmail = this.dsEmail
+                dsEmail = this.dsEmail,
+                hrInicioManha = this.hrInicioManha,
+                hrInicioTarde = this.hrInicioTarde,
+                hrFimTarde = this.hrFimTarde,
+                hrFimManha = this.hrFimManha
 
             };
             return _result;
@@ -45,6 +49,10 @@ namespace RP.Sistema.Web.Models.Entidade
                 nrTelefone = model.nrTelefone,
                 dsWebSite = model.dsWebSite,
                 dsEmail = model.dsEmail,
+                hrInicioManha = model.hrInicioManha,
+                hrInicioTarde = model.hrInicioTarde,
+                hrFimTarde = model.hrFimTarde,
+                hrFimManha = model.hrFimManha,
 
             };
             return _result;
@@ -94,6 +102,12 @@ namespace RP.Sistema.Web.Models.Entidade
 
         [Display(Name = "e-mail")]
         public string dsEmail { get; set; }
+
+        [Display(Name = "horário de funcionamento")]
+        public string hrInicioManha { get; set; }
+        public string hrFimManha { get; set; }
+        public string hrInicioTarde { get; set; }
+        public string hrFimTarde { get; set; }
 
         public byte imLogo { get; set; }
 

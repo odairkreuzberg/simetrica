@@ -18,6 +18,10 @@ namespace RP.Sistema.Model.Entities
         public string nrEndereco { get; set; }
         public string nrCEP { get; set; }
         public string nrTelefone { get; set; }
+        public string hrInicioManha { get; set; }
+        public string hrFimManha { get; set; }
+        public string hrInicioTarde { get; set; }
+        public string hrFimTarde { get; set; }
         public string dsWebSite { get; set; }
         public byte[] imLogo { get; set; }
         public string dsEmail { get; set; }

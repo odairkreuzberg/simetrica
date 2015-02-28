@@ -65,6 +65,7 @@ namespace RP.Sistema.Report.Class
             _result.Columns.Add("outrosDescontos", Type.GetType("System.Decimal"));
             _result.Columns.Add("horaExtra", Type.GetType("System.Decimal"));
             _result.Columns.Add("inss", Type.GetType("System.Decimal"));
+            _result.Columns.Add("fgts", Type.GetType("System.Decimal"));
             _result.Columns.Add("vale", Type.GetType("System.Decimal"));
             foreach (var item in folhas)
             {
@@ -74,8 +75,9 @@ namespace RP.Sistema.Report.Class
                 row["salario"] = item.salario == 0 ? item.comissao : item.salario;
                 row["outrosDescontos"] = item.outrosDescontos;
                 row["bonificacao"] = item.bonificacao;
-                row["horaExtra"] = item.horaExtra ??0;
+                row["horaExtra"] = item.horaExtra ?? 0;
                 row["inss"] = item.inss;
+                row["fgts"] = item.FGTS;
                 row["vale"] = item.vale;
                 _result.Rows.Add(row);
 

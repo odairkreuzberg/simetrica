@@ -14,6 +14,7 @@
         $('#bonificacao').val($('#bonificacao').val().replaceAll(".", ""));
         $('#outrosDescontos').val($('#outrosDescontos').val().replaceAll(".", ""));
         $('#inss').val($('#inss').val().replaceAll(".", ""));
+        $('#FGTS').val($('#FGTS').val().replaceAll(".", ""));
         $('#totalVencimento').val($('#totalVencimento').val().replaceAll(".", ""));
         $('#totalDesconto').val($('#totalDesconto').val().replaceAll(".", ""));
         $('#totalReceber').val($('#totalReceber').val().replaceAll(".", ""));
@@ -99,10 +100,14 @@ var Movimento = {
         var outrosDescontos = $('#outrosDescontos').val().replaceAll(".", "").replace(",", ".");
         $('#outrosDescontos').val(window.NumberFormat(outrosDescontos, 2, ',', '.'));
 
+        var FGTS = $('#FGTS').val().replaceAll(".", "").replace(",", ".");
+        $('#FGTS').val(window.NumberFormat(FGTS, 2, ',', '.'));
+
         var inss = $('#inss').val().replaceAll(".", "").replace(",", ".");
         $('#inss').val(window.NumberFormat(inss, 2, ',', '.'));
 
         totalDesconto = parseFloat(totalDesconto) + parseFloat(inss == "" ? 0 : inss);
+        totalDesconto = parseFloat(totalDesconto) + parseFloat(FGTS == "" ? 0 : FGTS);
         totalDesconto = parseFloat(totalDesconto) + parseFloat(outrosDescontos == "" ? 0 : outrosDescontos);
 
         var totalReceber = totalVencimento - totalDesconto;

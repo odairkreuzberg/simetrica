@@ -256,7 +256,7 @@ namespace RP.Sistema.Web.Controllers
                 {
                     var _bll = new BLL.FuncionarioBLL(db, _idUsuario);
 
-                    var result = _bll.Search(filter, string.Empty, page, pagesize, mensalista, tipo);
+                    var result = _bll.Search(filter,Funcionario.ATIVO, page, pagesize, mensalista, tipo);
 
                     var list = result.Select(s => new 
                     {

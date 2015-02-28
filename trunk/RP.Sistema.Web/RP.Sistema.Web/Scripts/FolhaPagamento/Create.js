@@ -1,12 +1,7 @@
 ﻿$(function () {
 
     $('#tblPonto').tGrid({
-        searchable: true,
         addMode: "append",
-        pager: {
-            enabled: true,
-            size: 10
-        },
         onCreate: function (grid) {
             var data = window.Functions.getJsonData('#tblPonto_data');
             if (data.length) {

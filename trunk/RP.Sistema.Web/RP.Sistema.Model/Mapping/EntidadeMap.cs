@@ -58,6 +58,18 @@ namespace RP.Sistema.Model.Mapping
             this.Property(t => t.dsEmail)
                 .HasMaxLength(100);
 
+            this.Property(t => t.hrInicioManha)
+                .HasMaxLength(8);
+
+            this.Property(t => t.hrFimManha)
+                .HasMaxLength(8);
+
+            this.Property(t => t.hrInicioTarde)
+                .HasMaxLength(8);
+
+            this.Property(t => t.hrFimTarde)
+                .HasMaxLength(8);
+
             // Table & Column Mappings
             this.ToTable("tbentidade", Context.Schema);
             this.Property(t => t.idEntidade).HasColumnName("identidade");
@@ -73,6 +85,10 @@ namespace RP.Sistema.Model.Mapping
             this.Property(t => t.dsWebSite).HasColumnName("dswebsite");
             this.Property(t => t.imLogo).HasColumnName("imlogo");
             this.Property(t => t.dsEmail).HasColumnName("dsemail");
+            this.Property(t => t.hrInicioManha).HasColumnName("hriniciomanha");
+            this.Property(t => t.hrFimManha).HasColumnName("hrfimmanha");
+            this.Property(t => t.hrInicioTarde).HasColumnName("hriniciotarde");
+            this.Property(t => t.hrFimTarde).HasColumnName("hrfimtarde");
         }
     }
 }
