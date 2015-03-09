@@ -232,7 +232,7 @@ var Produto = {
         '<tr class="data">' +
             '<td class="actions b2" >' +
                 '<a href="#" class="btn btn-danger" title="Excluir" data-event="remove"><i class="icon-trash icon-white"></i></a>' +
-                '<a href="#" class="btn btn-info" title="Excluir" data-event="edit"><i class="icon-check icon-white"></i></a>' +
+                '<a href="#" class="btn btn-info" title="Editar" data-event="edit"><i class="icon-check icon-white"></i></a>' +
                 '<input type="hidden" name="Produtos[0].idProduto" value="${idProduto}"/>' +
                 '<input type="hidden" name="Produtos[0].idProjetista" value="${idProjetista}"/>' +
                 '<input type="hidden" name="Produtos[0].idMarceneiro" value="${idMarceneiro}"/>' +
