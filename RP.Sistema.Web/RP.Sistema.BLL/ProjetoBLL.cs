@@ -268,5 +268,46 @@ namespace RP.Sistema.BLL
 
             }
         }
+
+        public void Duplicar(Projeto _projeto)
+        {
+            var produtos = _projeto.Produtos.ToList();
+            int idProjeto = _projeto.idProjeto;
+            _projeto.Produtos = null;
+            _projeto.idProjeto = 0;
+
+            this.Insert(_projeto);
+            db.SaveChanges(_idUsuario);
+            var _produtoBLL = new ProdutoBLL(db, _idUsuario);
+            var _produtoMaterialBLL = new ProdutoMaterialBLL(db, _idUsuario);
+
+            foreach (var item in produtos)
+            {
+                int idProduto = item.idProduto;
+                item.idProjeto = _projeto.idProjeto;
+                item.idProduto = 0;
+
+                _produtoBLL.Insert(item);
+                db.SaveChanges(_idUsuario);
+
+                if (idProduto != 0)
+                {
+                    var materiais = _produtoMaterialBLL.Find(u => u.idProduto == idProduto).ToList();
+
+                    foreach (var mt in materiais.ToList())
+                    {
+                        var material = new ProdutoMaterial
+                        {
+                            idMaterial = mt.idMaterial,
+                            idProduto = item.idProduto,
+                            margemGanho = mt.margemGanho,
+                            quantidade = mt.quantidade,
+                            valor = mt.valor
+                        };
+                        _produtoMaterialBLL.Insert(material);
+                    }
+                }
+            }
+        }
     }
 }

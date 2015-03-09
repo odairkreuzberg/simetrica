@@ -109,6 +109,48 @@ namespace RP.Sistema.Web.Controllers
             return View(model);
         }
 
+        [Auth.Class.Auth("sistema", "padrao", "Edit")]
+        public ActionResult Duplicar(int idProjeto)
+        {
+            return this.GetView(idProjeto);
+        }
+
+        [HttpPost]
+        [Auth.Class.Auth("sistema", "padrao", "Edit")]
+        public ActionResult Duplicar(AprovarVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    using (var db = new Context())
+                    {
+                        using (var trans = new RP.DataAccess.RPTransactionScope(db))
+                        {
+                            var _projeto = model.GetProjeto();
+
+                            var _bll = new BLL.ProjetoBLL(db, _idUsuario);
+
+                            _bll.Duplicar(_projeto);
+                            _bll.SaveChanges();
+
+                            trans.Complete();
+
+                            this.AddFlashMessage("Projeto duplicado com sucesso!", FlashMessage.SUCCESS);
+                            return RedirectToAction("Index");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
+                    return RedirectToAction("Index", "Erro", new { area = string.Empty });
+                }
+            }
+            return View(model);
+        }
+
+
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Edit(int id)
         {

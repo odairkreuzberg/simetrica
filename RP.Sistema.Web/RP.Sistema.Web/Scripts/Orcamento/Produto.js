@@ -69,6 +69,7 @@ var Item = {
                 tbl.updateIndex();
                 tbl.paginate();
                 window.Functions.handlers.mask();
+                $('#Material_nome').focus();
             } else {
                 ShowMessage("Este item já foi adicionado", "erro");
             }

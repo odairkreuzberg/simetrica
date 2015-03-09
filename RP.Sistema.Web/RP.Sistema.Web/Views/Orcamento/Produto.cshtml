@@ -78,7 +78,7 @@
                         </div>
                         <div class="modal-body">
 
-                            @Html.EditorFor(model => Material, "Material/Consultar", new { obrigatorio = true, mostrarValortes = false })
+                            @Html.EditorFor(model => Material, "Material/Consultar", new { obrigatorio = true, consulta = true })
                             <div class="control-group">
                                 @Html.Label("quantidade", "Quantidade", new { @class = "control-label" })
                                 <div class="controls  controls-row">

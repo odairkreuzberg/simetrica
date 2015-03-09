@@ -318,6 +318,7 @@ var Item = {
 
                         Item.limparForm(form);
                         Item.addValorTotal(tbl);
+                        $('#Material_nome').focus();
                     },
                     error: function (request) {
                         form.btnAdd.button('reset');

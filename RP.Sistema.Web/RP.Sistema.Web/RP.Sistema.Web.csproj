@@ -838,6 +838,7 @@
     <Content Include="Views\Projeto\Orcamento.cshtml" />
     <Content Include="Views\Caixa\Extrato.cshtml" />
     <Content Include="Views\ContaPagar\Report.cshtml" />
+    <Content Include="Views\Projeto\Duplicar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

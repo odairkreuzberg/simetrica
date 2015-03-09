@@ -3,6 +3,7 @@
 @{
     bool desabilitar = Convert.ToBoolean(ViewData["desabilitar"]);
     bool obrigatorio = Convert.ToBoolean(ViewData["obrigatorio"] = true);
+    bool consulta = Convert.ToBoolean(ViewData["consulta"]);
     
     var UnidadeMedida = new RP.Sistema.Web.Models.UnidadeMedida.Consultar();
 }
@@ -18,7 +19,11 @@
     {
         <div class="controls  controls-row">
             @Html.TextBoxFor(model => model.nome, new { @class = "span6", maxlength = "50", })
+            @if (!consulta)
+            {
             <a id="@Helper.getInputId("btn", Html.ClientPrefixName().ToString())" title="Adicionar fabricante" class="btn btn-input"><i style="font-size: 300px" class="icon-plus"></i></a>
+            
+            }
             @if (obrigatorio) { @Html.ValidationMessageFor(model => model.nome, null, new { @class = "help-inline", @id = Html.ClientPrefixName().ToString() }) }
         </div>
     }
