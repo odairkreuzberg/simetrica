@@ -19,6 +19,7 @@
                         <li class="divider"></li>
                         <li><a href="@Url.Action("Index")" title="Volta para tela inicial"><i class="icon-arrow-left"></i>Voltar</a></li>
                         <li class="divider"></li>
+                        <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.dtInicio, null, new { @class = "help-inline no-required" })</li>
                         <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.dtFim, null, new { @class = "help-inline no-required" })</li>
                         <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.descricao, null, new { @class = "help-inline no-required" })</li>
                         <li style="margin-left: -25px">@Html.ValidationMessageFor(model => model.Cliente.nome, null, new { @class = "help-inline no-required" })</li>
@@ -42,6 +43,12 @@
                         @Html.CustomLabelFor(model => model.descricao, new { @class = "control-label" })
                         <div class="controls">
                             @Html.TextBoxFor(model => model.descricao, new { @class = "span6", maxlength = "50" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.CustomLabelFor(model => model.dtInicio, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.dtInicio, new { @class = "input-small datepicker", @mask = "99/99/9999" })
                         </div>
                     </div>
                     <div class="control-group">
