@@ -32,6 +32,7 @@ namespace RP.Sistema.BLL
             var produtosDB = bll.Find(u => u.idProjeto == bean.idProjeto).Select(u => u.idProduto).ToList();
 
             ((Model.Context)db).Projetos.Attach(bean);
+            ((Model.Context)db).Entry(bean).Property(e => e.dtInicio).IsModified = true;
             ((Model.Context)db).Entry(bean).Property(e => e.dtFim).IsModified = true;
             ((Model.Context)db).Entry(bean).Property(e => e.descricao).IsModified = true;
             ((Model.Context)db).Entry(bean).Property(e => e.porcentagemVendedor).IsModified = true;
