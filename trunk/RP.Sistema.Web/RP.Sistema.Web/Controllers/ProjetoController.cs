@@ -209,6 +209,8 @@ namespace RP.Sistema.Web.Controllers
                     {
                         var _bll = new BLL.ProjetoBLL(db, _idUsuario);
 
+                        var margemGanho = model.margemGanhoMaterial;
+
                         var _projeto = _bll.FindSingle(e => e.idProjeto == model.idProjeto,
                             u => u.Cliente, u => u.Vendedor, u => u.Produtos, u => u.ProjetoCustos,
                             u => u.Produtos.Select(l => l.ProdutoMateriais),
@@ -228,6 +230,11 @@ namespace RP.Sistema.Web.Controllers
                         }
 
                         _bll.Aprovar(_projeto);
+                        _bll.SaveChanges();
+                        if (margemGanho != null)
+                        {
+                            _bll.AlterarMargemGanhoMaterial(margemGanho.Value, model.idProjeto);
+                        }
                         _bll.SaveChanges();
                         trans.Complete();
 

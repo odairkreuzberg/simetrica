@@ -51,7 +51,7 @@
                     <div class="control-group">
                         @Html.CustomLabelFor(model => model.flFormaPagamento, new { @class = "control-label" })
                         <div class="controls">
-                            @Html.TextBoxFor(model => model.flFormaPagamento, new { @class = "span2", @readonly = "readonly" })
+                            @Html.TextBoxFor(model => model.flFormaPagamento, new { @class = "span6", maxlength = "100" })
                         </div>
                     </div>
                     <div class="control-group">
