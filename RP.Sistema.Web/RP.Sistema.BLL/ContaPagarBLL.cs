@@ -137,6 +137,7 @@ namespace RP.Sistema.BLL
             ((Model.Context)db).Entry(bean).Property(e => e.situacao).IsModified = true;
             ((Model.Context)db).Entry(bean).Property(e => e.pagamento).IsModified = true;
             ((Model.Context)db).Entry(bean).Property(e => e.valorPago).IsModified = true;
+            ((Model.Context)db).Entry(bean).Property(e => e.flFormaPagamento).IsModified = true;
         }
     }
 }

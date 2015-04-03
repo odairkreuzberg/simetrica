@@ -200,6 +200,9 @@ namespace RP.Sistema.Web.Models.Projeto
         [Display(Name = "Comissão")]
         public decimal comissaoVendedor { get; set; }
 
+        [Display(Name = "Margem de ganho (material)")]
+        public decimal? margemGanhoMaterial { get; set; }
+
         [Display(Name = "Comissão (%)")]
         public decimal porcentagemVendedor { get; set; }
 

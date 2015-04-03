@@ -56,6 +56,13 @@
 
                                 @Html.EditorFor(model => model.Cliente, "Cliente/Consultar", new { desabilitar = true })
                                 @Html.EditorFor(model => model.Vendedor, "Funcionario/Consultar", new { label = "Vendedor", desabilitar = true })
+
+                                <div class="control-group">
+                                    @Html.CustomLabelFor(model => model.margemGanhoMaterial, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextBoxFor(model => model.margemGanhoMaterial, new { @class = "input-small", filter = "numeric", style = "text-align:right" })
+                                    </div>
+                                </div>
                                 <h4 class="heading">Produtos</h4>
                                 <table id="tblProduto">
                                     <thead>

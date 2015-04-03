@@ -255,14 +255,14 @@ namespace RP.Sistema.BLL
             foreach (var item in _produtos)
             {
                 var materiais = _produtoMaterialBLL.Find(u => u.idProduto == item.idProduto)
-                    .Select(u => new 
+                    .Select(u => new
                     {
                         u.idProdutoMaterial,
                         vlProduto = u.quantidade * u.valor,
                         vlVenda = ((u.margemGanho / 100) * (u.quantidade * u.valor)) + (u.quantidade * u.valor)
                     }).ToList();
                 item.vlProduto = ((item.margemGanho / 100) * materiais.Sum(u => u.vlVenda)) + materiais.Sum(u => u.vlVenda);
-                item.vlVenda = item.vlProduto  - item.vlDesconto;
+                item.vlVenda = item.vlProduto - item.vlDesconto;
 
                 _projeto.vlProjeto += item.vlProduto;
                 _projeto.vlVenda += (item.vlVenda - _projeto.vlDesconto);
@@ -309,6 +309,25 @@ namespace RP.Sistema.BLL
                     }
                 }
             }
+        }
+
+        public void AlterarMargemGanhoMaterial(decimal margemGanho, int idProjeto)
+        {
+            var _produtoBLL = new ProdutoBLL(db, _idUsuario);
+            var _produtoMaterialBLL = new ProdutoMaterialBLL(db, _idUsuario);
+
+            var ids = _produtoBLL.Find(u => u.idProjeto == idProjeto).Select(u => u.idProduto).ToList();
+
+            foreach (var idProduto in ids)
+            {
+                var materiais = _produtoMaterialBLL.Find(u => u.idProduto == idProduto).ToList();
+                foreach (var item in materiais)
+                {
+                    item.margemGanho = margemGanho;
+                }
+            }
+
+
         }
     }
 }
