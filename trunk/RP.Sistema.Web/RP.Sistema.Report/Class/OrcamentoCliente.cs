@@ -8,7 +8,7 @@ namespace RP.Sistema.Report.Class
 {
     public class OrcamentoCliente
     {
-        public System.Web.Mvc.ActionResult GetReport(Model.Context db, int idProjeto, string dsObservacao, string dsGarantia, string dsPrevisao, string dsIncluso, string dsValidade, int _idUsuario)
+        public System.Web.Mvc.ActionResult GetReport(Model.Context db, int idProjeto, string dsObservacao, string dsCondicao, string dsGarantia, string dsPrevisao, string dsIncluso, string dsValidade, int _idUsuario)
         {
             String titulo = "<center>Orçamento para Confecção dos Móveis na Linha MDF Masisa<center>";
             return Report.genericReport(
@@ -20,6 +20,7 @@ namespace RP.Sistema.Report.Class
                     parameters = new Dictionary<string, object> 
                     { 
                     { "titulo", titulo },
+                    { "dsCondicao", dsCondicao },
                     { "dsObservacao", dsObservacao },
                     { "dsGarantia", dsGarantia },
                     { "dsPrevisao", dsPrevisao },

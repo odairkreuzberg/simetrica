@@ -33,6 +33,7 @@ namespace RP.Sistema.Model.Entities
             this.Perfis = new List<PerfilUsuario>();
             this.Modulos = new List<ModuloUsuario>();
             this.funcionarios = new List<Funcionario>();
+            this.Logs = new List<LogDado>();
 		}
 
         public int idUsuario { get; set; }
@@ -55,6 +56,7 @@ namespace RP.Sistema.Model.Entities
         public ICollection<FolhaPagamento> folhapagamentoes { get; set; }
         public ICollection<Funcionario> funcionarios { get; set; }
         public ICollection<MovimentoProfissional> movimentoprofissionals { get; set; }
+        public ICollection<LogDado> Logs { get; set; }
     }
 }
 

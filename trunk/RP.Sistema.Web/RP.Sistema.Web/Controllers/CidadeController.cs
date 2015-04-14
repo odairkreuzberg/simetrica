@@ -9,6 +9,7 @@ using RP.Sistema.Web.Models.Cidade;
 using RP.Util;
 using System.Data;
 using System.Runtime.Serialization;
+using RP.Sistema.BLL;
 
 namespace RP.Sistema.Web.Controllers
 { 
@@ -27,6 +28,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "Cidade", _idUsuario));
             return View();
         }
 
@@ -36,6 +38,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search", "Cidade", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.CidadeBLL(db, _idUsuario);
@@ -55,12 +58,14 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Details(int id)
         {
+            LogBLL.Insert(new LogDado("Details", "Cidade", _idUsuario));
             return this.GetView(id);
         }
 
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Create()
         {
+            LogBLL.Insert(new LogDado("Create", "Cidade", _idUsuario));
             return View();
         } 
 
@@ -76,6 +81,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Create", "Cidade", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -121,6 +127,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Edit", "Cidade", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -160,6 +167,7 @@ namespace RP.Sistema.Web.Controllers
         {            
             try
             {
+                LogBLL.Insert(new LogDado("DeleteConfirmed", "Cidade", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -189,6 +197,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Report", "Cidade", _idUsuario));
                 using (var db = new Context())
                 {
                     return new Report.Class.Cidade().GetReport(db, filter, _idUsuario);

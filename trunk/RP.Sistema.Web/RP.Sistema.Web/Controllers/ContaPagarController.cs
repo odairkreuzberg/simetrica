@@ -28,6 +28,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "ContaPagar", _idUsuario));
             ViewBag.dtFim = DateTime.Now;
             return View();
         }
@@ -38,6 +39,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search", "ContaPagar", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.ContaPagarBLL(db, _idUsuario);
@@ -62,6 +64,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Details", "ContaPagar", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.ContaPagarBLL(db, _idUsuario);
@@ -96,6 +99,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Create", "ContaPagar", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -164,6 +168,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Report", "ContaPagar", _idUsuario));
                 using (var db = new Context())
                 {
                     var list = new List<int?>();
@@ -187,6 +192,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Cancelar", "ContaPagar", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -249,6 +255,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Pagar", "ContaPagar", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))

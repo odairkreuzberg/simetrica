@@ -28,6 +28,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "Projeto", _idUsuario));
             return View();
         }
 
@@ -37,6 +38,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search", "Projeto", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.ProjetoBLL(db, _idUsuario);
@@ -56,6 +58,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Details(int id)
         {
+            LogBLL.Insert(new LogDado("Details", "Projeto", _idUsuario));
             return this.GetView(id);
         }
 
@@ -81,6 +84,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Create", "Projeto", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -123,6 +127,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Duplicar", "Projeto", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -165,6 +170,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Edit", "Projeto", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -203,6 +209,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("AddItem", "Projeto", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -235,6 +242,22 @@ namespace RP.Sistema.Web.Controllers
                         {
                             _bll.AlterarMargemGanhoMaterial(margemGanho.Value, model.idProjeto);
                         }
+                        _bll.SaveChanges();
+
+
+                        model = AprovarVM.GetProjeto(_projeto);
+
+                        _projeto.vlProjeto = model.Produtos.Sum(u => u.vlProduto);
+                        _projeto.vlVenda = model.Produtos.Sum(u => u.vlVenda);
+                        _projeto.vlDesconto = model.Produtos.Sum(u => u.vlDesconto);
+
+                        foreach (var item in _projeto.Produtos)
+                        {
+                            item.vlVenda = model.Produtos.First(u => u.idProduto == item.idProduto).vlVenda;
+                            item.vlProduto = model.Produtos.First(u => u.idProduto == item.idProduto).vlProduto;
+                            item.vlDesconto = model.Produtos.First(u => u.idProduto == item.idProduto).vlDesconto;
+                        }
+                        _bll.Aprovar(_projeto);
                         _bll.SaveChanges();
                         trans.Complete();
 
@@ -304,6 +327,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Aprovar", "Projeto", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -430,6 +454,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("AddCusto", "Projeto", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -490,6 +515,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Finalizar", "Projeto", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -508,7 +534,6 @@ namespace RP.Sistema.Web.Controllers
             }
             catch (Exception ex)
             {
-                RP.Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
                 RP.Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
                 return RedirectToAction("Index");
             }
@@ -538,6 +563,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("OrdemCompra", "Projeto", _idUsuario));
                 using (var db = new Context())
                 {
                     return new Report.Class.OrdemCompra().GetReport(db, idProjeto, _idUsuario);
@@ -556,6 +582,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("RaioX", "Projeto", _idUsuario));
                 using (var db = new Context())
                 {
                     return new Report.Class.RaioX().GetReport(db, idProjeto, _idUsuario);
@@ -571,20 +598,69 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao", "index")]
         public ActionResult Orcamento(int idProjeto)
         {
-            return View(idProjeto);
+            try
+            {
+                using (var db = new Context())
+                {
+                    var _bll = new BLL.ProjetoBLL(db, _idUsuario);
+
+                    var _projeto = _bll.Find(u => u.idProjeto == idProjeto)
+                        .Select(u => new 
+                        {
+                            u.dsCondicao,
+                            u.dsGarantia,
+                            u.dsIncluso,
+                            u.dsObservacao,
+                            u.dsPrevisao,
+                            u.dsValidade
+                        }).FirstOrDefault();
+
+                    ViewBag.dsCondicao = _projeto.dsCondicao;
+                    ViewBag.dsGarantia = _projeto.dsGarantia;
+                    ViewBag.dsIncluso = _projeto.dsIncluso;
+                    ViewBag.dsObservacao = _projeto.dsObservacao;
+                    ViewBag.dsPrevisao = _projeto.dsPrevisao;
+                    ViewBag.dsValidade = _projeto.dsValidade;
+
+                    return View(idProjeto);
+                }
+            }
+            catch (Exception ex)
+            {
+                RP.Util.Entity.ErroLog.Add(ex, Session.SessionID, _idUsuario);
+                return RedirectToAction("Index");
+            }
         }
 
 
 
         [HttpPost]
         [Auth.Class.Auth("sistema", "padrao", "index")]
-        public ActionResult Orcamento(int idProjeto, string dsObservacao, string dsGarantia, string dsPrevisao, string dsIncluso, string dsValidade)
+        public ActionResult Orcamento(int idProjeto, string dsObservacao, string dsCondicao, string dsGarantia, string dsPrevisao, string dsIncluso, string dsValidade)
         {
             try
             {
+                LogBLL.Insert(new LogDado("Orcamento", "Projeto", _idUsuario));
                 using (var db = new Context())
                 {
-                    return new Report.Class.OrcamentoCliente().GetReport(db, idProjeto, dsObservacao, dsGarantia, dsPrevisao, dsIncluso, dsValidade, _idUsuario);
+
+                    using (var trans = new RP.DataAccess.RPTransactionScope(db))
+                    {
+                        var _bll = new BLL.ProjetoBLL(db, _idUsuario);
+
+                        var _projeto = _bll.FindSingle(u => u.idProjeto == idProjeto);
+
+                        _projeto.dsCondicao = dsCondicao;
+                        _projeto.dsGarantia = dsGarantia;
+                        _projeto.dsIncluso = dsIncluso;
+                        _projeto.dsObservacao = dsObservacao;
+                        _projeto.dsPrevisao = dsPrevisao;
+                        _projeto.dsValidade = dsValidade;
+                        _bll.SaveChanges();
+
+                        trans.Complete();
+                    }
+                    return new Report.Class.OrcamentoCliente().GetReport(db, idProjeto, dsObservacao, dsCondicao, dsGarantia, dsPrevisao, dsIncluso, dsValidade, _idUsuario);
                 }
             }
             catch (Exception ex)
@@ -659,6 +735,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("JsCreate", "Projeto", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))

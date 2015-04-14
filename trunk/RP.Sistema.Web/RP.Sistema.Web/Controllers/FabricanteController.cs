@@ -9,6 +9,7 @@ using RP.Sistema.Web.Models.Fabricante;
 using RP.Util;
 using System.Data;
 using System.Runtime.Serialization;
+using RP.Sistema.BLL;
 
 namespace RP.Sistema.Web.Controllers
 { 
@@ -27,6 +28,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "Fabricante", _idUsuario));
             return View();
         }
 
@@ -36,6 +38,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search", "Fabricante", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.FabricanteBLL(db, _idUsuario);
@@ -55,6 +58,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Details(int id)
         {
+            LogBLL.Insert(new LogDado("Details", "Fabricante", _idUsuario));
             return this.GetView(id);
         }
 
@@ -72,6 +76,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Create", "Fabricante", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -113,6 +118,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Edit", "Fabricante", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -152,6 +158,7 @@ namespace RP.Sistema.Web.Controllers
         {            
             try
             {
+                LogBLL.Insert(new LogDado("DeleteConfirmed", "Fabricante", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -181,6 +188,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Report", "Fabricante", _idUsuario));
                 using (var db = new Context())
                 {
                     return new Report.Class.Fabricante().GetReport(db, filter, _idUsuario);
@@ -254,6 +262,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("JsCreate", "Fabricante", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))

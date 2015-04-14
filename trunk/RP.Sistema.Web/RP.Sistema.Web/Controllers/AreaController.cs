@@ -7,6 +7,7 @@ using RP.Sistema.Model.Entities;
 using RP.Sistema.Model;
 using RP.Util;
 using RP.Util.Class;
+using RP.Sistema.BLL;
 
 namespace RP.Sistema.Web.Controllers
 { 
@@ -26,6 +27,7 @@ namespace RP.Sistema.Web.Controllers
         [PersistDataSearch("Search")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index()", "Area", _idUsuario));
             return View();
         }
 		
@@ -37,6 +39,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search()", "Area", _idUsuario));
                 using (Context db = new Context())
                 {
                     BLL.AreaBLL areaBLL = new BLL.AreaBLL(db, _idUsuario);
@@ -59,6 +62,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 if (searching)
                 {
+                    LogBLL.Insert(new LogDado("Query()", "Area", _idUsuario));
                     using (Context db = new Context())
                     {
                         BLL.AreaBLL areaBLL = new BLL.AreaBLL(db, _idUsuario);
@@ -83,6 +87,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Details()", "Area", _idUsuario));
                 using (Context db = new Context())
                 {
                     BLL.AreaBLL areaBLL = new BLL.AreaBLL(db, _idUsuario);
@@ -103,6 +108,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Create()
         {
+            LogBLL.Insert(new LogDado("Create()", "Area", _idUsuario));
             return View();
         } 
 
@@ -116,6 +122,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Create(RP.Sistema.Web.Models.Area.AreaVM viewData)", "Area", _idUsuario));
                     var area = viewData.VM2E();
                     using (Context db = new Context())
                     {
@@ -152,6 +159,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Edit()", "Area", _idUsuario));
                 using (Context db = new Context())
                 {
                     BLL.AreaBLL areaBLL = new BLL.AreaBLL(db, _idUsuario);
@@ -176,6 +184,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Edit(RP.Sistema.Web.Models.Area.AreaVM viewData)", "Area", _idUsuario));
                 if (ModelState.IsValid)
                 {
                     var area = viewData.VM2E();
@@ -212,6 +221,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Delete", "Area", _idUsuario));
                 using (Context db = new Context())
                 {
 	                BLL.AreaBLL areaBLL = new BLL.AreaBLL(db, _idUsuario);
@@ -235,6 +245,7 @@ namespace RP.Sistema.Web.Controllers
         {            
             try
             {
+                LogBLL.Insert(new LogDado("DeleteConfirmed", "Area", _idUsuario));
                 using (Context db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))

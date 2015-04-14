@@ -28,6 +28,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "Orcamento", _idUsuario));
             return View();
         }
 
@@ -37,6 +38,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search", "Orcamento", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.ProjetoBLL(db, _idUsuario);
@@ -58,6 +60,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Projeto", "Orcamento", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.ProjetoBLL(db, _idUsuario);
@@ -131,6 +134,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Produto", "Orcamento", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))

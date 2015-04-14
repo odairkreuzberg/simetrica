@@ -71,6 +71,7 @@
     <Compile Include="Entities\Controle.cs" />
     <Compile Include="Entities\Cidade.cs" />
     <Compile Include="Entities\CartaoPonto.cs" />
+    <Compile Include="Entities\LogDado.cs" />
     <Compile Include="Entities\RequisicaoItem.cs" />
     <Compile Include="Entities\Requisicao.cs" />
     <Compile Include="Entities\Feriado.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Mapping\ControleMap.cs" />
     <Compile Include="Mapping\CidadeMap.cs" />
     <Compile Include="Mapping\CartaoPontoMap.cs" />
+    <Compile Include="Mapping\LogDadoMap.cs" />
     <Compile Include="Mapping\RequisicaoItemMap.cs" />
     <Compile Include="Mapping\RequisicaoMap.cs" />
     <Compile Include="Mapping\HoraExtraMap.cs" />

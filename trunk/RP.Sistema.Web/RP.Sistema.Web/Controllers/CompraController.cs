@@ -28,6 +28,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "Compra", _idUsuario));
             return View();
         }
 
@@ -37,6 +38,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search", "Compra", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.CompraBLL(db, _idUsuario);
@@ -58,6 +60,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Details", "Compra", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.CompraBLL(db, _idUsuario);
@@ -109,6 +112,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Projeto", "Compra", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.ProjetoBLL(db, _idUsuario);
@@ -137,6 +141,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Create", "Compra", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -232,6 +237,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Vulso", "Compra", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -336,6 +342,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Cancelar", "Compra", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -365,6 +372,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Report", "Compra", _idUsuario));
                 using (var db = new Context())
                 {
                     return this.Index();//new Report.Class.Compra().GetReport(db, filter, _idUsuario);
@@ -420,6 +428,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("JsCreate", "Compra", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))

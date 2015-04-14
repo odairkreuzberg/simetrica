@@ -37,12 +37,14 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Extrato()
         {
+            LogBLL.Insert(new LogDado("Extrato", "Caixa", _idUsuario));
             return View();
         }
 
         [PersistDataSearch("Search")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "Caixa", _idUsuario));
             ViewBag.dtFim = DateTime.Now;
             return View();
         }
@@ -52,6 +54,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search", "Caixa", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.CaixaBLL(db, _idUsuario);
@@ -76,6 +79,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Details", "Caixa", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.CaixaBLL(db, _idUsuario);
@@ -95,6 +99,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Vale()
         {
+            LogBLL.Insert(new LogDado("Vale", "Caixa", _idUsuario));
             return View();
         }
 
@@ -110,6 +115,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Vale(ValeVM model)", "Caixa", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -168,6 +174,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Report", "Caixa", _idUsuario));
                 using (var db = new Context())
                 {
                     return new Report.Class.Caixa().GetReport(db, _idUsuario);
@@ -187,6 +194,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("ReportDetalhado", "Caixa", _idUsuario));
                 using (var db = new Context())
                 {
                     return new Report.Class.CaixaDetalhado().GetReport(db, _idUsuario);
@@ -205,6 +213,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("JsGetExtrato", "Caixa", _idUsuario));
                 using (Context db = new Context())
                 {
                     var fim = DateTime.Now;

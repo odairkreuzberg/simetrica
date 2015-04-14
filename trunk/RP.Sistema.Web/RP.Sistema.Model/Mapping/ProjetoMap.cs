@@ -16,6 +16,30 @@ namespace RP.Sistema.Model.Mapping
                 .IsRequired()
                 .HasMaxLength(255);
 
+            this.Property(t => t.dsObservacao)
+                .IsRequired()
+                .HasMaxLength(5000);
+
+            this.Property(t => t.dsGarantia)
+                .IsRequired()
+                .HasMaxLength(5000);
+
+            this.Property(t => t.dsPrevisao)
+                .IsRequired()
+                .HasMaxLength(5000);
+
+            this.Property(t => t.dsIncluso)
+                .IsRequired()
+                .HasMaxLength(5000);
+
+            this.Property(t => t.dsValidade)
+                .IsRequired()
+                .HasMaxLength(5000);
+
+            this.Property(t => t.dsCondicao)
+                .IsRequired()
+                .HasMaxLength(5000);
+
             this.Property(t => t.status)
                 .IsRequired()
                 .HasMaxLength(20);
@@ -38,6 +62,12 @@ namespace RP.Sistema.Model.Mapping
             this.Property(t => t.flConcluido).HasColumnName("flconcluido");
             this.Property(t => t.dtFim).HasColumnName("dtfim");
             this.Property(t => t.porcentagemVendedor).HasColumnName("porcentagemvendedor");
+            this.Property(t => t.dsObservacao).HasColumnName("dsobservacao");
+            this.Property(t => t.dsGarantia).HasColumnName("dsgarantia");
+            this.Property(t => t.dsPrevisao).HasColumnName("dsprevisao");
+            this.Property(t => t.dsIncluso).HasColumnName("dsincluso");
+            this.Property(t => t.dsValidade).HasColumnName("dsvalidade");
+            this.Property(t => t.dsCondicao).HasColumnName("dscondicao");
 
             // Relationships
             this.HasRequired(t => t.Cliente)

@@ -18,6 +18,8 @@ namespace RP.Sistema.Model
         public DbSet<Entities.Usuario> Usuarios { get; set; }
         public DbSet<Entities.Entidade> Entidades { get; set; }
         public DbSet<Entities.Parametro> Parametros { get; set; }
+        public DbSet<Entities.LogDado> LogDados { get; set; }
+
 
         public DbSet<Entities.Pais> Paises { get; set; }
         public DbSet<Entities.Estado> Estados { get; set; }
@@ -99,6 +101,7 @@ namespace RP.Sistema.Model
             modelBuilder.Configurations.Add(new CompraMap());
             modelBuilder.Configurations.Add(new ProjetoCustoMap());
             modelBuilder.Configurations.Add(new CartaoPontoMap());
+            modelBuilder.Configurations.Add(new LogDadoMap());
 
 
             base.OnModelCreating(modelBuilder);

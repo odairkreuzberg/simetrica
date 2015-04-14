@@ -28,6 +28,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "ContaReceber", _idUsuario));
             ViewBag.dtFim = DateTime.Now;
             return View();
         }
@@ -38,6 +39,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search", "ContaReceber", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.ContaReceberBLL(db, _idUsuario);
@@ -62,6 +64,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Details", "ContaReceber", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.ContaReceberBLL(db, _idUsuario);
@@ -96,6 +99,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Create", "ContaReceber", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -145,6 +149,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Cancelar", "ContaReceber", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -208,6 +213,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Receber", "ContaReceber", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))

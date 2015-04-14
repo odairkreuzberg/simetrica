@@ -9,6 +9,7 @@ using RP.Sistema.Model.Entities;
 using RP.Sistema.Model;
 using RP.Sistema.Web.Models.Usuario;
 using RP.Util;
+using RP.Sistema.BLL;
 
 namespace RP.Sistema.Web.Controllers
 {
@@ -27,6 +28,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "Usuario", _idUsuario));
             return View();
         }
 
@@ -38,6 +40,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search", "Usuario", _idUsuario));
                 using (Context db = new Context())
                 {
                     BLL.UsuarioBLL usuarioBLL = new BLL.UsuarioBLL(db, _idUsuario);
@@ -84,6 +87,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Details", "Usuario", _idUsuario));
                 using (Context db = new Context())
                 {
                     BLL.UsuarioBLL usuarioBLL = new BLL.UsuarioBLL(db, _idUsuario);
@@ -122,6 +126,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Create", "Usuario", _idUsuario));
                     Usuario usuario = model.VM2E();
                     usuario.dtValidade = DateTime.Now.Date.AddDays(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["UsuarioValidadeSenha"]));
 
@@ -196,6 +201,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Edit", "Usuario", _idUsuario));
                 if (ModelState.IsValid)
                 {
                     var usuarioView = model.VM2E();
@@ -284,6 +290,7 @@ namespace RP.Sistema.Web.Controllers
 
             try
             {
+                LogBLL.Insert(new LogDado("Perfil", "Usuario", _idUsuario));
                 using (Context db = new Context())
                 {
                     Usuario usuarioLogado;
@@ -376,6 +383,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("AlterPasswordMaster", "Usuario", _idUsuario));
                 if (ModelState.IsValid)
                 {
                     using (Context db = new Context())
@@ -454,6 +462,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("BloquearConfirmed", "Usuario", _idUsuario));
                 if (id == _idUsuario)
                 {
                     throw new Exception("Você não pode bloquear seu próprio usuário!");
@@ -531,6 +540,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("DesbloquearConfirmed", "Usuario", _idUsuario));
                 using (Context db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -602,6 +612,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("DeleteConfirmed", "Usuario", _idUsuario));
                 using (Context db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -733,6 +744,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("AddPerfil", "Usuario", _idUsuario));
                 if (ModelState.IsValid)
                 {
                     Usuario usuario = model.VM2E();
@@ -832,6 +844,7 @@ namespace RP.Sistema.Web.Controllers
 
             try
             {
+                LogBLL.Insert(new LogDado("JsAdicionarAtalho", "Usuario", _idUsuario));
                 using (Context db = new Context())
                 {
                     using (var transaction = new RP.DataAccess.RPTransactionScope(db))
