@@ -325,6 +325,7 @@ namespace RP.Sistema.BLL
                 {
                     item.margemGanho = margemGanho;
                 }
+
             }
 
 

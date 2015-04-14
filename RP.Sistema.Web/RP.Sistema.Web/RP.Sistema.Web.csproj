@@ -214,6 +214,7 @@
     <Compile Include="Controllers\ContaPagarController.cs" />
     <Compile Include="Controllers\ContaReceberController.cs" />
     <Compile Include="Controllers\CaixaController.cs" />
+    <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\OrcamentoController.cs" />
     <Compile Include="Controllers\RequisicaoController.cs" />
     <Compile Include="Controllers\FolhaPagamentoController.cs" />
@@ -839,6 +840,7 @@
     <Content Include="Views\Caixa\Extrato.cshtml" />
     <Content Include="Views\ContaPagar\Report.cshtml" />
     <Content Include="Views\Projeto\Duplicar.cshtml" />
+    <Content Include="Views\Log\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -7,6 +7,7 @@ using RP.Sistema.Model.Entities;
 using RP.Sistema.Model;
 using RP.Sistema.Web.Models.Acao;
 using RP.Util;
+using RP.Sistema.BLL;
 
 namespace RP.Sistema.Web.Controllers
 { 
@@ -26,6 +27,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "Ação", _idUsuario));
             return View();
         }
 		
@@ -41,7 +43,7 @@ namespace RP.Sistema.Web.Controllers
                 {
                     BLL.AcaoBLL acaoBLL = new BLL.AcaoBLL(db, _idUsuario);
                     var result = acaoBLL.Search(filter, page, pagesize);
-
+                    LogBLL.Insert(new LogDado("Search", "Ação", _idUsuario));
                     return View("Index", result);
 				}
             }
@@ -64,6 +66,7 @@ namespace RP.Sistema.Web.Controllers
                     BLL.AcaoBLL acaoBLL = new BLL.AcaoBLL(db, _idUsuario);
                     Acao acao = acaoBLL.FindSingle(e => e.idAcao == id, i => i.Controle, i => i.Menu);
 
+                    LogBLL.Insert(new LogDado("Details", "Ação", _idUsuario));
                     return View(AcaoVM.E2VM(acao));
                 }
             }
@@ -88,6 +91,7 @@ namespace RP.Sistema.Web.Controllers
                 icones.Add(System.IO.Path.GetFileNameWithoutExtension(finfo.Name));
             }
 
+            LogBLL.Insert(new LogDado("Create()", "Ação", _idUsuario));
             return View(new AcaoVM
             {
                 listaIcones = icones
@@ -105,6 +109,7 @@ namespace RP.Sistema.Web.Controllers
                 try
                 {
                     Acao acao = viewData.VM2E();
+                    LogBLL.Insert(new LogDado("Create(AcaoVM viewData)", "Ação", _idUsuario));
                     using (Context db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -137,6 +142,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Edit(int id)
         {
+            LogBLL.Insert(new LogDado("Edit(int id)", "Ação", _idUsuario));
             List<string> icones = new List<string>();
             System.IO.FileInfo finfo;
 
@@ -177,6 +183,7 @@ namespace RP.Sistema.Web.Controllers
                 if (ModelState.IsValid)
                 {
                     Acao acao = viewData.VM2E();
+                    LogBLL.Insert(new LogDado("Edit(AcaoVM viewData)", "Ação", _idUsuario));
                     using (Context db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -209,6 +216,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Delete(int id)", "Ação", _idUsuario));
                 using (Context db = new Context())
                 {
                     BLL.AcaoBLL acaoBLL = new BLL.AcaoBLL(db, _idUsuario);
@@ -232,6 +240,7 @@ namespace RP.Sistema.Web.Controllers
         {            
             try
             {
+                LogBLL.Insert(new LogDado("DeleteConfirmed(int id)", "Ação", _idUsuario));
                 using (Context db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))

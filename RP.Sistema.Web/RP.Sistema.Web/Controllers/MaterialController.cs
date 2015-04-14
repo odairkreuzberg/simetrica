@@ -9,6 +9,7 @@ using RP.Sistema.Web.Models.Material;
 using RP.Util;
 using System.Data;
 using System.Runtime.Serialization;
+using RP.Sistema.BLL;
 
 namespace RP.Sistema.Web.Controllers
 { 
@@ -27,6 +28,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "Material", _idUsuario));
             return View();
         }
 
@@ -36,6 +38,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search", "Material", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.MaterialBLL(db, _idUsuario);
@@ -56,6 +59,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Details(int id)
         {
+            LogBLL.Insert(new LogDado("Details", "Material", _idUsuario));
             return this.GetView(id);
         }
 
@@ -81,6 +85,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Create", "Material", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -141,6 +146,7 @@ namespace RP.Sistema.Web.Controllers
                             _bll.Update(_material);
                             _bll.SaveChanges();
 
+                            LogBLL.Insert(new LogDado("Edit", "Material", _idUsuario));
                             trans.Complete();
 
                             this.AddFlashMessage(RP.Util.Resource.Message.EDIT_SUCCESS, FlashMessage.SUCCESS);
@@ -169,6 +175,7 @@ namespace RP.Sistema.Web.Controllers
         {            
             try
             {
+                LogBLL.Insert(new LogDado("DeleteConfirmed", "Material", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -198,6 +205,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Report", "Material", _idUsuario));
                 using (var db = new Context())
                 {
                     return new Report.Class.Material().GetReport(db, filter, saldo, _idUsuario);
@@ -273,6 +281,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("JsCreate", "Material", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))

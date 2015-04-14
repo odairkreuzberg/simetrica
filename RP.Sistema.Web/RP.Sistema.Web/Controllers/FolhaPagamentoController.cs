@@ -30,6 +30,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "FolhaPagamento", _idUsuario));
             var _result = new ListVM
             {
                 Consulta = new ListVM.ConsultaVM
@@ -49,6 +50,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search", "FolhaPagamento", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.FuncionarioBLL(db, _idUsuario);
@@ -117,6 +119,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Create", "FolhaPagamento", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -219,6 +222,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Pagar", "FolhaPagamento", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -307,6 +311,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Report", "FolhaPagamento", _idUsuario));
                 using (var db = new Context())
                 {
                     return new Report.Class.HorasExtras().GetReport(db, consulta.ano, consulta.mes, _idUsuario);
@@ -325,6 +330,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("ReportMes", "FolhaPagamento", _idUsuario));
                 using (var db = new Context())
                 {
                     return new Report.Class.FolhaPagamento().GetReport(db, consulta.ano, consulta.mes, _idUsuario);
@@ -343,6 +349,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("FolhaFrequencia", "FolhaPagamento", _idUsuario));
                 using (var db = new Context())
                 {
                     return new Report.Class.FolhaFrequencia().GetReport(db, idFuncionario, consulta.ano, consulta.mes, _idUsuario);
@@ -361,6 +368,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Recibo", "FolhaPagamento", _idUsuario));
                 using (var db = new Context())
                 {
                     return new Report.Class.Recibo().GetReport(db, idFolha, _idUsuario);

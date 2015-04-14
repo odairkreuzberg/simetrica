@@ -85,6 +85,8 @@
     <Compile Include="ContaReceberBLL.cs" />
     <Compile Include="CompraBLL.cs" />
     <Compile Include="CartaoPontoBLL.cs" />
+    <Compile Include="LogDadoBLL.cs" />
+    <Compile Include="LogBLL.cs" />
     <Compile Include="RequisicaoItemBLL.cs" />
     <Compile Include="RequisicaoBLL.cs" />
     <Compile Include="FolhaPagamentoBLL.cs" />

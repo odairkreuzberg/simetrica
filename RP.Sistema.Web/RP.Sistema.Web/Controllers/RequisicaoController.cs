@@ -9,6 +9,7 @@ using RP.Sistema.Web.Models.Requisicao;
 using RP.Util;
 using System.Data;
 using System.Runtime.Serialization;
+using RP.Sistema.BLL;
 
 namespace RP.Sistema.Web.Controllers
 {
@@ -27,6 +28,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Index()
         {
+            LogBLL.Insert(new LogDado("Index", "Requisicao", _idUsuario));
             return View();
         }
 
@@ -36,6 +38,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Search", "Requisicao", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.RequisicaoBLL(db, _idUsuario);
@@ -57,6 +60,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Projeto", "Requisicao", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.ProjetoBLL(db, _idUsuario);
@@ -76,6 +80,7 @@ namespace RP.Sistema.Web.Controllers
         [Auth.Class.Auth("sistema", "padrao")]
         public ActionResult Details(int id)
         {
+            LogBLL.Insert(new LogDado("Details", "Requisicao", _idUsuario));
             return this.GetView(id);
         }
 
@@ -121,6 +126,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Create", "Requisicao", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -166,6 +172,7 @@ namespace RP.Sistema.Web.Controllers
             {
                 try
                 {
+                    LogBLL.Insert(new LogDado("Edit", "Requisicao", _idUsuario));
                     using (var db = new Context())
                     {
                         using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -205,6 +212,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("DeleteConfirmed", "Requisicao", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -234,6 +242,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("Report", "Requisicao", _idUsuario));
                 using (var db = new Context())
                 {
                     return new Report.Class.Requisicao().GetReport(db, idRequisicao, _idUsuario);

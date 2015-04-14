@@ -29,6 +29,13 @@ namespace RP.Sistema.Model.Entities
         public string status { get; set; }
         public Nullable<System.DateTime> dtInicio { get; set; }
         public Nullable<System.DateTime> dtFim { get; set; }
+        public string dsObservacao { get; set; }
+        public string dsGarantia { get; set; }
+        public string dsPrevisao { get; set; }
+        public string dsIncluso { get; set; }
+        public string dsValidade { get; set; }
+        public string dsCondicao { get; set; }
+
         public Cliente Cliente { get; set; }
         public ICollection<Compra> Compras { get; set; }
         public Funcionario Vendedor { get; set; }

@@ -8,6 +8,7 @@ using RP.Sistema.Model;
 using RP.Util;
 using System.Data;
 using System.Runtime.Serialization;
+using RP.Sistema.BLL;
 
 namespace RP.Sistema.Web.Controllers
 { 
@@ -27,6 +28,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("JsGetItens", "ProdutoMaterial", _idUsuario));
                 using (var db = new Context())
                 {
                     var _bll = new BLL.ProdutoMaterialBLL(db, _idUsuario);
@@ -62,6 +64,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("JsCreate", "ProdutoMaterial", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -107,6 +110,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("JsUpdate", "ProdutoMaterial", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
@@ -152,6 +156,7 @@ namespace RP.Sistema.Web.Controllers
         {
             try
             {
+                LogBLL.Insert(new LogDado("JsDelete", "ProdutoMaterial", _idUsuario));
                 using (var db = new Context())
                 {
                     using (var trans = new RP.DataAccess.RPTransactionScope(db))
